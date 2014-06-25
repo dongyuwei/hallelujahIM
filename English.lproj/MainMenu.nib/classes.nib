@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+                {
+            CLASS = ConversionEngine;
+            LANGUAGE = ObjC;
+            OUTLETS =             {
+                formatter = NSNumberFormatter;
+            };
+            SUPERCLASS = NSObject;
+        }, 
+                {
+            CLASS = FirstResponder;
+            LANGUAGE = ObjC;
+            SUPERCLASS = NSObject;
+        }
+    );
+    IBVersion = 1;
+}

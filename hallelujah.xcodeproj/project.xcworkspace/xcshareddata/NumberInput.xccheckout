@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E1FEEEE8-A3F8-42F1-A144-3ACA368F475E</string>
+	<key>IDESourceControlProjectName</key>
+	<string>NumberInput</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
+		<string>ssh://github.com/dongyuwei/NumberInput_IMKit_Sample.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>object-c/NumberInput0/NumberInput.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/dongyuwei/NumberInput_IMKit_Sample.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>IMKit-sample</string>
+		</dict>
+	</array>
+</dict>
+</plist>
