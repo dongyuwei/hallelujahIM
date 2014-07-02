@@ -287,7 +287,7 @@ Here are the three approaches:
                 NSRange range = [defi rangeOfString:@"^\\s*" options:NSRegularExpressionSearch];
                 defi = [defi stringByReplacingCharactersInRange:range withString:@""];
                 
-                [sharedCandidates showAnnotation: [defi substringWithRange:NSMakeRange(0, 17)]];
+                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString:[defi substringWithRange:NSMakeRange(0, 17)]]];
             }else{
                 [sharedCandidates showAnnotation: candidateString];
             }
@@ -312,88 +312,6 @@ Here are the three approaches:
     NSLog(@"candidateSelected, %@", candidateString);
 }
 
-- (NSArray*) getBaiduDictSuggestion: (NSString*)word{
-    NSArray* result = @[];
-    
-    @try {
-        NSString* query = [NSString stringWithFormat: @"http://nssug.baidu.com/su?prod=recon_dict&wd=%@", word];
-        NSURL * url = [[NSURL alloc] initWithString: query];
-        
-        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
-                                                    cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                                timeoutInterval:30];
-        
-        NSURLResponse *response;
-        NSError *error;
-        
-        NSData* data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                             returningResponse:&response
-                                                         error:&error];
-        if(error){
-            NSLog(@"getBaiduDictSuggestion Error: %@, the word prefix is:%@",error, word);
-            return result;
-        }
-        
-        NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSArray *chunks = [str componentsSeparatedByString: @"s:"];
-        if(chunks && chunks.count > 1){
-            NSArray *chunks2 = [chunks[1] componentsSeparatedByString: @"});"];
-            
-            if(chunks2 && chunks2.count != 0){
-                NSData *data2 = [chunks2[0] dataUsingEncoding:NSUTF8StringEncoding];
-                
-                result = [NSJSONSerialization
-                          JSONObjectWithData:data2
-                          options:0
-                          error:&error];
-                
-                NSLog(@"baidu dict suggestion is %@", result);
-            }
-        }
-        
-        if(error){
-            NSLog(@"getBaiduDictSuggestion Error: %@, the word prefix is:%@",error, word);
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"getBaiduDictSuggestion Error: %@, the word prefix is:%@",exception, word);
-    }
-    @finally {
-        return result;
-    }
-}
-
-- (NSArray*) getGoogleSuggestion: (NSString*)word{
-    NSString* query = [NSString stringWithFormat: @"http://google.com/complete/search?output=firefox&hl=en&q=%@", word];
-    NSURL * url = [[NSURL alloc] initWithString: query];
-
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
-                                                cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                            timeoutInterval:30];
-    
-    NSURLResponse *response;
-    NSError *error;
-    
-    NSData* data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    
-    
-    NSArray* result = @[];
-    NSArray* object = [NSJSONSerialization
-                       JSONObjectWithData:data
-                       options:0
-                       error:&error];
-    
-    if(!error){
-        result = object[1];
-    }else{
-        NSLog(@"getGoogleSuggestion Error: %@",error);
-    }
-    
-    return result;
-}
-
 -(void)dealloc{
     [_composedBuffer release];
     [_originalBuffer release];
@@ -401,4 +319,3 @@ Here are the three approaches:
 }
 
 @end
-

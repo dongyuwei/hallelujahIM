@@ -10,7 +10,6 @@
 		0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D29160719519CE500C4CE58 /* AppKit.framework */; };
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
 		0D2BFD911945890B00DE18D9 /* him.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD901945890B00DE18D9 /* him.tiff */; };
-		0D9BDFEF1898E97D00074AC9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D9BDFEE1898E97D00074AC9 /* Images.xcassets */; };
 		0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DC72DCB195A914A009888F6 /* google_227800_words.json */; };
 		7F54F666194486F8005521FD /* NDTrie.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54F665194486F8005521FD /* NDTrie.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -27,7 +26,6 @@
 		0D2BFD8E194588F400DE18D9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = hallelujah/Images.xcassets; sourceTree = "<group>"; };
 		0D2BFD901945890B00DE18D9 /* him.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = him.tiff; sourceTree = "<group>"; };
 		0D376F6A1949892900EF1E22 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		0D9BDFEE1898E97D00074AC9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = NumberInput/Images.xcassets; sourceTree = "<group>"; };
 		0DC72DCB195A914A009888F6 /* google_227800_words.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_227800_words.json; path = dictionary/google_227800_words.json; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 			children = (
 				0DC72DCB195A914A009888F6 /* google_227800_words.json */,
 				0D2BFD8E194588F400DE18D9 /* Images.xcassets */,
-				0D9BDFEE1898E97D00074AC9 /* Images.xcassets */,
 				E93396E20A9A0AAD0073E6C4 /* images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -200,7 +197,6 @@
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
 				0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */,
-				0D9BDFEF1898E97D00074AC9 /* Images.xcassets in Resources */,
 				0D2BFD911945890B00DE18D9 /* him.tiff in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 			);
