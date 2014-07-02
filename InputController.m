@@ -103,8 +103,7 @@ Here are the three approaches:
 }
 
 // If backspace is entered remove the preceding character and update the marked text.
-- (BOOL)deleteBackward:(id)sender
-{
+- (BOOL)deleteBackward:(id)sender{
     NSMutableString*		originalText = [self originalBuffer];
     
     NSLog(@"deleteBackward originalText:%@,_insertionIndex:%ld", originalText,_insertionIndex);
@@ -142,8 +141,7 @@ Here are the three approaches:
             || (flags & NSNumericPadKeyMask));
 }
 
--(void)commitComposition:(id)sender
-{
+-(void)commitComposition:(id)sender{
     NSString*		text = [self composedBuffer];
     
     if ( text == nil || [text length] == 0 ) {
@@ -168,8 +166,7 @@ Here are the three approaches:
 }
 
 // Return the composed buffer.  If it is NIL create it.
--(NSMutableString*)composedBuffer;
-{
+-(NSMutableString*)composedBuffer{
     if ( _composedBuffer == nil ) {
         _composedBuffer = [[NSMutableString alloc] init];
     }
@@ -177,16 +174,14 @@ Here are the three approaches:
 }
 
 // Change the composed buffer.
--(void)setComposedBuffer:(NSString*)string
-{
+-(void)setComposedBuffer:(NSString*)string{
     NSMutableString*		buffer = [self composedBuffer];
     [buffer setString:string];
 }
 
 
 // Get the original buffer.
--(NSMutableString*)originalBuffer
-{
+-(NSMutableString*)originalBuffer{
     if ( _originalBuffer == nil ) {
         _originalBuffer = [[NSMutableString alloc] init];
     }
@@ -194,8 +189,7 @@ Here are the three approaches:
 }
 
 // Add newly input text to the original buffer.
--(void)originalBufferAppend:(NSString*)string client:(id)sender
-{
+-(void)originalBufferAppend:(NSString*)string client:(id)sender{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer appendString: string];
     _insertionIndex++;
@@ -203,8 +197,7 @@ Here are the three approaches:
 }
 
 // Change the original buffer.
--(void)setOriginalBuffer:(NSString*)string
-{
+-(void)setOriginalBuffer:(NSString*)string{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer setString:string];
 }
@@ -213,7 +206,7 @@ Here are the three approaches:
     NSLog(@"him activateServer");
 }
 
--(void) :(id)sender {
+-(void) :(id)sender{
     [sharedCandidates hide];
 }
 
@@ -311,8 +304,7 @@ Here are the three approaches:
  @abstract   Called when a new candidate has been finally selected.
  @discussion The candidate parameter is the users final choice from the candidate window. The candidate window will have been closed before this method is called.
  */
-- (void)candidateSelected:(NSAttributedString*)candidateString
-{
+- (void)candidateSelected:(NSAttributedString*)candidateString{
     _candidateSelected = YES;
     [self setComposedBuffer:[candidateString string]];
     [self commitComposition:_currentClient];
@@ -402,8 +394,7 @@ Here are the three approaches:
     return result;
 }
 
--(void)dealloc
-{
+-(void)dealloc{
     [_composedBuffer release];
     [_originalBuffer release];
     [super dealloc];
