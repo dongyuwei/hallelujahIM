@@ -268,30 +268,29 @@ Here are the three approaches:
 
 - (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
     NSLog(@"candidateSelectionChanged, %@", [candidateString string]);
-    [_currentClient setMarkedText:[candidateString string] selectionRange:NSMakeRange(_insertionIndex, 0) replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
+    [_currentClient setMarkedText:[candidateString string]
+                   selectionRange:NSMakeRange(_insertionIndex, 0)
+                 replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
+    
     _insertionIndex = [candidateString length];
     
-//    [self showDefinitionOfWord:candidateString];
+    [self showDefinitionOfWord:candidateString];
 }
 
 - (void)showDefinitionOfWord:(NSAttributedString*)candidateString{
-    if(candidateString && candidateString.length >= 3){
+    if(candidateString && candidateString.length > 3){
         @try {
-            NSAttributedString *definition = (NSAttributedString *)DCSCopyTextDefinition(NULL,
-                                                                                         (__bridge CFStringRef)[candidateString string], CFRangeMake(0, [[candidateString string] length]));
+            NSString *definition = (NSString *)DCSCopyTextDefinition(NULL,
+                                            (__bridge CFStringRef)[candidateString string],
+                                            CFRangeMake(0, [[candidateString string] length]));
             
-            NSLog(@"definition of %@ is %@",[candidateString string], definition);
             
             if(definition && definition.length > 0){
-                NSString * defi = [definition string];
-                NSRange range = [defi rangeOfString:@"^\\s*" options:NSRegularExpressionSearch];
-                defi = [defi stringByReplacingCharactersInRange:range withString:@""];
+//                NSLog(@"definition of %@ is %@",[candidateString string], definition);
                 
-                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString:[defi substringWithRange:NSMakeRange(0, 17)]]];
-            }else{
-                [sharedCandidates showAnnotation: candidateString];
+                NSArray* arr = [definition componentsSeparatedByString:@"▶"];
+                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: arr[0]]];
             }
-            
         }
         @catch (NSException *exception) {
             NSLog(@"error when call showDefinitionOfWord %@", exception.reason);
