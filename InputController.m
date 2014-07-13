@@ -333,10 +333,10 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-    [self showDefinitionOfWord:candidateString];
+    [self showPhoneticSymbolOfWord:candidateString];
 }
 
-- (void)showDefinitionOfWord:(NSAttributedString*)candidateString{
+- (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
     if(candidateString && candidateString.length > 3){
         @try {
             NSString *definition = (NSString *)DCSCopyTextDefinition(NULL,
@@ -347,8 +347,13 @@ Here are the three approaches:
             if(definition && definition.length > 0){
 //                NSLog(@"definition of %@ is %@",[candidateString string], definition);
                 
-                NSArray* arr = [definition componentsSeparatedByString:@"▶"];
-                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: arr[0]]];
+                NSArray* arr = [definition componentsSeparatedByString:@"|"];
+                if([arr count] > 0){
+                    NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]",
+                                                [definition componentsSeparatedByString:@"|"][1]];
+                    [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: phoneticSymbol]];
+                }
+                
             }
         }
         @catch (NSException *exception) {
