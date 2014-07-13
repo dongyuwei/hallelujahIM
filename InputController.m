@@ -21,6 +21,21 @@ KEY_MOVE_DOWN = 125;
 
 @implementation InputController
 
+- (id)initWithServer:(IMKServer *)server delegate:(id)delegate client:(id)inputClient{
+    NSLog(@"initWithServer");
+    
+    self = [super initWithServer:server delegate:delegate client:inputClient];
+    
+    if (self){
+        _defaultEnglishMode = NO;
+    }
+    
+    return self;
+}
+-(NSUInteger)recognizedEvents:(id)sender{
+    return NSKeyDownMask | NSFlagsChangedMask;
+}
+
 /*
 Implement one of the three ways to receive input from the client. 
 Here are the three approaches:
@@ -37,22 +52,66 @@ Here are the three approaches:
 3. Receive events directly from the Text Services Manager as NSEvent objects.  For this approach implement:
         -(BOOL)handleEvent:(NSEvent*)event client:(id)sender;
 */
-
-
--(BOOL)inputText:(NSString*)string key:(NSInteger)keyCode modifiers:(NSUInteger)flags client:(id)sender{
+-(BOOL)handleEvent:(NSEvent*)event client:(id)sender{
     //tail -f /var/log/system.log
-    NSLog(@"text:%@, keycode:%ld, flags:%lu, bundleIdentifier: %@",
-          string, (long)keyCode,(unsigned long)flags, [sender bundleIdentifier]);
+    NSLog(@"event:%@",event);
     
+    NSUInteger modifiers = [event modifierFlags];
+    bool handled = NO;
+    switch ([event type]) {
+        case NSFlagsChanged:
+            // FIXME: a dirty workaround for chrome sending duplicated NSFlagsChanged event
+            if (_lastEventTypes[1] == NSFlagsChanged && _lastModifiers[1] == modifiers){
+                return YES;
+            }
+            
+            if (modifiers == 0
+                &&_lastEventTypes[1] == NSFlagsChanged
+                && _lastModifiers[1] == NSShiftKeyMask
+                &&!(_lastModifiers[0] & NSShiftKeyMask)){
+                _defaultEnglishMode = !_defaultEnglishMode;
+                if(_defaultEnglishMode){
+                    NSLog(@"Switched to default English mode!");
+                    
+                    NSString* bufferedText = [self originalBuffer];
+                    if ( bufferedText && [bufferedText length] > 0 ) {
+                        [self cancelComposition];
+                        [self commitComposition:sender];
+                    }
+                }
+            }
+            break;
+        case NSKeyDown:
+            if (_defaultEnglishMode) {
+                break;
+            }
+            handled = [self onKeyEvent:event client:sender];
+            break;
+        defaults:
+            break;
+    }
+    
+    _lastModifiers [0] = _lastModifiers[1];
+    _lastEventTypes[0] = _lastEventTypes[1];
+    _lastModifiers [1] = modifiers;
+    _lastEventTypes[1] = [event type];
+    
+    return handled;
+}
+
+-(BOOL)onKeyEvent:(NSEvent*)event client:(id)sender{
     _currentClient = sender;
+    NSUInteger modifiers = [event modifierFlags];
+    NSInteger keyCode = [event keyCode];
+    NSString* string = [event characters];
     
-    if ([self shouldIgnoreKey:keyCode modifiers:flags]){
+    if ([self shouldIgnoreKey:keyCode modifiers:modifiers]){
         [self reset];
         return NO;
     }
     
     if(keyCode == KEY_DELETE){
-        NSString*		bufferedText = [self originalBuffer];
+        NSString* bufferedText = [self originalBuffer];
         
         if ( bufferedText && [bufferedText length] > 0 ) {
             return [self deleteBackward:sender];
@@ -60,7 +119,7 @@ Here are the three approaches:
         return NO;
     }
     
-    NSString*		bufferedText = [self originalBuffer];
+    NSString* bufferedText = [self originalBuffer];
     
     if(keyCode == KEY_RETURN){
         if ( bufferedText && [bufferedText length] > 0 ) {
@@ -74,7 +133,7 @@ Here are the three approaches:
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self cancelComposition];
             [self commitComposition:sender];
-
+            
             return YES;
         }
         return NO;
@@ -83,7 +142,7 @@ Here are the three approaches:
     char ch = [string characterAtIndex:0];
     if(ch >= 'a' && ch <= 'z'){
         [self originalBufferAppend:string client:sender];
-
+        
         [sharedCandidates updateCandidates];
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
@@ -162,7 +221,7 @@ Here are the three approaches:
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    _candidateSelected = NO; 
+    _candidateSelected = NO;
 }
 
 // Return the composed buffer.  If it is NIL create it.

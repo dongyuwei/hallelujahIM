@@ -16,6 +16,10 @@
     id								_currentClient;
     
     BOOL                            _candidateSelected;
+    
+    BOOL                            _defaultEnglishMode;
+    NSUInteger                      _lastModifiers[2];
+    NSEventType                     _lastEventTypes[2];
 }
 
 //These are simple methods for managing our composition and original buffers
