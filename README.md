@@ -8,9 +8,9 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 3. It will show phonetic symbol of your selected word.
 4. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode.
 
-![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-1.png?raw=true)
+![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-1.png?raw=true&v=2)
 
-![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency.png?raw=true)
+![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency.png?raw=true&v=2)
 
 ![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
 
