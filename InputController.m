@@ -55,7 +55,7 @@ Here are the three approaches:
             }
             
             if (modifiers == 0
-                &&_lastEventTypes[1] == NSFlagsChanged
+                && _lastEventTypes[1] == NSFlagsChanged
                 && _lastModifiers[1] == NSShiftKeyMask
                 &&!(_lastModifiers[0] & NSShiftKeyMask)){
                 defaultEnglishMode = !defaultEnglishMode;
@@ -69,6 +69,7 @@ Here are the three approaches:
                     }
                 }
             }
+            
             break;
         case NSKeyDown:
             if (defaultEnglishMode) {
@@ -111,21 +112,22 @@ Here are the three approaches:
     NSString* bufferedText = [self originalBuffer];
     
     if(keyCode == KEY_RETURN){
-        if ( bufferedText && [bufferedText length] > 0 ) {
-            [self commitComposition:sender];
-            return YES;
+        if(!bufferedText || [bufferedText length] <= 0){
+            return NO;
         }
-        return NO;
+        
+        [self commitComposition:sender];
+        return YES;
     }
     
     if(keyCode == KEY_ESC){
-        if ( bufferedText && [bufferedText length] > 0 ) {
-            [self cancelComposition];
-            [self commitComposition:sender];
-            
-            return YES;
+        if(!bufferedText || [bufferedText length] <= 0){
+            return NO;
         }
-        return NO;
+        
+        [self cancelComposition];
+        [self commitComposition:sender];
+        return YES;
     }
     
     char ch = [string characterAtIndex:0];
@@ -136,15 +138,14 @@ Here are the three approaches:
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
     }else{
-        if ( bufferedText && [bufferedText length] > 0 ) {
-            [self originalBufferAppend:string client:sender];
-            [self commitComposition: sender];
-            return YES;
-        }else{
+        if(!bufferedText || [bufferedText length] <= 0){
             [sharedCandidates hide];
             return NO;
         }
         
+        [self originalBufferAppend:string client:sender];
+        [self commitComposition: sender];
+        return YES;
     }
     
     return NO;
@@ -156,26 +157,27 @@ Here are the three approaches:
     
     NSLog(@"deleteBackward originalText:%@,_insertionIndex:%ld", originalText,_insertionIndex);
     
-    if ( _insertionIndex > 0 ) {
-        --_insertionIndex;
-         
-        NSString* convertedString = [originalText substringToIndex: originalText.length - 1];
-        NSLog(@"deleteBackward, convertedString is :%@",convertedString);
-        
-        [self setComposedBuffer:convertedString];
-        [self setOriginalBuffer:convertedString];
-        
-        [sender setMarkedText:convertedString
-               selectionRange:NSMakeRange(_insertionIndex, 0)
-             replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
-        
-        if(convertedString){
-            [sharedCandidates updateCandidates];
-            [sharedCandidates show:kIMKLocateCandidatesBelowHint];
-        }
-        return YES;
+    if (_insertionIndex <= 0) {
+        return NO;
     }
-    return NO;
+    
+    --_insertionIndex;
+    
+    NSString* convertedString = [originalText substringToIndex: originalText.length - 1];
+    NSLog(@"deleteBackward, convertedString is :%@",convertedString);
+    
+    [self setComposedBuffer:convertedString];
+    [self setOriginalBuffer:convertedString];
+    
+    [sender setMarkedText:convertedString
+           selectionRange:NSMakeRange(_insertionIndex, 0)
+         replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
+    
+    if(convertedString){
+        [sharedCandidates updateCandidates];
+        [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+    }
+    return YES;
 }
 
 - (BOOL) shouldIgnoreKey:(NSInteger)keyCode modifiers:(NSUInteger)flags{
@@ -326,29 +328,31 @@ Here are the three approaches:
 }
 
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
-    if(candidateString && candidateString.length > 3){
-        @try {
-            NSString *definition = (NSString *)DCSCopyTextDefinition(NULL,
-                                            (__bridge CFStringRef)[candidateString string],
-                                            CFRangeMake(0, [[candidateString string] length]));
+    if(!candidateString || candidateString.length <= 3){
+        return;
+    }
+    
+    @try {
+        NSString *definition = (NSString *)DCSCopyTextDefinition(NULL,
+                                                                 (__bridge CFStringRef)[candidateString string],
+                                                                 CFRangeMake(0, [[candidateString string] length]));
+        
+        if(definition && definition.length > 0){
+            //                NSLog(@"definition of %@ is %@",[candidateString string], definition);
             
-            
-            if(definition && definition.length > 0){
-//                NSLog(@"definition of %@ is %@",[candidateString string], definition);
-                
-                NSArray* arr = [definition componentsSeparatedByString:@"|"];
-                if([arr count] > 0){
-                    NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]",
-                                                [definition componentsSeparatedByString:@"|"][1]];
-                    [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: phoneticSymbol]];
-                }
-                
+            NSArray* arr = [definition componentsSeparatedByString:@"|"];
+            if([arr count] > 0){
+                NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]",
+                                            [definition componentsSeparatedByString:@"|"][1]];
+                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: phoneticSymbol]];
             }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"error when call showDefinitionOfWord %@", exception.reason);
+            
         }
     }
+    @catch (NSException *exception) {
+        NSLog(@"error when call showDefinitionOfWord %@", exception.reason);
+    }
+
 }
 
 /*!
