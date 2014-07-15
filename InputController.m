@@ -6,7 +6,7 @@
 extern IMKCandidates *sharedCandidates;
 extern NDMutableTrie*  trie;
 extern NSDictionary* wordsWithFrequency;
-
+extern BOOL defaultEnglishMode;
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -21,17 +21,6 @@ KEY_MOVE_DOWN = 125;
 
 @implementation InputController
 
-- (id)initWithServer:(IMKServer *)server delegate:(id)delegate client:(id)inputClient{
-    NSLog(@"initWithServer");
-    
-    self = [super initWithServer:server delegate:delegate client:inputClient];
-    
-    if (self){
-        _defaultEnglishMode = NO;
-    }
-    
-    return self;
-}
 -(NSUInteger)recognizedEvents:(id)sender{
     return NSKeyDownMask | NSFlagsChangedMask;
 }
@@ -69,8 +58,8 @@ Here are the three approaches:
                 &&_lastEventTypes[1] == NSFlagsChanged
                 && _lastModifiers[1] == NSShiftKeyMask
                 &&!(_lastModifiers[0] & NSShiftKeyMask)){
-                _defaultEnglishMode = !_defaultEnglishMode;
-                if(_defaultEnglishMode){
+                defaultEnglishMode = !defaultEnglishMode;
+                if(defaultEnglishMode){
                     NSLog(@"Switched to default English mode!");
                     
                     NSString* bufferedText = [self originalBuffer];
@@ -82,7 +71,7 @@ Here are the three approaches:
             }
             break;
         case NSKeyDown:
-            if (_defaultEnglishMode) {
+            if (defaultEnglishMode) {
                 break;
             }
             handled = [self onKeyEvent:event client:sender];
@@ -252,7 +241,7 @@ Here are the three approaches:
     NSMutableString*		buffer = [self originalBuffer];
     [buffer appendString: string];
     _insertionIndex++;
-    [sender setMarkedText:buffer selectionRange:NSMakeRange(0, [buffer length]) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    [sender setMarkedText:buffer selectionRange:NSMakeRange([buffer length], 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
 // Change the original buffer.

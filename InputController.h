@@ -17,7 +17,6 @@
     
     BOOL                            _candidateSelected;
     
-    BOOL                            _defaultEnglishMode;
     NSUInteger                      _lastModifiers[2];
     NSEventType                     _lastEventTypes[2];
 }

@@ -8,6 +8,7 @@ IMKServer*      server;
 IMKCandidates*  sharedCandidates;
 NDMutableTrie*  trie;
 NSDictionary* wordsWithFrequency;
+BOOL defaultEnglishMode;
 
 NDMutableTrie* buildTrieFromFile(){
     NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words"
