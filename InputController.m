@@ -188,9 +188,6 @@ Here are the three approaches:
         text = [self originalBuffer];
     }
     
-    if (_candidateSelected){
-        text = [text stringByAppendingString:@" "];
-    }
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
     
     [self reset];
