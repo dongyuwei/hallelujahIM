@@ -328,7 +328,7 @@ Here are the three approaches:
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
     if(candidateString && candidateString.length > 3){
         @try {
-            NSString *definition = (NSString *)DCSCopyTextDefinition(NULL,
+            NSString *definition = (__bridge NSString *)DCSCopyTextDefinition(NULL,
                                             (__bridge CFStringRef)[candidateString string],
                                             CFRangeMake(0, [[candidateString string] length]));
             
@@ -362,12 +362,6 @@ Here are the three approaches:
     [self commitComposition:_currentClient];
     
     NSLog(@"candidateSelected, %@", candidateString);
-}
-
--(void)dealloc{
-    [_composedBuffer release];
-    [_originalBuffer release];
-    [super dealloc];
 }
 
 @end
