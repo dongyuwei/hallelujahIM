@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
     
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server
                                                    panelType:kIMKSingleColumnScrollingCandidatePanel];
+    
+    
     if (!sharedCandidates){
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);
         return -1;

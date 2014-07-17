@@ -18,9 +18,7 @@ KEY_MOVE_LEFT = 123,
 KEY_MOVE_RIGHT = 124,
 KEY_MOVE_DOWN = 125;
 
-
 @implementation InputController
-
 /*
 Implement one of the three ways to receive input from the client. 
 Here are the three approaches:
@@ -37,8 +35,6 @@ Here are the three approaches:
 3. Receive events directly from the Text Services Manager as NSEvent objects.  For this approach implement:
         -(BOOL)handleEvent:(NSEvent*)event client:(id)sender;
 */
-
-
 -(BOOL)inputText:(NSString*)string key:(NSInteger)keyCode modifiers:(NSUInteger)flags client:(id)sender{
     //tail -f /var/log/system.log
     NSLog(@"text:%@, keycode:%ld, flags:%lu, bundleIdentifier: %@",
@@ -102,7 +98,16 @@ Here are the three approaches:
     return NO;
 }
 
-// If backspace is entered remove the preceding character and update the marked text.
+- (id)initWithServer:(IMKServer*)server delegate:(id)delegate client:(id)inputClient{
+    if (self = [super initWithServer:server delegate:delegate client:inputClient]) {
+        _currentClient = nil;
+        
+        _win = [CocoaWinController sharedController];
+    }
+    
+    return self;
+}
+
 - (BOOL)deleteBackward:(id)sender{
     NSMutableString*		originalText = [self originalBuffer];
     
@@ -149,9 +154,9 @@ Here are the three approaches:
     }
     
     NSLog(@"commitComposition: %@",text);
-    if (_candidateSelected){
-        text = [text stringByAppendingString:@" "];
-    }
+//    if (_candidateSelected){
+//        text = [text stringByAppendingString:@" "];
+//    }
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
     
     [self reset];
@@ -165,7 +170,6 @@ Here are the three approaches:
     _candidateSelected = NO; 
 }
 
-// Return the composed buffer.  If it is NIL create it.
 -(NSMutableString*)composedBuffer{
     if ( _composedBuffer == nil ) {
         _composedBuffer = [[NSMutableString alloc] init];
@@ -173,14 +177,12 @@ Here are the three approaches:
     return _composedBuffer;
 }
 
-// Change the composed buffer.
 -(void)setComposedBuffer:(NSString*)string{
     NSMutableString*		buffer = [self composedBuffer];
     [buffer setString:string];
 }
 
 
-// Get the original buffer.
 -(NSMutableString*)originalBuffer{
     if ( _originalBuffer == nil ) {
         _originalBuffer = [[NSMutableString alloc] init];
@@ -188,7 +190,6 @@ Here are the three approaches:
     return _originalBuffer;
 }
 
-// Add newly input text to the original buffer.
 -(void)originalBufferAppend:(NSString*)string client:(id)sender{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer appendString: string];
@@ -196,7 +197,6 @@ Here are the three approaches:
     [sender setMarkedText:buffer selectionRange:NSMakeRange(0, [buffer length]) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
-// Change the original buffer.
 -(void)setOriginalBuffer:(NSString*)string{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer setString:string];
@@ -288,8 +288,10 @@ Here are the three approaches:
             if(definition && definition.length > 0){
 //                NSLog(@"definition of %@ is %@",[candidateString string], definition);
                 
-                NSArray* arr = [definition componentsSeparatedByString:@"▶"];
-                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: arr[0]]];
+//                NSArray* arr = [definition componentsSeparatedByString:@"▶"];
+//                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: arr[0]]];
+                NSRect rect = [sharedCandidates candidateFrame];
+                [_win showAnnotation:rect annotation:definition level:[_currentClient windowLevel]];
             }
         }
         @catch (NSException *exception) {
@@ -298,11 +300,6 @@ Here are the three approaches:
     }
 }
 
-/*!
- @method
- @abstract   Called when a new candidate has been finally selected.
- @discussion The candidate parameter is the users final choice from the candidate window. The candidate window will have been closed before this method is called.
- */
 - (void)candidateSelected:(NSAttributedString*)candidateString{
     _candidateSelected = YES;
     [self setComposedBuffer:[candidateString string]];

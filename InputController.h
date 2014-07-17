@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
+#import "CocoaWinController.h"
 
 @interface InputController : IMKInputController {
     
@@ -16,10 +17,11 @@
     id								_currentClient;
     
     BOOL                            _candidateSelected;
+    
+    CocoaWinController*             _win;
 }
 
-//These are simple methods for managing our composition and original buffers
-//They are all simple wrappers around basic NSString methods.
+
 -(NSMutableString*)composedBuffer;
 -(void)setComposedBuffer:(NSString*)string;
 
