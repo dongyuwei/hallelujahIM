@@ -42,9 +42,6 @@ Here are the three approaches:
         -(BOOL)handleEvent:(NSEvent*)event client:(id)sender;
 */
 -(BOOL)handleEvent:(NSEvent*)event client:(id)sender{
-    //tail -f /var/log/system.log
-    NSLog(@"event:%@",event);
-    
     NSUInteger modifiers = [event modifierFlags];
     bool handled = NO;
     switch ([event type]) {
@@ -60,7 +57,6 @@ Here are the three approaches:
                 &&!(_lastModifiers[0] & NSShiftKeyMask)){
                 defaultEnglishMode = !defaultEnglishMode;
                 if(defaultEnglishMode){
-                    NSLog(@"Switched to default English mode!");
                     
                     NSString* bufferedText = [self originalBuffer];
                     if ( bufferedText && [bufferedText length] > 0 ) {
@@ -150,18 +146,14 @@ Here are the three approaches:
     return NO;
 }
 
-// If backspace is entered remove the preceding character and update the marked text.
 - (BOOL)deleteBackward:(id)sender{
     NSMutableString*		originalText = [self originalBuffer];
-    
-    NSLog(@"deleteBackward originalText:%@,_insertionIndex:%ld", originalText,_insertionIndex);
     
     if ( _insertionIndex > 0 ) {
         --_insertionIndex;
          
         NSString* convertedString = [originalText substringToIndex: originalText.length - 1];
-        NSLog(@"deleteBackward, convertedString is :%@",convertedString);
-        
+
         [self setComposedBuffer:convertedString];
         [self setOriginalBuffer:convertedString];
         
@@ -196,7 +188,6 @@ Here are the three approaches:
         text = [self originalBuffer];
     }
     
-    NSLog(@"commitComposition: %@",text);
     if (_candidateSelected){
         text = [text stringByAppendingString:@" "];
     }
@@ -213,7 +204,6 @@ Here are the three approaches:
     _candidateSelected = NO;
 }
 
-// Return the composed buffer.  If it is NIL create it.
 -(NSMutableString*)composedBuffer{
     if ( _composedBuffer == nil ) {
         _composedBuffer = [[NSMutableString alloc] init];
@@ -221,14 +211,11 @@ Here are the three approaches:
     return _composedBuffer;
 }
 
-// Change the composed buffer.
 -(void)setComposedBuffer:(NSString*)string{
     NSMutableString*		buffer = [self composedBuffer];
     [buffer setString:string];
 }
 
-
-// Get the original buffer.
 -(NSMutableString*)originalBuffer{
     if ( _originalBuffer == nil ) {
         _originalBuffer = [[NSMutableString alloc] init];
@@ -236,7 +223,6 @@ Here are the three approaches:
     return _originalBuffer;
 }
 
-// Add newly input text to the original buffer.
 -(void)originalBufferAppend:(NSString*)string client:(id)sender{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer appendString: string];
@@ -244,14 +230,9 @@ Here are the three approaches:
     [sender setMarkedText:buffer selectionRange:NSMakeRange([buffer length], 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
-// Change the original buffer.
 -(void)setOriginalBuffer:(NSString*)string{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer setString:string];
-}
-
-- (void) activateServer:(id)client{
-    NSLog(@"him activateServer");
 }
 
 -(void) :(id)sender{
@@ -315,7 +296,6 @@ Here are the three approaches:
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
-    NSLog(@"candidateSelectionChanged, %@", [candidateString string]);
     [_currentClient setMarkedText:[candidateString string]
                    selectionRange:NSMakeRange(_insertionIndex, 0)
                  replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
@@ -334,8 +314,6 @@ Here are the three approaches:
             
             
             if(definition && definition.length > 0){
-//                NSLog(@"definition of %@ is %@",[candidateString string], definition);
-                
                 NSArray* arr = [definition componentsSeparatedByString:@"|"];
                 if([arr count] > 0){
                     NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]",
@@ -346,22 +324,15 @@ Here are the three approaches:
             }
         }
         @catch (NSException *exception) {
-            NSLog(@"error when call showDefinitionOfWord %@", exception.reason);
+            NSLog(@"error when call showPhoneticSymbolOfWord %@", exception.reason);
         }
     }
 }
 
-/*!
- @method
- @abstract   Called when a new candidate has been finally selected.
- @discussion The candidate parameter is the users final choice from the candidate window. The candidate window will have been closed before this method is called.
- */
 - (void)candidateSelected:(NSAttributedString*)candidateString{
     _candidateSelected = YES;
     [self setComposedBuffer:[candidateString string]];
     [self commitComposition:_currentClient];
-    
-    NSLog(@"candidateSelected, %@", candidateString);
 }
 
 -(void)dealloc{
