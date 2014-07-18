@@ -17,3 +17,8 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 ![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
 
 ![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
+
+
+##Paid Support
+
+If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
