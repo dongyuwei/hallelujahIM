@@ -8,6 +8,8 @@
 	<string>hallelujah</string>
 	<key>CFBundleIdentifier</key>
 	<string>im.session.inputmethod.hallelujahInputMethod</string>
+	<key>CFBundleIconFile</key>
+	<string>him.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -35,6 +37,6 @@
 		<string>Latn</string>
 	</array>
 	<key>tsInputMethodIconFileKey</key>
-	<string>him.tiff</string>
+	<string>him.png</string>
 </dict>
 </plist>
