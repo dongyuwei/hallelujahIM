@@ -3,10 +3,11 @@ hallelujahIM
 
 hallelujahIM is  an english input method with auto-suggestions and spell check features, mac only.
 
-1. The auto suggestion words come from google's  [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged it to 227800 words (all wrong words removed). Candidates words are sorted by frequency.
-2. hallelujahIM is also a spell-checker, when you input wrong word, it will give you the right candidates.
-3. It will show phonetic symbol of your selected word.
-4. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode.
+1. The auto-suggestion words come from google's  [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged it to 227800 words (all wrong words removed). Candidates words are sorted by frequency.
+2. hallelujahIM is also a __Spell-Checker__: when you input wrong word, it will give you the right candidates.
+3. It will show __Phonetic Symbol__ of your selected word.
+4. hallelujahIM is also a __Password Manager__: it has a special __Command Mode__ to manage your password, when you input `:! zhima xyz` and press the `Enter` key, the `xyz`(which can be any valid characters) is recognized as the password. The `zhima` means `Sesame`(Open, O Sesame!) in Chinese. After the first time, just input `:! zhima` and press the `Enter` key, hallelujahIM will give the password to the paired application.
+5. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode
 
 [download releases](https://github.com/dongyuwei/hallelujahIM/releases)
 

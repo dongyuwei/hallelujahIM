@@ -7,6 +7,8 @@ extern IMKCandidates *sharedCandidates;
 extern NDMutableTrie*  trie;
 extern NSDictionary* wordsWithFrequency;
 extern BOOL defaultEnglishMode;
+extern NSMutableDictionary* passwordDict;
+
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -72,7 +74,7 @@ Here are the three approaches:
             }
             handled = [self onKeyEvent:event client:sender];
             break;
-        defaults:
+        default:
             break;
     }
     
@@ -108,6 +110,10 @@ Here are the three approaches:
     
     if(keyCode == KEY_RETURN){
         if ( bufferedText && [bufferedText length] > 0 ) {
+            if(_is_cmd_mode && [self isPasswordMode: bufferedText] ){
+                [self commitPassword: bufferedText client: sender];
+                return YES;
+            }
             [self commitComposition:sender];
             return YES;
         }
@@ -122,6 +128,17 @@ Here are the three approaches:
             return YES;
         }
         return NO;
+    }
+    
+    if ( (bufferedText && [bufferedText length] == 0  && [@":"  isEqual: string])
+        || ([@":"  isEqual: bufferedText] && [@"!" isEqual: string]) ) {
+        [self originalBufferAppend:string client:sender];
+        return YES;
+    }
+    if ( bufferedText && [bufferedText hasPrefix:@":!"] ) {
+        _is_cmd_mode = YES;
+        [self appendToOriginalBuffer:string client:sender];
+        return YES;
     }
     
     char ch = [string characterAtIndex:0];
@@ -198,7 +215,6 @@ Here are the three approaches:
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    _candidateSelected = NO;
 }
 
 -(NSMutableString*)composedBuffer{
@@ -225,6 +241,51 @@ Here are the three approaches:
     [buffer appendString: string];
     _insertionIndex++;
     [sender setMarkedText:buffer selectionRange:NSMakeRange([buffer length], 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+}
+
+-(void)appendToOriginalBuffer:(NSString*)string client:(id)sender{
+    NSMutableString*		buffer = [self originalBuffer];
+    [buffer appendString: string];
+}
+
+-(BOOL) isPasswordMode:(NSString*)bufferedText{
+    return [bufferedText rangeOfString: @"zhima"].location != NSNotFound;
+}
+
+-(NSString*)getPassword:(id)sender{
+    NSString* password = [passwordDict objectForKey: [sender bundleIdentifier]];
+    return password;
+}
+
+-(void)setPassword:(NSString*)string client:(id)sender{
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:@":!\\s*zhima\\s*(.+)"
+                                  options:NSRegularExpressionCaseInsensitive
+                                  error:NULL];
+    [regex enumerateMatchesInString:string
+                            options:0
+                              range:NSMakeRange(0, [string length])
+                         usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
+                             
+        NSString* password = [[string substringWithRange:[match rangeAtIndex:1]]
+                            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                             
+        [passwordDict setValue: password forKey: [sender bundleIdentifier]];
+    }];
+}
+
+-(void)commitPassword:(NSString*)bufferedText client:(id)sender{
+    NSString* password;
+    if([bufferedText hasSuffix:@"zhima"]){
+        password = [self getPassword:sender];
+    }else{
+        [self setPassword: bufferedText client: sender];
+        password = [self getPassword:sender];
+    }
+    
+    [sender insertText: password replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    
+    [self reset];
 }
 
 -(void)setOriginalBuffer:(NSString*)string{
@@ -327,7 +388,6 @@ Here are the three approaches:
 }
 
 - (void)candidateSelected:(NSAttributedString*)candidateString{
-    _candidateSelected = YES;
     [self setComposedBuffer:[candidateString string]];
     [self commitComposition:_currentClient];
 }

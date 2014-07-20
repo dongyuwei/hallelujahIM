@@ -9,6 +9,7 @@ IMKCandidates*  sharedCandidates;
 NDMutableTrie*  trie;
 NSDictionary* wordsWithFrequency;
 BOOL defaultEnglishMode;
+NSMutableDictionary* passwordDict;
 
 NDMutableTrie* buildTrieFromFile(){
     NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words"
@@ -40,6 +41,8 @@ int main(int argc, char *argv[])
     }
     
     trie =  buildTrieFromFile();
+    
+    passwordDict = [[NSMutableDictionary alloc] init];
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]
