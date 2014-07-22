@@ -10,6 +10,9 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 
 [download releases](https://github.com/dongyuwei/hallelujahIM/releases)
 
+![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
+
+
 ![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-2.png?raw=true)
 
 ![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency-2.png?raw=true)
