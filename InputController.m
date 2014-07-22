@@ -63,7 +63,6 @@ Here are the three approaches:
                     NSString* bufferedText = [self originalBuffer];
                     if ( bufferedText && [bufferedText length] > 0 ) {
                         [self cancelComposition];
-                        NSLog(@"call commitComposition 00,bufferedText:%@",bufferedText);
                         [self commitComposition:sender];
                     }
                 }
@@ -131,19 +130,12 @@ Here are the three approaches:
         return NO;
     }
     
-    NSLog(@"bufferedText:%@,string:%@,%ld,boolean:%@",bufferedText,string, bufferedText.length,[bufferedText length] == 0  && [string  isEqualToString: @":"] ? @"YES" : @"NO");
-    
-    
     if ( [bufferedText length] == 0  && [string  isEqualToString: @":"]) {
-        NSLog(@":::::::::::::::::::::::");
         [self appendToOriginalBuffer:string client:sender];
-        NSLog(@"originalBuffer1:%@",[self originalBuffer]);
         return YES;
     }
     if ( [bufferedText isEqualToString: @":"] && [string isEqualToString: @"!"] ) {
-        NSLog(@"!!!!!!!!!!!!!!!!!!");
         [self appendToOriginalBuffer:string client:sender];
-        NSLog(@"originalBuffer2:%@",[self originalBuffer]);
         return YES;
     }
     if ( [bufferedText hasPrefix:@":!"] ) {
@@ -162,17 +154,15 @@ Here are the three approaches:
     }else{
         if ([bufferedText length] > 0 ) {
             [self originalBufferAppend:string client:sender];
-            NSLog(@"call commitComposition 11,bufferedText:%@,string:%@",bufferedText,string);
             [self commitComposition: sender];
             return YES;
         }else{
             [sharedCandidates hide];
-            NSLog(@"111111-NO");
             return NO;
         }
         
     }
-    NSLog(@"22222-NO");
+    
     return NO;
 }
 
@@ -212,25 +202,13 @@ Here are the three approaches:
 }
 
 -(void)commitComposition:(id)sender{
-//    NSTimer *timer = [[NSTimer scheduledTimerWithTimeInterval:0.050
-//                                                       target:self
-//                                                     selector:@selector(commit:)
-//                                                     userInfo:nil
-//                                                      repeats:NO] init];
-//    [timer fire];
-    
-    [self commit];
-}
-
--(void)commit{
     NSString*		text = [self composedBuffer];
     
     if ( text == nil || [text length] == 0 ) {
         text = [self originalBuffer];
     }
     
-    NSLog(@"commitComposition,text:%@",text);
-    [_currentClient insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
     
     [self reset];
 }
@@ -414,7 +392,6 @@ Here are the three approaches:
 
 - (void)candidateSelected:(NSAttributedString*)candidateString{
     [self setComposedBuffer:[candidateString string]];
-    NSLog(@"call commitComposition,candidateString:%@",[candidateString string]);
     [self commitComposition:_currentClient];
 }
 
