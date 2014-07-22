@@ -23,3 +23,15 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 ##Paid Support
 
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
+
+中文说明
+=======
+1. hallelujahIM 是一个mac平台上的智能英文输入法. 它可以按照prefix前缀自动补全英语单词，候选词列表按使用频率排列。总词库有227800个单词。
+
+2. hallelujahIM也是一个拼写检查器(spell checker)，当用户输入错误的单词时，它会自动提示最相近的正确单词列表。
+
+3. hallelujahIM也是一个密码管理器，免费的OnePass替代品:) ：第一次在密码框输入 :! zhima xyz 按回车键, xyz就是用户的密码字符串。zhima就是芝麻开门的意思(Open, O Sesame!) 。以后只要输入 :! zhima 按回车键, 输入法就会自动输入密码给对应的应用程序（如Cisco AnyConnectVPN client）。
+
+4. hallelujahIM可以显示用户选中的候选单词的音标。
+
+5. 按shift键，可以切换到原始的English input状态，比如在iterm2下不想使用自动补全模式。再次按shift键，切换到自动补全模式。
