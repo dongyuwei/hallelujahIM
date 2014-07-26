@@ -9,7 +9,12 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 4. hallelujahIM is also a __Password Manager__: it has a special __Command Mode__ to manage your password, when you input `:! zhima xyz` and press the `Enter` key, the `xyz`(which can be any valid characters) is recognized as the password. The `zhima` means `Sesame`(Open, O Sesame!) in Chinese. After the first time, just input `:! zhima` and press the `Enter` key, hallelujahIM will give the password to the paired application.
 5. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode
 
-[download releases](https://github.com/dongyuwei/hallelujahIM/releases)
+download and install
+======
+1. [download releases](https://github.com/dongyuwei/hallelujahIM/releases)
+2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
+3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
+4. switch to hallelujah input method
 
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
