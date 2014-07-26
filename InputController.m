@@ -177,9 +177,7 @@ Here are the three approaches:
         [self setComposedBuffer:convertedString];
         [self setOriginalBuffer:convertedString];
         
-        [sender setMarkedText:convertedString
-               selectionRange:NSMakeRange(_insertionIndex, 0)
-             replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
+        [self showPreeditString: convertedString];
         
         if(convertedString){
             [sharedCandidates updateCandidates];
@@ -239,11 +237,20 @@ Here are the three approaches:
     return _originalBuffer;
 }
 
+-(void)showPreeditString:(NSString*)string{
+    NSDictionary*       attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, [string length])];
+    NSAttributedString* attrString = [[NSAttributedString alloc] initWithString:string attributes:attrs];
+    
+    [_currentClient setMarkedText:attrString
+                   selectionRange:NSMakeRange(string.length, 0)
+                 replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+}
+
 -(void)originalBufferAppend:(NSString*)string client:(id)sender{
-    NSMutableString*		buffer = [self originalBuffer];
+    NSMutableString* buffer = [self originalBuffer];
     [buffer appendString: string];
     _insertionIndex++;
-    [sender setMarkedText:buffer selectionRange:NSMakeRange([buffer length], 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    [self showPreeditString: buffer];
 }
 
 -(void)appendToOriginalBuffer:(NSString*)string client:(id)sender{
@@ -357,9 +364,7 @@ Here are the three approaches:
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
-    [_currentClient setMarkedText:[candidateString string]
-                   selectionRange:NSMakeRange(_insertionIndex, 0)
-                 replacementRange:NSMakeRange(NSNotFound,NSNotFound)];
+    [self showPreeditString: [candidateString string]];
     
     _insertionIndex = [candidateString length];
     
