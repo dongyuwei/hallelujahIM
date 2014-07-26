@@ -7,7 +7,7 @@
     NSInteger						_insertionIndex;
     BOOL							_didConvert;
     id								_currentClient;
-    BOOL                            _candidateSelected;
+    BOOL                            _is_cmd_mode;
     NSUInteger                      _lastModifiers[2];
     NSEventType                     _lastEventTypes[2];
 }
