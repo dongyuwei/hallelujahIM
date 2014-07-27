@@ -54,9 +54,10 @@ Here are the three approaches:
             }
             
             if (modifiers == 0
-                &&_lastEventTypes[1] == NSFlagsChanged
+                && _lastEventTypes[1] == NSFlagsChanged
                 && _lastModifiers[1] == NSShiftKeyMask
-                &&!(_lastModifiers[0] & NSShiftKeyMask)){
+                && !(_lastModifiers[0] & NSShiftKeyMask)){
+                
                 defaultEnglishMode = !defaultEnglishMode;
                 if(defaultEnglishMode){
                     
@@ -259,7 +260,7 @@ Here are the three approaches:
 }
 
 -(BOOL) isPasswordMode:(NSString*)bufferedText{
-    return [bufferedText rangeOfString: @"zhima"].location != NSNotFound;
+    return [[bufferedText lowercaseString] rangeOfString: @"zhima"].location != NSNotFound;
 }
 
 -(NSString*)getPassword:(id)sender{
@@ -286,7 +287,7 @@ Here are the three approaches:
 
 -(void)commitPassword:(NSString*)bufferedText client:(id)sender{
     NSString* password;
-    if([bufferedText hasSuffix:@"zhima"]){
+    if([[bufferedText lowercaseString] hasSuffix:@"zhima"]){
         password = [self getPassword:sender];
     }else{
         [self setPassword: bufferedText client: sender];
