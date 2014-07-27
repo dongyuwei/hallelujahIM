@@ -240,7 +240,14 @@ Here are the three approaches:
 
 -(void)showPreeditString:(NSString*)string{
     NSDictionary*       attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, [string length])];
-    NSAttributedString* attrString = [[NSAttributedString alloc] initWithString:string attributes:attrs];
+    NSAttributedString* attrString;
+    
+    NSString* originalBuff = [NSString stringWithString:[self originalBuffer]];
+    if([[string lowercaseString] hasPrefix: [originalBuff lowercaseString]]){
+        attrString = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat: @"%@%@", originalBuff, [string substringFromIndex: originalBuff.length]] attributes: attrs];
+    }else{
+        attrString = [[NSAttributedString alloc] initWithString:string attributes:attrs];
+    }
     
     [_currentClient setMarkedText:attrString
                    selectionRange:NSMakeRange(string.length, 0)
