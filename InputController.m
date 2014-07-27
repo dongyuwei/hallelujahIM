@@ -146,7 +146,7 @@ Here are the three approaches:
     }
     
     char ch = [string characterAtIndex:0];
-    if(ch >= 'a' && ch <= 'z'){
+    if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ){
         [self originalBufferAppend:string client:sender];
         
         [sharedCandidates updateCandidates];
@@ -309,7 +309,7 @@ Here are the three approaches:
 }
 
 - (NSArray*)candidates:(id)sender{
-    NSMutableString* buffer = [self originalBuffer];
+    NSString* buffer = [[self originalBuffer] lowercaseString];
     NSMutableArray* result = [[NSMutableArray alloc] init];
     
     if(buffer && buffer.length > 0){
@@ -397,7 +397,13 @@ Here are the three approaches:
 }
 
 - (void)candidateSelected:(NSAttributedString*)candidateString{
-    [self setComposedBuffer:[candidateString string]];
+    NSString* originalBuff = [NSString stringWithString:[self originalBuffer]];
+    NSString* composed = [candidateString string];
+    if([composed hasPrefix: [originalBuff lowercaseString]]){
+        [self setComposedBuffer: [NSString stringWithFormat: @"%@%@", originalBuff, [composed substringFromIndex: originalBuff.length]]];
+    }else{
+        [self setComposedBuffer:composed];
+    }
     [self commitComposition:_currentClient];
 }
 
