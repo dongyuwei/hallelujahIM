@@ -12,9 +12,7 @@
 		0D2BFD911945890B00DE18D9 /* him.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD901945890B00DE18D9 /* him.tiff */; };
 		0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DC72DCB195A914A009888F6 /* google_227800_words.json */; };
 		7F54F666194486F8005521FD /* NDTrie.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54F665194486F8005521FD /* NDTrie.m */; };
-		7FD8FA6C196EC59F00241C36 /* Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FD8FA6B196EC59F00241C36 /* Window.xib */; };
 		7FD8FA6F196EC79600241C36 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD8FA6E196EC79600241C36 /* AnnotationWinController.m */; };
-		7FD8FA72196ECAED00241C36 /* CocoaWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD8FA71196ECAED00241C36 /* CocoaWinController.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -37,11 +35,8 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		7F54F664194486F8005521FD /* NDTrie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NDTrie.h; sourceTree = "<group>"; };
 		7F54F665194486F8005521FD /* NDTrie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NDTrie.m; sourceTree = "<group>"; };
-		7FD8FA6B196EC59F00241C36 /* Window.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Window.xib; sourceTree = "<group>"; };
 		7FD8FA6D196EC74A00241C36 /* AnnotationWinController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnnotationWinController.h; sourceTree = "<group>"; };
 		7FD8FA6E196EC79600241C36 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationWinController.m; sourceTree = "<group>"; };
-		7FD8FA70196ECA5800241C36 /* CocoaWinController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CocoaWinController.h; sourceTree = "<group>"; };
-		7FD8FA71196ECAED00241C36 /* CocoaWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaWinController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* hallelujah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hallelujah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93074B60A5C264700470842 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = /System/Library/Frameworks/InputMethodKit.framework; sourceTree = "<absolute>"; };
@@ -72,8 +67,6 @@
 				E93074E10A5C2F1200470842 /* InputController.m */,
 				7FD8FA6D196EC74A00241C36 /* AnnotationWinController.h */,
 				7FD8FA6E196EC79600241C36 /* AnnotationWinController.m */,
-				7FD8FA70196ECA5800241C36 /* CocoaWinController.h */,
-				7FD8FA71196ECAED00241C36 /* CocoaWinController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -133,7 +126,6 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
-				7FD8FA6B196EC59F00241C36 /* Window.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -212,7 +204,6 @@
 				0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */,
 				0D2BFD911945890B00DE18D9 /* him.tiff in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				7FD8FA6C196EC59F00241C36 /* Window.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +218,6 @@
 				7FD8FA6F196EC79600241C36 /* AnnotationWinController.m in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				E93074E20A5C2F1200470842 /* InputController.m in Sources */,
-				7FD8FA72196ECAED00241C36 /* CocoaWinController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -102,7 +102,7 @@ Here are the three approaches:
     if (self = [super initWithServer:server delegate:delegate client:inputClient]) {
         _currentClient = nil;
         
-        _win = [CocoaWinController sharedController];
+        _annotationWin = [[AnnotationWinController alloc] init];
     }
     
     return self;
@@ -286,12 +286,13 @@ Here are the three approaches:
             
             
             if(definition && definition.length > 0){
-//                NSLog(@"definition of %@ is %@",[candidateString string], definition);
-                
-//                NSArray* arr = [definition componentsSeparatedByString:@"▶"];
-//                [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: arr[0]]];
                 NSRect rect = [sharedCandidates candidateFrame];
-                [_win showAnnotation:rect annotation:definition level:[_currentClient windowLevel]];
+                NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(rect), NSMaxY(rect));
+                
+                rect.origin = windowInsertionPoint;
+                [sharedCandidates hide];//for test
+                [_annotationWin setAnnotation:definition];
+                [_annotationWin showWindow:rect  level:CGShieldingWindowLevel() + 1];
             }
         }
         @catch (NSException *exception) {

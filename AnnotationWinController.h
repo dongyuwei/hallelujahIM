@@ -1,7 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
 @interface AnnotationWinController : NSObject{
-    
     IBOutlet NSPanel *panel;
     
     IBOutlet NSTextView *view;
@@ -14,9 +13,5 @@
 - (void)setAnnotation:(NSString *)annotation;
 
 - (void)clearAnnotation;
-
-- (NSSize)size;
-
-+ (id)sharedController;
 
 @end

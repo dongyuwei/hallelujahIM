@@ -1,24 +1,25 @@
 #import "AnnotationWinController.h"
 
-static AnnotationWinController *sharedController;
 
 @implementation AnnotationWinController
-
-+ (id)sharedController{
-    return sharedController;
-}
-
-
-- (void)awakeFromNib{
-    sharedController = self;
+-(void)awakeFromNib{
+//    NSRect annoRect;
+//    annoRect.origin.x = 0;
+//    annoRect.origin.y = 0;
+//    annoRect.size.width = 280;
+//    annoRect.size.height = 400;
+//    [panel setFrame:annoRect display:YES];
 }
 
 - (void)showWindow:(NSRect)rect level:(CGWindowLevel)level{
-    [panel setFrameOrigin:rect.origin];
+    [panel setFrameTopLeftPoint:rect.origin];
    
-    level = level + 1;
-    NSLog(@"level is:%d",level);
-    NSLog(@"NSStatusWindowLevel: %d,NSFloatingWindowLevel:%d)",NSStatusWindowLevel,NSFloatingWindowLevel);//kUtilityWindowClass 8
+    NSLog(@"rect:%@", CGRectCreateDictionaryRepresentation(rect));
+    NSLog(@"AnnotationWin rect:%@", CGRectCreateDictionaryRepresentation([panel frame]));
+    
+    NSRect e = [[NSScreen mainScreen] frame];
+    NSLog(@"mainScreen rect:%@",CGRectCreateDictionaryRepresentation(e));
+    
     [panel orderFront:nil];
     [panel setLevel:level];
     
@@ -31,6 +32,7 @@ static AnnotationWinController *sharedController;
 }
 
 - (void)setAnnotation:(NSString *)annotation{
+    NSLog(@"annotation:%@",annotation);
     [self clearAnnotation];
     [view insertText:annotation];
     [view setSelectedRange:NSMakeRange(0,0)];
@@ -41,7 +43,4 @@ static AnnotationWinController *sharedController;
     [view setString:@""];
 }
 
-- (NSSize)size{
-    return [panel frame].size;
-}
 @end

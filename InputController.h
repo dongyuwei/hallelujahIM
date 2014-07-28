@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
-#import "CocoaWinController.h"
+#import "AnnotationWinController.h"
 
 @interface InputController : IMKInputController {
     
@@ -18,7 +18,7 @@
     
     BOOL                            _candidateSelected;
     
-    CocoaWinController*             _win;
+    AnnotationWinController*             _annotationWin;
 }
 
 
