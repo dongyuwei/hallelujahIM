@@ -38,7 +38,7 @@ If functional you need is missing but you're ready to pay for it, feel free to c
 
 2. hallelujahIM也是一个__拼写检查器(spell checker)__，当用户输入错误的单词时，它会自动提示最相近的正确单词列表。
 
-3. hallelujahIM也是一个__密码管理器__，免费的OnePass替代品:) ：第一次在密码框输入 :! zhima xyz 按回车键, xyz就是用户的密码字符串。zhima就是芝麻开门的意思(Open, O Sesame!) 。以后只要输入 :! zhima 按回车键, 输入法就会自动输入密码给对应的应用程序（如Cisco AnyConnectVPN client）。
+3. hallelujahIM也是一个__密码管理器__，免费的OnePass替代品:) ：第一次在密码框输入 `:! zhima xyz`按回车键, xyz就是用户的密码字符串。zhima就是芝麻开门的意思(Open, O Sesame!) 。以后只要输入 `:! zhima` 按回车键, 输入法就会自动输入密码给对应的应用程序（如Cisco AnyConnect VPN client）。
 
 4. hallelujahIM可以显示用户选中的候选单词的__音标__。
 
