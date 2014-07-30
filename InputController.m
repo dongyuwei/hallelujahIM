@@ -390,11 +390,9 @@ Here are the three approaches:
             if(definition && definition.length > 0){
                 NSArray* arr = [definition componentsSeparatedByString:@"|"];
                 if([arr count] > 0){
-                    NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]",
-                                                [definition componentsSeparatedByString:@"|"][1]];
+                    NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]", arr[1]];
                     [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: phoneticSymbol]];
                 }
-                
             }
         }
         @catch (NSException *exception) {
