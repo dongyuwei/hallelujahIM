@@ -377,6 +377,7 @@ Here are the three approaches:
     _insertionIndex = [candidateString length];
     
     [self showPhoneticSymbolOfWord:candidateString];
+    
 }
 
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
@@ -410,6 +411,12 @@ Here are the three approaches:
         [self setComposedBuffer:composed];
     }
     [self commitComposition:_currentClient];
+}
+
+//when annotation clicked, speak the word.
+- (void)annotationSelected:(NSAttributedString*)annotationString forCandidate:(NSAttributedString*)candidateString{
+    NSSpeechSynthesizer *synth = [[NSSpeechSynthesizer alloc] initWithVoice:@"com.apple.speech.synthesis.voice.Alex"];
+    [synth startSpeakingString:[candidateString string]];
 }
 
 @end

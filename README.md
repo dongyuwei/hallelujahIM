@@ -8,6 +8,7 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 3. It will show __Phonetic Symbol__ of your selected word.
 4. hallelujahIM is also a __Password Manager__: it has a special __Command Mode__ to manage your password, when you input `:! zhima xyz` and press the `Enter` key, the `xyz`(which can be any valid characters) is recognized as the password. The `zhima` means `Sesame`(Open, O Sesame!) in Chinese. After the first time, just input `:! zhima` and press the `Enter` key, hallelujahIM will give the password to the paired application.
 5. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode
+6. when annotation clicked, speak(like the `say` cmd) the word.
 
 download and install
 ======
