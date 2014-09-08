@@ -2,12 +2,12 @@
 #import "NDTrie.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
+#import "PasswordManager.h"
 
 extern IMKCandidates *sharedCandidates;
 extern NDMutableTrie*  trie;
 extern NSDictionary* wordsWithFrequency;
 extern BOOL defaultEnglishMode;
-extern NSMutableDictionary* passwordDict;
 
 
 typedef NSInteger KeyCode;
@@ -271,7 +271,9 @@ Here are the three approaches:
 }
 
 -(NSString*)getPassword:(id)sender{
-    NSString* password = [passwordDict objectForKey: [sender bundleIdentifier]];
+    NSString *password = [PasswordManager getPasswordFromServiceName:[sender bundleIdentifier]
+                                                      forAccountName:@"HallelujahIM"];
+    
     return password;
 }
 
@@ -288,7 +290,9 @@ Here are the three approaches:
         NSString* password = [[string substringWithRange:[match rangeAtIndex:1]]
                             stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                              
-        [passwordDict setValue: password forKey: [sender bundleIdentifier]];
+        [PasswordManager storePasswordForServiceName:[sender bundleIdentifier]
+                                     withAccountName:@"HallelujahIM" andPassword:password];
+
     }];
 }
 

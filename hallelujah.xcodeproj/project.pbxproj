@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D08FDE619BDE11F0001561A /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D08FDE519BDE11F0001561A /* PasswordManager.m */; };
 		0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D29160719519CE500C4CE58 /* AppKit.framework */; };
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
+		0DA9181A19BDE327003D4B38 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA9181919BDE327003D4B38 /* Security.framework */; };
 		0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DC72DCB195A914A009888F6 /* google_227800_words.json */; };
 		0DE74BFE1978EC6A00040F3C /* him.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFD1978EC6A00040F3C /* him.png */; };
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
@@ -23,9 +25,12 @@
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0D08FDE419BDE1050001561A /* PasswordManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordManager.h; sourceTree = "<group>"; };
+		0D08FDE519BDE11F0001561A /* PasswordManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordManager.m; sourceTree = "<group>"; };
 		0D29160719519CE500C4CE58 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		0D2BFD8E194588F400DE18D9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = hallelujah/Images.xcassets; sourceTree = "<group>"; };
 		0D376F6A1949892900EF1E22 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		0DA9181919BDE327003D4B38 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0DC72DCB195A914A009888F6 /* google_227800_words.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_227800_words.json; path = dictionary/google_227800_words.json; sourceTree = "<group>"; };
 		0DE74BFD1978EC6A00040F3C /* him.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = him.png; sourceTree = "<group>"; };
 		0DE74BFF1978F18E00040F3C /* him.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = him.icns; sourceTree = "<group>"; };
@@ -48,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0DA9181A19BDE327003D4B38 /* Security.framework in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
@@ -64,6 +70,8 @@
 				7F54F665194486F8005521FD /* NDTrie.m */,
 				E93074E00A5C2F1200470842 /* InputController.h */,
 				E93074E10A5C2F1200470842 /* InputController.m */,
+				0D08FDE419BDE1050001561A /* PasswordManager.h */,
+				0D08FDE519BDE11F0001561A /* PasswordManager.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -130,6 +138,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0DA9181919BDE327003D4B38 /* Security.framework */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
 				0D376F6A1949892900EF1E22 /* WebKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -215,6 +224,7 @@
 			files = (
 				7F54F666194486F8005521FD /* NDTrie.m in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				0D08FDE619BDE11F0001561A /* PasswordManager.m in Sources */,
 				E93074E20A5C2F1200470842 /* InputController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
