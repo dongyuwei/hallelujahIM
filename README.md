@@ -9,6 +9,7 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 4. hallelujahIM is also a __Password Manager__: it has a special __Command Mode__ to manage your password.
     1. set/update password: input `:! zhima your_key your_password` and press the `Enter` key. The `zhima` means `Sesame`(Open, O Sesame!) in Chinese. 
     2. get password: just input `:! zhima your_key` and press the `Enter` key, hallelujahIM will give the password according to the key.
+    3. Is it safe? Yes. It stores your password based on cocoa `security` framework. 
 5. You can swith to the default English input mode by press the `shift` key. Press `shift` again, it switch to the auto-suggestion mode
 6. when annotation clicked, speak(like the `say` cmd) the word.
 
