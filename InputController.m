@@ -331,9 +331,12 @@ Here are the three approaches:
 
 
 -(void)_commitPassword:(NSString*)password client:(id)sender{
+    if(![[sender bundleIdentifier] isEqual: @"com.google.Chrome"]){
+       [sender insertText: password replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    }
     [[NSPasteboard generalPasteboard] clearContents];
     [[NSPasteboard generalPasteboard] setString:password forType:NSStringPboardType];
-    [sender insertText: password replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    
     [self reset];
 }
 
