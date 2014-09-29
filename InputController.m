@@ -4,10 +4,11 @@
 #import <CoreServices/CoreServices.h>
 #import "PasswordManager.h"
 
-extern IMKCandidates *sharedCandidates;
-extern NDMutableTrie*  trie;
-extern NSDictionary* wordsWithFrequency;
-extern BOOL defaultEnglishMode;
+extern IMKCandidates*           sharedCandidates;
+extern NDMutableTrie*           trie;
+extern NSMutableDictionary*     wordsWithFrequency;
+extern BOOL                     defaultEnglishMode;
+extern NSString*                dictName;
 
 
 typedef NSInteger KeyCode;
@@ -208,6 +209,11 @@ Here are the three approaches:
     }
     
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    
+    int frequency = [[wordsWithFrequency objectForKey: text] intValue];
+    if(!defaultEnglishMode){
+        [wordsWithFrequency setValue: [NSNumber numberWithInt: frequency + 1] forKey: text];
+    }
     
     [self reset];
 }
@@ -451,6 +457,22 @@ Here are the three approaches:
 - (void)annotationSelected:(NSAttributedString*)annotationString forCandidate:(NSAttributedString*)candidateString{
     NSSpeechSynthesizer *synth = [[NSSpeechSynthesizer alloc] initWithVoice:@"com.apple.speech.synthesis.voice.Alex"];
     [synth startSpeakingString:[candidateString string]];
+}
+
+- (void)deactivateServer:(id)sender{
+//    performence!!
+//    [self updateDictionary];
+}
+
+-(void)updateDictionary{
+    NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
+    NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+    [outputStream open];
+    [NSJSONSerialization writeJSONObject:wordsWithFrequency
+                                toStream:outputStream
+                                 options:nil
+                                   error:nil];
+    [outputStream close];
 }
 
 @end

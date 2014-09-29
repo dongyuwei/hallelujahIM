@@ -2,23 +2,24 @@
 #import <InputMethodKit/InputMethodKit.h>
 #import "NDTrie.h"
 
-const NSString* kConnectionName = @"Hallelujah_1_Connection";
-
-IMKServer*      server;
-IMKCandidates*  sharedCandidates;
-NDMutableTrie*  trie;
-NSDictionary* wordsWithFrequency;
-BOOL defaultEnglishMode;
+const NSString*         kConnectionName = @"Hallelujah_1_Connection";
+IMKServer*              server;
+IMKCandidates*          sharedCandidates;
+NDMutableTrie*          trie;
+NSString*               dictName = @"google_227800_words";
+NSMutableDictionary*    wordsWithFrequency;
+BOOL                    defaultEnglishMode;
 
 NDMutableTrie* buildTrieFromFile(){
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words"
-                                                     ofType:@"json"];
+    NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
     
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
     [inputStream  open];
-    wordsWithFrequency  = [NSJSONSerialization JSONObjectWithStream:inputStream
+    NSDictionary* dict = [NSJSONSerialization JSONObjectWithStream:inputStream
                                                                  options:nil
                                                                    error:nil];
+    
+    wordsWithFrequency = [dict mutableCopy];
     [inputStream close];
     
     return [NDMutableTrie trieWithArray: [wordsWithFrequency allKeys]];
