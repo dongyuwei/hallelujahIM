@@ -12,22 +12,34 @@
 	<dict>
 		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
 		<string>ssh://github.com/dongyuwei/NumberInput_IMKit_Sample.git</string>
+		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
+		<string>github.com:dongyuwei/hallelujahIM.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>object-c/passwordInputMethod/hallelujah.xcodeproj/project.xcworkspace</string>
+	<string>hallelujah.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
-		<string>../../../..</string>
+		<string>../../../IMKit-sample</string>
+		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/dongyuwei/NumberInput_IMKit_Sample.git</string>
+	<string>github.com:dongyuwei/hallelujahIM.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</string>
+	<string>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</string>
+			<key>IDESourceControlWCCName</key>
+			<string>hallelujahIM</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

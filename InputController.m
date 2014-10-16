@@ -71,7 +71,7 @@ Here are the three approaches:
             }
             break;
         case NSKeyDown:
-            if (defaultEnglishMode) {
+            if (defaultEnglishMode && ![[sender bundleIdentifier]  isEqual: @"com.cisco.Cisco-AnyConnect-Secure-Mobility-Client"]) {
                 break;
             }
             handled = [self onKeyEvent:event client:sender];
