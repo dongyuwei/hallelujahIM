@@ -373,8 +373,8 @@ Here are the three approaches:
             result = [self getSuggestionOfSpellChecker:buffer];
         }
         
-        if(result.count >= 100){
-            result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 99)]];
+        if(result.count > 50){
+            result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
         }
         
         [result removeObject:buffer];
