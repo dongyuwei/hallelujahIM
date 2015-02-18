@@ -5,6 +5,7 @@
 #import "PasswordManager.h"
 
 extern IMKCandidates*           sharedCandidates;
+extern IMKCandidates*           subCandidates;
 extern NDMutableTrie*           trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
@@ -223,6 +224,7 @@ Here are the three approaches:
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
+    [subCandidates hide];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -351,10 +353,6 @@ Here are the three approaches:
     [buffer setString:string];
 }
 
--(void) :(id)sender{
-    [sharedCandidates hide];
-}
-
 - (NSArray*)candidates:(id)sender{
     NSString* buffer = [[self originalBuffer] lowercaseString];
     NSMutableArray* result = [[NSMutableArray alloc] init];
@@ -416,8 +414,38 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-    [self showPhoneticSymbolOfWord:candidateString];
+//    [self showPhoneticSymbolOfWord:candidateString];
+    [self showSubCandidates: candidateString];
     
+}
+
+-(void)showSubCandidates:(NSAttributedString*)candidateString{
+    NSInteger candidateIdentifier = [sharedCandidates selectedCandidate];
+    NSInteger subCandidateStringIdentifier = [sharedCandidates candidateStringIdentifier: candidateString];
+    
+    NSLog(@"%@: %ld==%ld", candidateString, candidateIdentifier, subCandidateStringIdentifier);
+
+    if (candidateIdentifier == subCandidateStringIdentifier) {
+        [subCandidates setCandidateData: [self getSubCandidates: candidateString]];
+        
+        NSRect currentFrame = [sharedCandidates candidateFrame];
+        NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
+        [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
+        
+        
+        [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
+        [sharedCandidates showChild];
+        
+        // Select the first choice
+//        [subCandidates selectCandidate:[subCandidates candidateIdentifierAtLineNumber:0]];
+        
+//        candidateString = [subCandidates selectedCandidateString];
+    }
+    
+}
+
+-(NSArray*)getSubCandidates: (NSAttributedString*)candidateString{
+    return @[@"foo", @"bar", @"foobar"];
 }
 
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
