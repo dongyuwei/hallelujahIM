@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
 #import "NDTrie.h"
+#import <LevelDB.h>
 
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
@@ -43,7 +44,31 @@ int main(int argc, char *argv[])
     }
     
     trie =  buildTrieFromFile();
-
+    
+    
+    LevelDBOptions options = [LevelDB makeOptions];
+    options.createIfMissing = true;
+    options.compression     = false;
+    LevelDB *ldb = [[LevelDB alloc] init];
+    ldb = [ldb initWithPath:@"/Users/ywdong/code/input-method/hallelujahIM/translation.ldb" name:@"translation.ldb" andOptions: options];
+    
+    
+//    NSString* path = [[NSBundle mainBundle] pathForResource:@"all_translation" ofType:@"json"];
+//    
+//    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
+//    [inputStream  open];
+//    NSDictionary* dict = [NSJSONSerialization JSONObjectWithStream:inputStream
+//                                                           options:nil
+//                                                             error:nil];
+//    
+//    [inputStream close];
+//    
+//    for(id key in dict){
+//        NSLog(@"key=%@ value=%@", key, [dict objectForKey:key]);
+//        ldb[key] = [dict objectForKey:key];
+//    }
+    
+    NSLog(@"String Value: %@", ldb[@"name"]);
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]

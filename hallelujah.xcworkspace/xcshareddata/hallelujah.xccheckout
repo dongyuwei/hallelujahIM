@@ -12,6 +12,8 @@
 	<dict>
 		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
 		<string>github.com:dongyuwei/hallelujahIM.git</string>
+		<key>BDF394AD00F0672C031FDA5A297CD80086AC8A54</key>
+		<string>https://code.google.com/p/leveldb/</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>hallelujah.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
 		<string>..</string>
+		<key>BDF394AD00F0672C031FDA5A297CD80086AC8A54</key>
+		<string>../../APLevelDB/leveldb</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:dongyuwei/hallelujahIM.git</string>
@@ -35,6 +39,14 @@
 			<string>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</string>
 			<key>IDESourceControlWCCName</key>
 			<string>hallelujahIM</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BDF394AD00F0672C031FDA5A297CD80086AC8A54</string>
+			<key>IDESourceControlWCCName</key>
+			<string>leveldb</string>
 		</dict>
 	</array>
 </dict>
