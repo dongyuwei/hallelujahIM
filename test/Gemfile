@@ -1,0 +1,4 @@
+source "http://ruby.taobao.org/"
+
+gem "sequel"
+gem "sqlite3"

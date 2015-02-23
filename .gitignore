@@ -129,3 +129,8 @@ xcuserdata
 # ...none. Everything is now explained.
 
 Pods/
+
+test/all_translation.json
+test/node_modules/
+test/translation.sqlite.db
+test/vendor/

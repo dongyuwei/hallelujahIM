@@ -1,0 +1,12 @@
+GEM
+  remote: http://ruby.taobao.org/
+  specs:
+    sequel (4.19.0)
+    sqlite3 (1.3.10)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  sequel
+  sqlite3
