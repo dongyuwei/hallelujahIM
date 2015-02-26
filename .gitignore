@@ -133,3 +133,4 @@ test/all_translation.json
 test/node_modules/
 test/translation.sqlite.db
 test/vendor/
+test/words_translation.ldb/
