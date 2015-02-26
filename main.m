@@ -39,8 +39,6 @@ NSDictionary* getTranslationes(){
     
     [inputStream close];
     
-    NSLog(@"value=%@",[translationes objectForKey: @"good"]);
-    
     return translationes;
 }
 
