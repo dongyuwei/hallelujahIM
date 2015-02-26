@@ -133,4 +133,8 @@ test/all_translation.json
 test/node_modules/
 test/translation.sqlite.db
 test/vendor/
-test/words_translation.ldb/
+test/words_translation.ldb/*.ldb
+test/words_translation.ldb/*.log
+test/words_translation.ldb/LOG
+test/words_translation.ldb/CURRENT
+test/words_translation.ldb/MANIFEST-*
