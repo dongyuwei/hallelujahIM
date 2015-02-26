@@ -10,6 +10,8 @@ extern NDMutableTrie*           trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
 extern NSString*                dictName;
+extern NSDictionary*            translationes;
+
 
 
 typedef NSInteger KeyCode;
@@ -414,38 +416,33 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-    [self showPhoneticSymbolOfWord:candidateString];
-//    [self showSubCandidates: candidateString];
+//    [self showPhoneticSymbolOfWord:candidateString];
+    [self showSubCandidates: candidateString];
     
 }
 
 -(void)showSubCandidates:(NSAttributedString*)candidateString{
     NSInteger candidateIdentifier = [sharedCandidates selectedCandidate];
     NSInteger subCandidateStringIdentifier = [sharedCandidates candidateStringIdentifier: candidateString];
-    
-    NSLog(@"%@: %ld==%ld", candidateString, candidateIdentifier, subCandidateStringIdentifier);
 
     if (candidateIdentifier == subCandidateStringIdentifier) {
-        [subCandidates setCandidateData: [self getSubCandidates: candidateString]];
-        
-        NSRect currentFrame = [sharedCandidates candidateFrame];
-        NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
-        [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
-        
-        
-        [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
-        [sharedCandidates showChild];
-        
-        // Select the first choice
-//        [subCandidates selectCandidate:[subCandidates candidateIdentifierAtLineNumber:0]];
-        
-//        candidateString = [subCandidates selectedCandidateString];
+        NSArray* subList = [self getSubCandidates: candidateString];
+        if(subList && subList.count > 0){
+            [subCandidates setCandidateData: subList];
+            
+            NSRect currentFrame = [sharedCandidates candidateFrame];
+            NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
+            [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
+            
+            
+            [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
+            [sharedCandidates showChild];
+        }
     }
-    
 }
 
 -(NSArray*)getSubCandidates: (NSAttributedString*)candidateString{
-    return @[@"foo", @"bar", @"foobar"];
+    return translationes[[[candidateString string] lowercaseString]];
 }
 
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{

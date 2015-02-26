@@ -11,6 +11,7 @@ NDMutableTrie*          trie;
 NSString*               dictName = @"google_227800_words";
 NSMutableDictionary*    wordsWithFrequency;
 BOOL                    defaultEnglishMode;
+NSDictionary*           translationes;
 
 NDMutableTrie* buildTrieFromFile(){
     NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
@@ -25,6 +26,22 @@ NDMutableTrie* buildTrieFromFile(){
     [inputStream close];
     
     return [NDMutableTrie trieWithArray: [wordsWithFrequency allKeys]];
+}
+
+NSDictionary* getTranslationes(){
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"transformed_translation" ofType:@"json"];
+    
+    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
+    [inputStream  open];
+    NSDictionary* translationes = [NSJSONSerialization JSONObjectWithStream:inputStream
+                                                                    options:nil
+                                                                      error:nil];
+    
+    [inputStream close];
+    
+    NSLog(@"value=%@",[translationes objectForKey: @"good"]);
+    
+    return translationes;
 }
 
 int main(int argc, char *argv[])
@@ -43,55 +60,30 @@ int main(int argc, char *argv[])
         return -1;
     }
     
-    trie =  buildTrieFromFile();
-    
-    
-//    LevelDBOptions options = [LevelDB makeOptions];
-//    options.createIfMissing = true;
-//    options.compression     = false;
-//    LevelDB *ldb = [[LevelDB alloc] init];
-//    ldb = [ldb initWithPath:@"/Users/ywdong/code/input-method/hallelujahIM/translation.ldb" name:@"translation.ldb" andOptions: options];
-    
-    
-//    NSString* path = [[NSBundle mainBundle] pathForResource:@"all_translation" ofType:@"json"];
-//    
-//    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
-//    [inputStream  open];
-//    NSDictionary* dict = [NSJSONSerialization JSONObjectWithStream:inputStream
-//                                                           options:nil
-//                                                             error:nil];
-//    
-//    [inputStream close];
-//    
-//    for(id key in dict){
-//        NSLog(@"key=%@ value=%@", key, [dict objectForKey:key]);
-//        ldb[key] = [dict objectForKey:key];
-//    }
-    
-//    NSLog(@"String Value: %@", ldb[@"name"]);
-
+    trie = buildTrieFromFile();
+    translationes = getTranslationes();
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];
 	
-    NSRect frame = NSMakeRect(0, 0, 300, 300);
-    NSWindow* window  = [[NSWindow alloc] initWithContentRect:frame
-                                                     styleMask:NSClosableWindowMask
-                                                       backing:NSBackingStoreRetained
-                                                         defer:NO] ;
-    
-    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
-    [view setWantsLayer:YES];
-    view.layer.backgroundColor = [[NSColor yellowColor] CGColor];
-    
-    [window setContentView:view];
-    
-    [window makeKeyAndOrderFront:nil];
-    [window setLevel:NSStatusWindowLevel];
-	
-    NSAttributedString* word = [[NSAttributedString alloc] initWithString:@"test"];
-    [view showDefinitionForAttributedString:word atPoint:NSMakePoint(150,150)];
+//    NSRect frame = NSMakeRect(0, 0, 300, 300);
+//    NSWindow* window  = [[NSWindow alloc] initWithContentRect:frame
+//                                                     styleMask:NSClosableWindowMask
+//                                                       backing:NSBackingStoreRetained
+//                                                         defer:NO] ;
+//    
+//    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+//    [view setWantsLayer:YES];
+//    view.layer.backgroundColor = [[NSColor yellowColor] CGColor];
+//    
+//    [window setContentView:view];
+//    
+//    [window makeKeyAndOrderFront:nil];
+//    [window setLevel:NSStatusWindowLevel];
+//	
+//    NSAttributedString* word = [[NSAttributedString alloc] initWithString:@"test"];
+//    [view showDefinitionForAttributedString:word atPoint:NSMakePoint(150,150)];
     
     
 	[[NSApplication sharedApplication] run];
