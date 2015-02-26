@@ -31,6 +31,9 @@ download and install
 
 ![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
 
+translation:
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/subCondidates/snapshots/translation.png)
+
 
 ##Paid Support
 
