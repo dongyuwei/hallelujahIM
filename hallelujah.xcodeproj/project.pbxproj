@@ -37,6 +37,7 @@
 		0DDD44C71A9ABBC000A2F57A /* all_translation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = all_translation.json; path = test/all_translation.json; sourceTree = "<group>"; };
 		0DDD44C91A9AC22A00A2F57A /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = ../../APLevelDB/leveldb/libleveldb.a; sourceTree = "<group>"; };
 		0DDD44CB1A9AC30100A2F57A /* APLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = APLevelDB.framework; sourceTree = "<group>"; };
+		0DDD44CE1A9D808A00A2F57A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		0DE74BFD1978EC6A00040F3C /* him.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = him.png; sourceTree = "<group>"; };
 		0DE74BFF1978F18E00040F3C /* him.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = him.icns; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -150,6 +151,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0DDD44CE1A9D808A00A2F57A /* Carbon.framework */,
 				0DDD44CB1A9AC30100A2F57A /* APLevelDB.framework */,
 				0DDD44C91A9AC22A00A2F57A /* libleveldb.a */,
 				0DA9181919BDE327003D4B38 /* Security.framework */,

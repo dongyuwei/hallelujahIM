@@ -46,11 +46,11 @@ int main(int argc, char *argv[])
     trie =  buildTrieFromFile();
     
     
-    LevelDBOptions options = [LevelDB makeOptions];
-    options.createIfMissing = true;
-    options.compression     = false;
-    LevelDB *ldb = [[LevelDB alloc] init];
-    ldb = [ldb initWithPath:@"/Users/ywdong/code/input-method/hallelujahIM/translation.ldb" name:@"translation.ldb" andOptions: options];
+//    LevelDBOptions options = [LevelDB makeOptions];
+//    options.createIfMissing = true;
+//    options.compression     = false;
+//    LevelDB *ldb = [[LevelDB alloc] init];
+//    ldb = [ldb initWithPath:@"/Users/ywdong/code/input-method/hallelujahIM/translation.ldb" name:@"translation.ldb" andOptions: options];
     
     
 //    NSString* path = [[NSBundle mainBundle] pathForResource:@"all_translation" ofType:@"json"];
@@ -68,14 +68,34 @@ int main(int argc, char *argv[])
 //        ldb[key] = [dict objectForKey:key];
 //    }
     
-    NSLog(@"String Value: %@", ldb[@"name"]);
+//    NSLog(@"String Value: %@", ldb[@"name"]);
+
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];
 	
+    NSRect frame = NSMakeRect(0, 0, 300, 300);
+    NSWindow* window  = [[NSWindow alloc] initWithContentRect:frame
+                                                     styleMask:NSClosableWindowMask
+                                                       backing:NSBackingStoreRetained
+                                                         defer:NO] ;
+    
+    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+    [view setWantsLayer:YES];
+    view.layer.backgroundColor = [[NSColor yellowColor] CGColor];
+    
+    [window setContentView:view];
+    
+    [window makeKeyAndOrderFront:nil];
+    [window setLevel:NSStatusWindowLevel];
 	
+    NSAttributedString* word = [[NSAttributedString alloc] initWithString:@"test"];
+    [view showDefinitionForAttributedString:word atPoint:NSMakePoint(150,150)];
+    
+    
 	[[NSApplication sharedApplication] run];
-	
+    
+    
     return 0;
 }

@@ -414,8 +414,8 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-//    [self showPhoneticSymbolOfWord:candidateString];
-    [self showSubCandidates: candidateString];
+    [self showPhoneticSymbolOfWord:candidateString];
+//    [self showSubCandidates: candidateString];
     
 }
 
