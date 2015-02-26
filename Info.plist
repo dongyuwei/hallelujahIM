@@ -27,7 +27,9 @@
 	<key>InputMethodServerControllerClass</key>
 	<string>InputController</string>
 	<key>LSBackgroundOnly</key>
-	<string>1</string>
+	<string>NO</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
