@@ -5,10 +5,13 @@
 #import "PasswordManager.h"
 
 extern IMKCandidates*           sharedCandidates;
+extern IMKCandidates*           subCandidates;
 extern NDMutableTrie*           trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
 extern NSString*                dictName;
+extern NSDictionary*            translationes;
+
 
 
 typedef NSInteger KeyCode;
@@ -104,7 +107,11 @@ Here are the three approaches:
         
         if ( bufferedText && [bufferedText length] > 0 ) {
             return [self deleteBackward:sender];
+        }else{
+            [self reset];
         }
+        
+        
         return NO;
     }
     
@@ -223,6 +230,7 @@ Here are the three approaches:
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
+    [subCandidates hide];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -351,10 +359,6 @@ Here are the three approaches:
     [buffer setString:string];
 }
 
--(void) :(id)sender{
-    [sharedCandidates hide];
-}
-
 - (NSArray*)candidates:(id)sender{
     NSString* buffer = [[self originalBuffer] lowercaseString];
     NSMutableArray* result = [[NSMutableArray alloc] init];
@@ -416,8 +420,37 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-    [self showPhoneticSymbolOfWord:candidateString];
+//    [self showPhoneticSymbolOfWord:candidateString];
+    [self showSubCandidates: candidateString];
     
+}
+
+-(void)showSubCandidates:(NSAttributedString*)candidateString{
+    NSInteger candidateIdentifier = [sharedCandidates selectedCandidate];
+    NSInteger subCandidateStringIdentifier = [sharedCandidates candidateStringIdentifier: candidateString];
+
+    if (candidateIdentifier == subCandidateStringIdentifier) {
+        NSArray* subList = [self getSubCandidates: candidateString];
+        if(subList && subList.count > 0){
+            [subCandidates setCandidateData: subList];
+            
+            NSRect currentFrame = [sharedCandidates candidateFrame];
+            NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
+            [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
+            
+            
+            [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
+            [sharedCandidates showChild];
+        }else{
+            [subCandidates hide];
+        }
+    }else{
+        [subCandidates hide];
+    }
+}
+
+-(NSArray*)getSubCandidates: (NSAttributedString*)candidateString{
+    return translationes[[[candidateString string] lowercaseString]];
 }
 
 - (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
