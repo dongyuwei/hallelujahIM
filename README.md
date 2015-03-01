@@ -1,7 +1,7 @@
 hallelujahIM(哈利路亚 英文输入法)
 ============
 
-hallelujahIM is  an english input method with auto-suggestions and spell check features, mac only.
+hallelujahIM is  an english input method with auto-suggestions and spell check features, Mac only(supports 10.9+ OSX).
 
 1. The auto-suggestion words come from google's  [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged it to 227800 words (all wrong words removed). Candidates words are sorted by frequency.
 2. hallelujahIM is also a __Spell-Checker__: when you input wrong word, it will give you the right candidates.
