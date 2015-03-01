@@ -107,10 +107,7 @@ Here are the three approaches:
         
         if ( bufferedText && [bufferedText length] > 0 ) {
             return [self deleteBackward:sender];
-        }else{
-            [self reset];
         }
-        
         
         return NO;
     }
@@ -188,9 +185,11 @@ Here are the three approaches:
         
         [self showPreeditString: convertedString];
         
-        if(convertedString){
+        if(convertedString && convertedString.length > 0){
             [sharedCandidates updateCandidates];
             [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+        }else{
+            [self reset];
         }
         return YES;
     }
