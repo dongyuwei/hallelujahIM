@@ -22,14 +22,20 @@ download and install
 
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
-
+auto-suggestion:
 ![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-2.png?raw=true)
 
+sort-by-frequency:
 ![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency-2.png?raw=true)
 
+spell-check:
 ![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
 
+spell-check:
 ![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
+
+translation:
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/subCondidates/snapshots/translation.png)
 
 
 ##Paid Support
