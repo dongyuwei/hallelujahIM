@@ -26,21 +26,14 @@ setup:<br/>
 auto suggestion:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-2.png?raw=true)
 
-sort by frequency:<br/>
-![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency-2.png?raw=true)
+translation(inspired by [MacUIM](https://code.google.com/p/uim/wiki/WhatsUim)):<br/>
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
 
 spell check:<br/>
 ![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
 
 spell check:<br/>
 ![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
-
-translation:<br/>
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
-
-The translation feature is inspired by [MacUIM](https://code.google.com/p/uim/wiki/WhatsUim):<br/>
-![macuim](https://cloud.githubusercontent.com/assets/112451/3268786/dda15116-f2e1-11e3-99fd-c7ec33e86171.png)
-
 
 ##Paid Support
 
