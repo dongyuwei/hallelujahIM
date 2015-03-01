@@ -20,22 +20,23 @@ download and install
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
 4. switch to hallelujah input method
 
+setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
-auto-suggestion:
+auto suggestion:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-2.png?raw=true)
 
-sort-by-frequency:
+sort by frequency:<br/>
 ![sort-by-frequency](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/sort-by-frequency-2.png?raw=true)
 
-spell-check:
+spell check:<br/>
 ![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
 
-spell-check:
+spell check:<br/>
 ![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
 
 translation:
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/subCondidates/snapshots/translation.png)
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
 
 
 ##Paid Support
