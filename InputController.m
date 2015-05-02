@@ -419,7 +419,6 @@ Here are the three approaches:
     
     _insertionIndex = [candidateString length];
     
-//    [self showPhoneticSymbolOfWord:candidateString];
     [self showSubCandidates: candidateString];
     
 }
@@ -431,7 +430,13 @@ Here are the three approaches:
     if (candidateIdentifier == subCandidateStringIdentifier) {
         NSArray* subList = [self getSubCandidates: candidateString];
         if(subList && subList.count > 0){
-            [subCandidates setCandidateData: subList];
+            NSString* phoneticSymbol = [self getPhoneticSymbolOfWord: candidateString];
+            if([phoneticSymbol length] > 0){
+                NSArray* list = @[phoneticSymbol];
+                [subCandidates setCandidateData: [list arrayByAddingObjectsFromArray:subList]];
+            }else{
+                [subCandidates setCandidateData: subList];
+            }
             
             NSRect currentFrame = [sharedCandidates candidateFrame];
             NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
@@ -452,7 +457,8 @@ Here are the three approaches:
     return translationes[[[candidateString string] lowercaseString]];
 }
 
-- (void)showPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
+-(NSString*) getPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
+    NSString* phoneticSymbol = nil;
     if(candidateString && candidateString.length > 3){
         @try {
             NSString *definition = (__bridge NSString *)DCSCopyTextDefinition(NULL,
@@ -463,8 +469,7 @@ Here are the three approaches:
             if(definition && definition.length > 0){
                 NSArray* arr = [definition componentsSeparatedByString:@"|"];
                 if([arr count] > 0){
-                    NSString* phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]", arr[1]];
-                    [sharedCandidates showAnnotation: [[NSAttributedString alloc] initWithString: phoneticSymbol]];
+                    phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]", arr[1]];
                 }
             }
         }
@@ -472,6 +477,8 @@ Here are the three approaches:
             NSLog(@"error when call showPhoneticSymbolOfWord %@", exception.reason);
         }
     }
+    
+    return phoneticSymbol;
 }
 
 - (void)candidateSelected:(NSAttributedString*)candidateString{
