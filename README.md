@@ -24,16 +24,19 @@ setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
 auto suggestion:<br/>
-![auto-suggestion](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/auto-suggestion-2.png?raw=true)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
 
 translation(inspired by [MacUIM](https://code.google.com/p/uim/wiki/WhatsUim)):<br/>
 ![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
 
 spell check:<br/>
-![spell-check](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-1.png?raw=true)
-
-spell check:<br/>
-![spell-check-2](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/spell-check-2.png?raw=true)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
 
 ##Paid Support
 
