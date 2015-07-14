@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D08FDE619BDE11F0001561A /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D08FDE519BDE11F0001561A /* PasswordManager.m */; };
 		0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D29160719519CE500C4CE58 /* AppKit.framework */; };
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
 		0DA9181A19BDE327003D4B38 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA9181919BDE327003D4B38 /* Security.framework */; };
@@ -17,11 +16,15 @@
 		0DE7AF5A1AA2DE640009DEDF /* transformed_translation.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DE7AF591AA2DE640009DEDF /* transformed_translation.json */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
-		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
-		E93074E20A5C2F1200470842 /* InputController.m in Sources */ = {isa = PBXBuildFile; fileRef = E93074E10A5C2F1200470842 /* InputController.m */; };
-		F10E58011B54F74C0025F542 /* PJTernarySearchTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F10E58001B54F74C0025F542 /* PJTernarySearchTree.m */; };
+		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
+		F1CDA2B01B551A55005086C6 /* InputController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A51B55180A005086C6 /* InputController.m */; };
+		F1CDA2B11B551A55005086C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A61B55180A005086C6 /* main.m */; };
+		F1CDA2B21B551A55005086C6 /* PasswordManager.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A71B55180A005086C6 /* PasswordManager.h */; };
+		F1CDA2B31B551A55005086C6 /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A81B55180A005086C6 /* PasswordManager.m */; };
+		F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */; };
+		F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +51,13 @@
 		E93074E10A5C2F1200470842 /* InputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputController.m; sourceTree = "<group>"; };
 		F10E57FF1B54F74C0025F542 /* PJTernarySearchTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJTernarySearchTree.h; sourceTree = "<group>"; };
 		F10E58001B54F74C0025F542 /* PJTernarySearchTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJTernarySearchTree.m; sourceTree = "<group>"; };
+		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
+		F1CDA2A51B55180A005086C6 /* InputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputController.m; path = src/InputController.m; sourceTree = "<group>"; };
+		F1CDA2A61B55180A005086C6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/main.m; sourceTree = "<group>"; };
+		F1CDA2A71B55180A005086C6 /* PasswordManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PasswordManager.h; path = src/PasswordManager.h; sourceTree = "<group>"; };
+		F1CDA2A81B55180A005086C6 /* PasswordManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PasswordManager.m; path = src/PasswordManager.m; sourceTree = "<group>"; };
+		F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PJTernarySearchTree.h; path = src/PJTernarySearchTree.h; sourceTree = "<group>"; };
+		F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PJTernarySearchTree.m; path = src/PJTernarySearchTree.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +78,13 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F1CDA2A41B55180A005086C6 /* InputController.h */,
+				F1CDA2A51B55180A005086C6 /* InputController.m */,
+				F1CDA2A61B55180A005086C6 /* main.m */,
+				F1CDA2A71B55180A005086C6 /* PasswordManager.h */,
+				F1CDA2A81B55180A005086C6 /* PasswordManager.m */,
+				F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */,
+				F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				E93074E00A5C2F1200470842 /* InputController.h */,
 				E93074E10A5C2F1200470842 /* InputController.m */,
@@ -218,10 +235,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				F10E58011B54F74C0025F542 /* PJTernarySearchTree.m in Sources */,
-				0D08FDE619BDE11F0001561A /* PasswordManager.m in Sources */,
-				E93074E20A5C2F1200470842 /* InputController.m in Sources */,
+				F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */,
+				F1CDA2B01B551A55005086C6 /* InputController.m in Sources */,
+				F1CDA2B11B551A55005086C6 /* main.m in Sources */,
+				F1CDA2B21B551A55005086C6 /* PasswordManager.h in Sources */,
+				F1CDA2B31B551A55005086C6 /* PasswordManager.m in Sources */,
+				F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */,
+				F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

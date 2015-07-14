@@ -6,10 +6,10 @@
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>hallelujah</string>
-	<key>CFBundleIdentifier</key>
-	<string>im.session.inputmethod.hallelujahInputMethod</string>
 	<key>CFBundleIconFile</key>
 	<string>him.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>im.session.inputmethod.hallelujahInputMethod</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
