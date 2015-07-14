@@ -363,7 +363,7 @@ Here are the three approaches:
     NSMutableArray* result = [[NSMutableArray alloc] init];
     
     if(buffer && buffer.length > 0){
-        NSArray* filtered = [trie retrievePrefix: [NSString stringWithString: buffer] countLimit: 50];
+        NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
         if(filtered && filtered.count > 0){
             NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
             if(frequentWords && frequentWords.count > 0){
@@ -373,6 +373,10 @@ Here are the three approaches:
             }
         }else{
             result = [self getSuggestionOfSpellChecker:buffer];
+        }
+        
+        if(result.count > 50){
+            result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
         }
         
         [result removeObject:buffer];
