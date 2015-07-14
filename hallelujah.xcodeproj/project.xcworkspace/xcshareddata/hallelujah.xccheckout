@@ -10,6 +10,8 @@
 	<string>hallelujah</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>0F9FA459D04DE1C15AB5EB391DFBBB9E57EEE634</key>
+		<string>github.com:peakji/PJTernarySearchTree.git</string>
 		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
 		<string>ssh://github.com/dongyuwei/NumberInput_IMKit_Sample.git</string>
 		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
@@ -19,6 +21,8 @@
 	<string>hallelujah.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>0F9FA459D04DE1C15AB5EB391DFBBB9E57EEE634</key>
+		<string>../../../PJTernarySearchTree</string>
 		<key>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</key>
 		<string>../../../IMKit-sample</string>
 		<key>B846CF68E59B80F2EA9AB6030C794D4DE2EA8646</key>
@@ -47,6 +51,14 @@
 			<string>2B19AC92-B1CC-4932-ADF9-BF2659C3EEBE</string>
 			<key>IDESourceControlWCCName</key>
 			<string>IMKit-sample</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0F9FA459D04DE1C15AB5EB391DFBBB9E57EEE634</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PJTernarySearchTree</string>
 		</dict>
 	</array>
 </dict>

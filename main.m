@@ -1,18 +1,18 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
-#import "NDTrie.h"
+#import "PJTernarySearchTree.h"
 
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
 IMKCandidates*          sharedCandidates;
 IMKCandidates*          subCandidates;
-NDMutableTrie*          trie;
+PJTernarySearchTree*    trie;
 NSString*               dictName = @"google_227800_words";
 NSMutableDictionary*    wordsWithFrequency;
 BOOL                    defaultEnglishMode;
 NSDictionary*           translationes;
 
-NDMutableTrie* buildTrieFromFile(){
+PJTernarySearchTree* buildTrieFromFile(){
     NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
     
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
@@ -24,7 +24,14 @@ NDMutableTrie* buildTrieFromFile(){
     wordsWithFrequency = [dict mutableCopy];
     [inputStream close];
     
-    return [NDMutableTrie trieWithArray: [wordsWithFrequency allKeys]];
+    PJTernarySearchTree * tree = [[PJTernarySearchTree alloc] init];
+    
+    NSArray * allWords = [wordsWithFrequency allKeys];
+    for(NSString* word in allWords){
+        [tree insertString: word];
+    }
+    
+    return tree;
 }
 
 NSDictionary* getTranslationes(){

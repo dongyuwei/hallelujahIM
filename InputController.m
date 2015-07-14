@@ -1,12 +1,12 @@
 #import "InputController.h"
-#import "NDTrie.h"
+#import "PJTernarySearchTree.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
 #import "PasswordManager.h"
 
 extern IMKCandidates*           sharedCandidates;
 extern IMKCandidates*           subCandidates;
-extern NDMutableTrie*           trie;
+extern PJTernarySearchTree*     trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
 extern NSString*                dictName;
@@ -361,10 +361,10 @@ Here are the three approaches:
 - (NSArray*)candidates:(id)sender{
     NSString* buffer = [[self originalBuffer] lowercaseString];
     NSMutableArray* result = [[NSMutableArray alloc] init];
+    NSUInteger* limit = 50;
     
     if(buffer && buffer.length > 0){
-        NSArray* filtered = [trie everyObjectForKeyWithPrefix:[NSString stringWithString: buffer]];
-        
+        NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit:limit];
         if(filtered && filtered.count > 0){
             NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
             if(frequentWords && frequentWords.count > 0){
@@ -376,7 +376,7 @@ Here are the three approaches:
             result = [self getSuggestionOfSpellChecker:buffer];
         }
         
-        if(result.count > 50){
+        if(result.count > limit){
             result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
         }
         
