@@ -361,10 +361,9 @@ Here are the three approaches:
 - (NSArray*)candidates:(id)sender{
     NSString* buffer = [[self originalBuffer] lowercaseString];
     NSMutableArray* result = [[NSMutableArray alloc] init];
-    NSUInteger* limit = 50;
     
     if(buffer && buffer.length > 0){
-        NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit:limit];
+        NSArray* filtered = [trie retrievePrefix: [NSString stringWithString: buffer] countLimit: 50];
         if(filtered && filtered.count > 0){
             NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
             if(frequentWords && frequentWords.count > 0){
@@ -374,10 +373,6 @@ Here are the three approaches:
             }
         }else{
             result = [self getSuggestionOfSpellChecker:buffer];
-        }
-        
-        if(result.count > limit){
-            result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
         }
         
         [result removeObject:buffer];
