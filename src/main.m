@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
 #import "PJTernarySearchTree.h"
+@import SSKeychain;
 
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
@@ -50,6 +51,19 @@ NSDictionary* getTranslationes(){
 
 int main(int argc, char *argv[])
 {
+    NSError *error = nil;
+    NSString* token = [SSKeychain passwordForService:@"Internet password" account:@"Instagram" error:&error];
+    if ([error code] == errSecItemNotFound) {
+        NSLog(@"Password not found");
+        [SSKeychain setPassword: @"test" forService:@"Internet password" account:@"Instagram"];
+        NSLog(@"Data saved to keychain");
+    } else if (error != nil) {
+        NSLog(@"Some other error occurred: %@", [error localizedDescription]);
+    }
+    NSLog(@"token: %@", token);
+
+    
+    
     NSString*       identifier;
     
     identifier = [[NSBundle mainBundle] bundleIdentifier];
