@@ -283,65 +283,41 @@ Here are the three approaches:
     return [[bufferedText lowercaseString] rangeOfString: @"zhima"].location != NSNotFound;
 }
 
--(void)commitPassword:(NSString*)bufferedText client:(id)sender{
-    //keep the call sequences!
-    [self setPasswordIfMatch:bufferedText client: sender];
-    [self getPasswordIfMatch:bufferedText client: sender];
+-(NSString*)getPassword:(id)sender{
+    NSString* identity = [self _getAppIdentity:sender];
+    return [PasswordManager getPasswordFromServiceName: identity forAccountName: @"HallelujahIM"];
 }
 
--(void)setPasswordIfMatch:(NSString*)bufferedText client:(id)sender{
+-(void)setPassword:(NSString*)string client:(id)sender{
     NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@":!\\s*zhima\\s*(\\S+)\\s+(\\S+)"
+                                  regularExpressionWithPattern:@":!\\s*zhima\\s*(\\S+)"
                                   options:NSRegularExpressionCaseInsensitive
                                   error:NULL];
-    
-    [regex enumerateMatchesInString:bufferedText
+    [regex enumerateMatchesInString:string
                             options:0
-                              range:NSMakeRange(0, [bufferedText length])
+                              range:NSMakeRange(0, [string length])
                          usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
                              
-                             if([match numberOfRanges] == 3){
-                                 NSString* key = [ [bufferedText substringWithRange:[match rangeAtIndex:1]]
-                                                  stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                 NSString* password = [[bufferedText substringWithRange:[match rangeAtIndex:2]]
-                                                       stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                 
-                                 [PasswordManager storePasswordForServiceName: key
-                                                              withAccountName: @"HallelujahIM"
-                                                                  andPassword: password];
-                                 
-                                 [self _commitPassword:password client:sender];
-                             }
+                             NSString* password = [[string substringWithRange:[match rangeAtIndex:1]]
+                                                   stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                              
-                             
+                             [PasswordManager storePasswordForServiceName: [self _getAppIdentity:sender]
+                                                          withAccountName: @"HallelujahIM"
+                                                              andPassword: password];
                          }];
-    
 }
 
--(void)getPasswordIfMatch:(NSString*)bufferedText client:(id)sender{
-    NSRegularExpression *extractKeyRegex = [NSRegularExpression
-                                            regularExpressionWithPattern:@":!\\s*zhima\\s*(\\S+)"
-                                            options:NSRegularExpressionCaseInsensitive
-                                            error:NULL];
+-(void)commitPassword:(NSString*)bufferedText client:(id)sender{
+    NSString* password;
+    if([bufferedText hasSuffix:@"zhima"]){
+        password = [self getPassword: sender];
+    }else{
+        [self setPassword: bufferedText client: sender];
+        password = [self getPassword:sender];
+    }
     
-    [extractKeyRegex enumerateMatchesInString:bufferedText
-                                      options:0
-                                        range:NSMakeRange(0, [bufferedText length])
-                                   usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
-                                       
-                                       if([match numberOfRanges] == 2){
-                                           NSString* key = [ [bufferedText substringWithRange:[match rangeAtIndex:1]]
-                                                            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                           
-                                           NSString *password = [PasswordManager getPasswordFromServiceName: key
-                                                                                             forAccountName: @"HallelujahIM"];
-                                           [self _commitPassword:password client:sender];
-                                       }
-                                   }];
-    
-    
+    [self _commitPassword:password client:sender];
 }
-
 
 -(void)_commitPassword:(NSString*)password client:(id)sender{
     if(![[sender bundleIdentifier] isEqual: @"com.google.Chrome"]){
@@ -351,6 +327,35 @@ Here are the three approaches:
     [[NSPasteboard generalPasteboard] setString:password forType:NSStringPboardType];
     
     [self reset];
+}
+
+-(NSString*)_getAppIdentity:(id)sender{
+    NSString* key = [sender bundleIdentifier];
+    
+    //no firefox support right now.
+    if([key isEqual: @"com.google.Chrome"] || [key isEqual:@"com.apple.Safari"]){
+        NSAppleScript *script;
+        if([key isEqual: @"com.google.Chrome"]){
+            script = [[NSAppleScript alloc] initWithSource:@"tell application \"Google Chrome\" to return URL of active tab of front window"];
+        }else{
+            script = [[NSAppleScript alloc] initWithSource:@"tell application \"Safari\" to return URL of front document as string"];
+        }
+        
+        NSDictionary *scriptError = nil;
+        NSAppleEventDescriptor *descriptor = [script executeAndReturnError:&scriptError];
+        if(scriptError) {
+            NSLog(@"Error: %@",scriptError);
+            return key;
+        } else {
+            NSAppleEventDescriptor *unicode = [descriptor coerceToDescriptorType:typeUnicodeText];
+            NSData *data = [unicode data];
+            NSString *url = [[NSString alloc] initWithCharacters:(unichar*)[data bytes] length:[data length] / sizeof(unichar)];
+            NSURLComponents *components = [[NSURLComponents alloc] initWithString: url];
+            //such as: com.google.Chrome-https://gist.github.com:80
+            return [NSString stringWithFormat: @"%@-%@://%@:%@", key,components.scheme,components.host,components.port];
+        }
+    }
+    return key;
 }
 
 -(void)setOriginalBuffer:(NSString*)string{
