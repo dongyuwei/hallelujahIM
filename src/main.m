@@ -7,13 +7,12 @@ IMKServer*              server;
 IMKCandidates*          sharedCandidates;
 IMKCandidates*          subCandidates;
 PJTernarySearchTree*    trie;
-NSString*               dictName = @"google_227800_words";
 NSMutableDictionary*    wordsWithFrequency;
 BOOL                    defaultEnglishMode;
 NSDictionary*           translationes;
 
 PJTernarySearchTree* buildTrieFromFile(){
-    NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"json"];
     
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
     [inputStream  open];
@@ -71,9 +70,7 @@ int main(int argc, char *argv[])
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];
     
-    
 	[[NSApplication sharedApplication] run];
-    
     
     return 0;
 }

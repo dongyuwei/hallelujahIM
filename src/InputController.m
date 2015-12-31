@@ -2,17 +2,13 @@
 #import "PJTernarySearchTree.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
-#import "PasswordManager.h"
 
 extern IMKCandidates*           sharedCandidates;
 extern IMKCandidates*           subCandidates;
 extern PJTernarySearchTree*     trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
-extern NSString*                dictName;
 extern NSDictionary*            translationes;
-
-
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -24,35 +20,17 @@ KEY_MOVE_LEFT = 123,
 KEY_MOVE_RIGHT = 124,
 KEY_MOVE_DOWN = 125;
 
-
 @implementation InputController
 
 -(NSUInteger)recognizedEvents:(id)sender{
     return NSKeyDownMask | NSFlagsChangedMask;
 }
 
-/*
-Implement one of the three ways to receive input from the client. 
-Here are the three approaches:
-                 
- 1.  Support keybinding.  
-        In this approach the system takes each keydown and trys to map the keydown to an action method that the input method has implemented.  If an action is found the system calls didCommandBySelector:client:.  If no action method is found inputText:client: is called.  An input method choosing this approach should implement
-        -(BOOL)inputText:(NSString*)string client:(id)sender;
-        -(BOOL)didCommandBySelector:(SEL)aSelector client:(id)sender;
-        
-2. Receive all key events without the keybinding, but do "unpack" the relevant text data.
-        Key events are broken down into the Unicodes, the key code that generated them, and modifier flags.  This data is then sent to the input method's inputText:key:modifiers:client: method.  For this approach implement:
-        -(BOOL)inputText:(NSString*)string key:(NSInteger)keyCode modifiers:(NSUInteger)flags client:(id)sender;
-        
-3. Receive events directly from the Text Services Manager as NSEvent objects.  For this approach implement:
-        -(BOOL)handleEvent:(NSEvent*)event client:(id)sender;
-*/
 -(BOOL)handleEvent:(NSEvent*)event client:(id)sender{
     NSUInteger modifiers = [event modifierFlags];
     bool handled = NO;
     switch ([event type]) {
         case NSFlagsChanged:
-            // FIXME: a dirty workaround for chrome sending duplicated NSFlagsChanged event
             if (_lastEventTypes[1] == NSFlagsChanged && _lastModifiers[1] == modifiers){
                 return YES;
             }
@@ -64,7 +42,6 @@ Here are the three approaches:
                 
                 defaultEnglishMode = !defaultEnglishMode;
                 if(defaultEnglishMode){
-                    
                     NSString* bufferedText = [self originalBuffer];
                     if ( bufferedText && [bufferedText length] > 0 ) {
                         [self cancelComposition];
@@ -74,9 +51,6 @@ Here are the three approaches:
             }
             break;
         case NSKeyDown:
-            if (defaultEnglishMode && ![[sender bundleIdentifier]  isEqual: @"com.cisco.Cisco-AnyConnect-Secure-Mobility-Client"]) {
-                break;
-            }
             handled = [self onKeyEvent:event client:sender];
             break;
         default:
@@ -116,10 +90,6 @@ Here are the three approaches:
     
     if(keyCode == KEY_RETURN){
         if ( [bufferedText length] > 0 ) {
-            if(_is_cmd_mode && [self isPasswordMode: bufferedText] ){
-                [self commitPassword: bufferedText client: sender];
-                return YES;
-            }
             [self commitComposition:sender];
             return YES;
         }
@@ -279,79 +249,6 @@ Here are the three approaches:
     [buffer appendString: string];
 }
 
--(BOOL) isPasswordMode:(NSString*)bufferedText{
-    return [[bufferedText lowercaseString] rangeOfString: @"zhima"].location != NSNotFound;
-}
-
--(void)commitPassword:(NSString*)bufferedText client:(id)sender{
-    //keep the call sequences!
-    [self setPasswordIfMatch:bufferedText client: sender];
-    [self getPasswordIfMatch:bufferedText client: sender];
-}
-
--(void)setPasswordIfMatch:(NSString*)bufferedText client:(id)sender{
-    NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@":!\\s*zhima\\s*(\\S+)\\s+(\\S+)"
-                                  options:NSRegularExpressionCaseInsensitive
-                                  error:NULL];
-    
-    [regex enumerateMatchesInString:bufferedText
-                            options:0
-                              range:NSMakeRange(0, [bufferedText length])
-                         usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
-                             
-                             if([match numberOfRanges] == 3){
-                                 NSString* key = [ [bufferedText substringWithRange:[match rangeAtIndex:1]]
-                                                  stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                 NSString* password = [[bufferedText substringWithRange:[match rangeAtIndex:2]]
-                                                       stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                 
-                                 [PasswordManager storePasswordForServiceName: key
-                                                              withAccountName: @"HallelujahIM"
-                                                                  andPassword: password];
-                                 
-                                 [self _commitPassword:password client:sender];
-                             }
-                             
-                             
-                         }];
-    
-}
-
--(void)getPasswordIfMatch:(NSString*)bufferedText client:(id)sender{
-    NSRegularExpression *extractKeyRegex = [NSRegularExpression
-                                            regularExpressionWithPattern:@":!\\s*zhima\\s*(\\S+)"
-                                            options:NSRegularExpressionCaseInsensitive
-                                            error:NULL];
-    
-    [extractKeyRegex enumerateMatchesInString:bufferedText
-                                      options:0
-                                        range:NSMakeRange(0, [bufferedText length])
-                                   usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
-                                       
-                                       if([match numberOfRanges] == 2){
-                                           NSString* key = [ [bufferedText substringWithRange:[match rangeAtIndex:1]]
-                                                            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                                           
-                                           NSString *password = [PasswordManager getPasswordFromServiceName: key
-                                                                                             forAccountName: @"HallelujahIM"];
-                                           [self _commitPassword:password client:sender];
-                                       }
-                                   }];
-    
-    
-}
-
-
--(void)_commitPassword:(NSString*)password client:(id)sender{
-    if(![[sender bundleIdentifier] isEqual: @"com.google.Chrome"]){
-       [sender insertText: password replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
-    }
-    [[NSPasteboard generalPasteboard] clearContents];
-    [[NSPasteboard generalPasteboard] setString:password forType:NSStringPboardType];
-    
-    [self reset];
-}
 
 -(void)setOriginalBuffer:(NSString*)string{
     NSMutableString*		buffer = [self originalBuffer];
@@ -489,28 +386,6 @@ Here are the three approaches:
         [self setComposedBuffer:composed];
     }
     [self commitComposition:_currentClient];
-}
-
-//when annotation clicked, speak the word.
-- (void)annotationSelected:(NSAttributedString*)annotationString forCandidate:(NSAttributedString*)candidateString{
-    NSSpeechSynthesizer *synth = [[NSSpeechSynthesizer alloc] initWithVoice:@"com.apple.speech.synthesis.voice.Alex"];
-    [synth startSpeakingString:[candidateString string]];
-}
-
-- (void)deactivateServer:(id)sender{
-//    performence!!
-//    [self updateDictionary];
-}
-
--(void)updateDictionary{
-    NSString* path = [[NSBundle mainBundle] pathForResource:dictName ofType:@"json"];
-    NSOutputStream *outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
-    [outputStream open];
-    [NSJSONSerialization writeJSONObject:wordsWithFrequency
-                                toStream:outputStream
-                                 options:nil
-                                   error:nil];
-    [outputStream close];
 }
 
 @end

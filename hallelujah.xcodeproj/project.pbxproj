@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D29160719519CE500C4CE58 /* AppKit.framework */; };
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
-		0DA9181A19BDE327003D4B38 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA9181919BDE327003D4B38 /* Security.framework */; };
 		0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DC72DCB195A914A009888F6 /* google_227800_words.json */; };
 		0DE74BFE1978EC6A00040F3C /* him.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFD1978EC6A00040F3C /* him.png */; };
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
@@ -21,8 +20,6 @@
 		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
 		F1CDA2B01B551A55005086C6 /* InputController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A51B55180A005086C6 /* InputController.m */; };
 		F1CDA2B11B551A55005086C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A61B55180A005086C6 /* main.m */; };
-		F1CDA2B21B551A55005086C6 /* PasswordManager.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A71B55180A005086C6 /* PasswordManager.h */; };
-		F1CDA2B31B551A55005086C6 /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A81B55180A005086C6 /* PasswordManager.m */; };
 		F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */; };
 		F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */; };
 /* End PBXBuildFile section */
@@ -47,8 +44,6 @@
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
 		F1CDA2A51B55180A005086C6 /* InputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputController.m; path = src/InputController.m; sourceTree = "<group>"; };
 		F1CDA2A61B55180A005086C6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/main.m; sourceTree = "<group>"; };
-		F1CDA2A71B55180A005086C6 /* PasswordManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PasswordManager.h; path = src/PasswordManager.h; sourceTree = "<group>"; };
-		F1CDA2A81B55180A005086C6 /* PasswordManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PasswordManager.m; path = src/PasswordManager.m; sourceTree = "<group>"; };
 		F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PJTernarySearchTree.h; path = src/PJTernarySearchTree.h; sourceTree = "<group>"; };
 		F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PJTernarySearchTree.m; path = src/PJTernarySearchTree.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,7 +53,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DA9181A19BDE327003D4B38 /* Security.framework in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
@@ -74,8 +68,6 @@
 				F1CDA2A41B55180A005086C6 /* InputController.h */,
 				F1CDA2A51B55180A005086C6 /* InputController.m */,
 				F1CDA2A61B55180A005086C6 /* main.m */,
-				F1CDA2A71B55180A005086C6 /* PasswordManager.h */,
-				F1CDA2A81B55180A005086C6 /* PasswordManager.m */,
 				F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */,
 				F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */,
 			);
@@ -224,8 +216,6 @@
 				F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */,
 				F1CDA2B01B551A55005086C6 /* InputController.m in Sources */,
 				F1CDA2B11B551A55005086C6 /* main.m in Sources */,
-				F1CDA2B21B551A55005086C6 /* PasswordManager.h in Sources */,
-				F1CDA2B31B551A55005086C6 /* PasswordManager.m in Sources */,
 				F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */,
 				F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */,
 			);
