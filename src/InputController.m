@@ -260,6 +260,10 @@ KEY_MOVE_DOWN = 125;
     NSMutableArray* result = [[NSMutableArray alloc] init];
     
     if(buffer && buffer.length > 0){
+        if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
+            return [self getGoogleSuggestion: [buffer substringFromIndex:2]];
+        }
+        
         NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
         if(filtered && filtered.count > 0){
             NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
@@ -316,7 +320,6 @@ KEY_MOVE_DOWN = 125;
     _insertionIndex = [candidateString length];
     
     [self showSubCandidates: candidateString];
-    
 }
 
 -(void)showSubCandidates:(NSAttributedString*)candidateString{
@@ -386,6 +389,37 @@ KEY_MOVE_DOWN = 125;
         [self setComposedBuffer:composed];
     }
     [self commitComposition:_currentClient];
+}
+
+-(NSArray*) getGoogleSuggestion: (NSString*)word{
+    NSString* query = [NSString stringWithFormat: @"http://google.com/complete/search?output=firefox&hl=en&q=%@", word];
+    NSURL * url = [[NSURL alloc] initWithString: query];
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
+                                                cachePolicy:NSURLRequestReturnCacheDataElseLoad
+                                            timeoutInterval:30];
+    
+    NSURLResponse *response;
+    NSError *error;
+    
+    NSData* data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    
+    
+    NSArray* result = @[];
+    NSArray* object = [NSJSONSerialization
+                       JSONObjectWithData:data
+                       options:0
+                       error:&error];
+    
+    if(!error){
+        result = object[1];
+    }else{
+        NSLog(@"getGoogleSuggestion Error: %@",error);
+    }
+    
+    return result;
 }
 
 @end
