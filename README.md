@@ -19,10 +19,17 @@ download and install
 setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
-auto suggestion:<br/>
+auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
+
+auto suggestions from Google Suggestion(for any word startsWith `gs`):<br>
+![Google Suggestion](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/google_suggestions.png)
+
+Text Expander: <br/>
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
 
 translation(inspired by [MacUIM](https://code.google.com/p/uim/wiki/WhatsUim)):<br/>
 ![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
