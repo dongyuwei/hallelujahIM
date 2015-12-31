@@ -10,6 +10,7 @@ PJTernarySearchTree*    trie;
 NSMutableDictionary*    wordsWithFrequency;
 BOOL                    defaultEnglishMode;
 NSDictionary*           translationes;
+NSDictionary*           substitutions;
 
 PJTernarySearchTree* buildTrieFromFile(){
     NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"json"];
@@ -47,6 +48,19 @@ NSDictionary* getTranslationes(){
     return translationes;
 }
 
+NSDictionary* getUserDefinedSubstitutions(){
+    NSString* path =[NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
+    
+    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
+    [inputStream  open];
+    NSDictionary* substitutions = [NSJSONSerialization JSONObjectWithStream:inputStream
+                                                                    options:nil
+                                                                      error:nil];
+    
+    [inputStream close];
+    return substitutions;
+}
+
 int main(int argc, char *argv[])
 {
     NSString*       identifier;
@@ -65,6 +79,7 @@ int main(int argc, char *argv[])
     
     trie = buildTrieFromFile();
     translationes = getTranslationes();
+    substitutions = getUserDefinedSubstitutions();
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]

@@ -9,6 +9,7 @@ extern PJTernarySearchTree*     trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
 extern NSDictionary*            translationes;
+extern NSDictionary*            substitutions;
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -51,6 +52,9 @@ KEY_MOVE_DOWN = 125;
             }
             break;
         case NSKeyDown:
+            if (defaultEnglishMode){
+                break;
+            }
             handled = [self onKeyEvent:event client:sender];
             break;
         default:
@@ -260,24 +264,27 @@ KEY_MOVE_DOWN = 125;
     NSMutableArray* result = [[NSMutableArray alloc] init];
     
     if(buffer && buffer.length > 0){
-        if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
-            return [self getGoogleSuggestion: [buffer substringFromIndex:2]];
+        if(substitutions && substitutions[buffer]){
+            result = [NSMutableArray arrayWithArray: @[substitutions[buffer]]];
         }
-        
-        NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
-        if(filtered && filtered.count > 0){
-            NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
-            if(frequentWords && frequentWords.count > 0){
-                result = frequentWords;
-            }else{
-                result = [NSMutableArray arrayWithArray:filtered];
-            }
+        else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
+            result = [NSMutableArray arrayWithArray: [self getGoogleSuggestion: [buffer substringFromIndex:2]]];
         }else{
-            result = [self getSuggestionOfSpellChecker:buffer];
-        }
-        
-        if(result.count > 50){
-            result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
+            NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
+            if(filtered && filtered.count > 0){
+                NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
+                if(frequentWords && frequentWords.count > 0){
+                    result = frequentWords;
+                }else{
+                    result = [NSMutableArray arrayWithArray:filtered];
+                }
+            }else{
+                result = [self getSuggestionOfSpellChecker:buffer];
+            }
+            
+            if(result.count > 50){
+                result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
+            }
         }
         
         [result removeObject:buffer];
@@ -408,13 +415,18 @@ KEY_MOVE_DOWN = 125;
     
     
     NSArray* result = @[];
-    NSArray* object = [NSJSONSerialization
-                       JSONObjectWithData:data
-                       options:0
-                       error:&error];
-    
-    if(!error){
-        result = object[1];
+    if(!error && data){
+        NSArray* object = [NSJSONSerialization
+                           JSONObjectWithData:data
+                           options:0
+                           error:&error];
+        
+        if(!error){
+            result = object[1];
+        }else{
+            NSLog(@"getGoogleSuggestion Error: %@",error);
+        }
+
     }else{
         NSLog(@"getGoogleSuggestion Error: %@",error);
     }
