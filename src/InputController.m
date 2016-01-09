@@ -404,7 +404,7 @@ KEY_MOVE_DOWN = 125;
     
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
                                                 cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                            timeoutInterval:30];
+                                            timeoutInterval:3];
     
     NSURLResponse *response;
     NSError *error;
