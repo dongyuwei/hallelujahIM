@@ -269,6 +269,8 @@ KEY_MOVE_DOWN = 125;
         }
         else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
             result = [NSMutableArray arrayWithArray: [self getGoogleSuggestion: [buffer substringFromIndex:2]]];
+        }else if([buffer hasPrefix:@"pinyin"] && [buffer length] > 6){
+            result = [NSMutableArray arrayWithArray: [self getPinyinCandidates:[buffer substringFromIndex:6]]];
         }else{
             NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
             if(filtered && filtered.count > 0){
@@ -433,5 +435,47 @@ KEY_MOVE_DOWN = 125;
     
     return result;
 }
+
+-(NSArray*) getPinyinCandidates: (NSString*)word{
+    NSString* query = [NSString stringWithFormat: @"http://olime.baidu.com/py?input=%@&inputtype=py&bg=0&ed=20&result=hanzi&resultcoding=unicode&ch_en=0&clientinfo=web&version=1", word];
+    NSURL * url = [[NSURL alloc] initWithString: query];
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
+                                                cachePolicy:NSURLRequestReturnCacheDataElseLoad
+                                            timeoutInterval:3];
+    
+    NSURLResponse *response;
+    NSError *error;
+    
+    NSData* data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    
+    
+    NSArray* result = @[];
+    if(!error && data){
+        NSDictionary* object = [NSJSONSerialization
+                                JSONObjectWithData:data
+                                options:0
+                                error:&error];
+        
+        if(!error){
+            result = object[@"result"][0];
+        }else{
+            NSLog(@"getPinyinCandidates Error: %@",error);
+        }
+        
+    }else{
+        NSLog(@"getPinyinCandidates Error: %@",error);
+    }
+    
+    if([result count] > 0){
+        NSMutableArray* finalResult = [[NSMutableArray alloc] init];
+        for(id item in result){
+            [finalResult addObject: item[0]];
+        }
+        return [NSArray arrayWithArray:finalResult];
+    }
+    return result;}
 
 @end
