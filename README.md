@@ -31,7 +31,7 @@ Text Expander: <br/>
 ![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
 ![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
 
-translation(inspired by [MacUIM](https://code.google.com/p/uim/wiki/WhatsUim)):<br/>
+translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/WhatsUim)):<br/>
 ![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
 
 spell check:<br/>
