@@ -1,15 +1,9 @@
 #import "InputController.h"
-#import "PJTernarySearchTree.h"
-#import <AppKit/NSSpellChecker.h>
-#import <CoreServices/CoreServices.h>
+#import "FMDatabase.h"
 
 extern IMKCandidates*           sharedCandidates;
-extern IMKCandidates*           subCandidates;
-extern PJTernarySearchTree*     trie;
-extern NSMutableDictionary*     wordsWithFrequency;
+extern FMDatabase*              db;
 extern BOOL                     defaultEnglishMode;
-extern NSDictionary*            translationes;
-extern NSDictionary*            substitutions;
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -110,20 +104,6 @@ KEY_MOVE_DOWN = 125;
         return NO;
     }
     
-    if ( [bufferedText length] == 0  && [string  isEqualToString: @":"]) {
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    if ( [bufferedText isEqualToString: @":"] && [string isEqualToString: @"!"] ) {
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    if ( [bufferedText hasPrefix:@":!"] ) {
-        _is_cmd_mode = YES;
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    
     char ch = [string characterAtIndex:0];
     if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ){
         [self originalBufferAppend:string client:sender];
@@ -190,11 +170,6 @@ KEY_MOVE_DOWN = 125;
     
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
     
-    int frequency = [[wordsWithFrequency objectForKey: text] intValue];
-    if(!defaultEnglishMode){
-        [wordsWithFrequency setValue: [NSNumber numberWithInt: frequency + 1] forKey: text];
-    }
-    
     [self reset];
 }
 
@@ -203,7 +178,6 @@ KEY_MOVE_DOWN = 125;
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    [subCandidates hide];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -261,130 +235,25 @@ KEY_MOVE_DOWN = 125;
 
 - (NSArray*)candidates:(id)sender{
     NSString* buffer = [[self originalBuffer] lowercaseString];
-    NSMutableArray* result = [[NSMutableArray alloc] init];
+    NSArray* result = @[];
     
     if(buffer && buffer.length > 0){
-        if(substitutions && substitutions[buffer]){
-            result = [NSMutableArray arrayWithArray: @[substitutions[buffer]]];
-        }
-        else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
-            result = [NSMutableArray arrayWithArray: [self getGoogleSuggestion: [buffer substringFromIndex:2]]];
-        }else{
-            NSArray* filtered = [trie retrievePrefix:[NSString stringWithString: buffer] countLimit: 0];
-            if(filtered && filtered.count > 0){
-                NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
-                if(frequentWords && frequentWords.count > 0){
-                    result = frequentWords;
-                }else{
-                    result = [NSMutableArray arrayWithArray:filtered];
-                }
-            }else{
-                result = [self getSuggestionOfSpellChecker:buffer];
-            }
-            
-            if(result.count > 50){
-                result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
-            }
-        }
-        
-        [result removeObject:buffer];
-        [result insertObject:buffer atIndex:0];
+        result = [self querySqliteDb: buffer];
     }
     
-    return [NSArray arrayWithArray:result];
+    return result;
 }
 
--(NSMutableArray*)getSuggestionOfSpellChecker:(NSString*)buffer{
-    NSSpellChecker* checker = [NSSpellChecker sharedSpellChecker];
-    NSRange range = NSMakeRange(0, [buffer length]);
-    NSMutableArray* suggestion = [NSMutableArray arrayWithArray:
-                                  [checker guessesForWordRange:range
-                                                      inString:buffer
-                                                      language:@"en"
-                                        inSpellDocumentWithTag:0]];
-    
-    return suggestion;
-}
+-(NSArray*)querySqliteDb:(NSString*)key{
+    NSMutableArray* filtered = [[NSMutableArray alloc] init];
 
--(NSArray*)sortByFrequency:(NSArray*) filtered{
-    NSArray *sorted = [filtered sortedArrayUsingComparator:^NSComparisonResult(id w1, id w2) {
-        int n = [[wordsWithFrequency objectForKey: w1] intValue] - [[wordsWithFrequency objectForKey:w2] intValue];
-        if (n > 0){
-            return (NSComparisonResult)NSOrderedAscending;
-        }
-        if (n < 0){
-            return (NSComparisonResult)NSOrderedDescending;
-        }
-        return (NSComparisonResult)NSOrderedSame;
-    }];
-    
-    return sorted;
-}
-
-- (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
-    [self showPreeditString: [candidateString string]];
-    
-    _insertionIndex = [candidateString length];
-    
-    [self showSubCandidates: candidateString];
-}
-
--(void)showSubCandidates:(NSAttributedString*)candidateString{
-    NSInteger candidateIdentifier = [sharedCandidates selectedCandidate];
-    NSInteger subCandidateStringIdentifier = [sharedCandidates candidateStringIdentifier: candidateString];
-
-    if (candidateIdentifier == subCandidateStringIdentifier) {
-        NSArray* subList = [self getSubCandidates: candidateString];
-        if(subList && subList.count > 0){
-            NSString* phoneticSymbol = [self getPhoneticSymbolOfWord: candidateString];
-            if([phoneticSymbol length] > 0){
-                NSArray* list = @[phoneticSymbol];
-                [subCandidates setCandidateData: [list arrayByAddingObjectsFromArray:subList]];
-            }else{
-                [subCandidates setCandidateData: subList];
-            }
-            
-            NSRect currentFrame = [sharedCandidates candidateFrame];
-            NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
-            [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
-            
-            
-            [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
-            [sharedCandidates showChild];
-        }else{
-            [subCandidates hide];
-        }
-    }else{
-        [subCandidates hide];
+    NSString* sql = [NSString stringWithFormat: @"select value from mapping  where key like '%@%@' limit 50", key, @"%"];
+    FMResultSet *rs = [db executeQuery: sql];
+    while ([rs next]) {
+        [filtered addObject: [rs stringForColumn:@"value"]];
     }
-}
-
--(NSArray*)getSubCandidates: (NSAttributedString*)candidateString{
-    return translationes[[[candidateString string] lowercaseString]];
-}
-
--(NSString*) getPhoneticSymbolOfWord:(NSAttributedString*)candidateString{
-    NSString* phoneticSymbol = nil;
-    if(candidateString && candidateString.length > 3){
-        @try {
-            NSString *definition = (__bridge NSString *)DCSCopyTextDefinition(NULL,
-                                            (__bridge CFStringRef)[candidateString string],
-                                            CFRangeMake(0, [[candidateString string] length]));
-            
-            
-            if(definition && definition.length > 0){
-                NSArray* arr = [definition componentsSeparatedByString:@"|"];
-                if([arr count] > 0){
-                    phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]", arr[1]];
-                }
-            }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"error when call showPhoneticSymbolOfWord %@", exception.reason);
-        }
-    }
-    
-    return phoneticSymbol;
+ 
+    return [NSMutableArray arrayWithArray: filtered];;
 }
 
 - (void)candidateSelected:(NSAttributedString*)candidateString{
@@ -396,42 +265,6 @@ KEY_MOVE_DOWN = 125;
         [self setComposedBuffer:composed];
     }
     [self commitComposition:_currentClient];
-}
-
--(NSArray*) getGoogleSuggestion: (NSString*)word{
-    NSString* query = [NSString stringWithFormat: @"http://google.com/complete/search?output=firefox&hl=en&q=%@", word];
-    NSURL * url = [[NSURL alloc] initWithString: query];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url
-                                                cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                            timeoutInterval:30];
-    
-    NSURLResponse *response;
-    NSError *error;
-    
-    NSData* data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    
-    
-    NSArray* result = @[];
-    if(!error && data){
-        NSArray* object = [NSJSONSerialization
-                           JSONObjectWithData:data
-                           options:0
-                           error:&error];
-        
-        if(!error){
-            result = object[1];
-        }else{
-            NSLog(@"getGoogleSuggestion Error: %@",error);
-        }
-
-    }else{
-        NSLog(@"getGoogleSuggestion Error: %@",error);
-    }
-    
-    return result;
 }
 
 @end

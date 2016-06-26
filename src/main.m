@@ -1,65 +1,23 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
-#import "PJTernarySearchTree.h"
+#import "FMDatabase.h"
+
+
 
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
 IMKCandidates*          sharedCandidates;
-IMKCandidates*          subCandidates;
-PJTernarySearchTree*    trie;
-NSMutableDictionary*    wordsWithFrequency;
+FMDatabase*             db;
 BOOL                    defaultEnglishMode;
-NSDictionary*           translationes;
-NSDictionary*           substitutions;
 
-PJTernarySearchTree* buildTrieFromFile(){
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"json"];
+FMDatabase* shuangpinDB(){
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"shuangpin-sqlite" ofType:@"db"];
+    FMDatabase *db = [FMDatabase databaseWithPath: path];
+    [db open];
     
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
-    [inputStream  open];
-    NSDictionary* dict = [NSJSONSerialization JSONObjectWithStream:inputStream
-                                                                 options:nil
-                                                                   error:nil];
-    
-    wordsWithFrequency = [dict mutableCopy];
-    [inputStream close];
-    
-    PJTernarySearchTree * tree = [[PJTernarySearchTree alloc] init];
-    
-    NSArray * allWords = [wordsWithFrequency allKeys];
-    for(NSString* word in allWords){
-        [tree insertString: word];
-    }
-    
-    return tree;
+    return db;
 }
 
-NSDictionary* getTranslationes(){
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"transformed_translation" ofType:@"json"];
-    
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
-    [inputStream  open];
-    NSDictionary* translationes = [NSJSONSerialization JSONObjectWithStream:inputStream
-                                                                    options:nil
-                                                                      error:nil];
-    
-    [inputStream close];
-    
-    return translationes;
-}
-
-NSDictionary* getUserDefinedSubstitutions(){
-    NSString* path =[NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
-    
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
-    [inputStream  open];
-    NSDictionary* substitutions = [NSJSONSerialization JSONObjectWithStream:inputStream
-                                                                    options:nil
-                                                                      error:nil];
-    
-    [inputStream close];
-    return substitutions;
-}
 
 int main(int argc, char *argv[])
 {
@@ -70,17 +28,15 @@ int main(int argc, char *argv[])
                             bundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
     
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
-    subCandidates    = [[IMKCandidates alloc] initWithServer:nil    panelType:kIMKSingleColumnScrollingCandidatePanel];
     
     if (!sharedCandidates){
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);
         return -1;
     }
     
-    trie = buildTrieFromFile();
-    translationes = getTranslationes();
-    substitutions = getUserDefinedSubstitutions();
-    
+    db = shuangpinDB();
+
+        
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];

@@ -128,4 +128,8 @@ xcuserdata
 #
 # ...none. Everything is now explained.
 
-Pods/
+# Benefits of checking in the Pods directory
+# After cloning the repo, the project can immediately build and run, even without having CocoaPods installed on the machine. 
+# There is no need to run `pod install`, and no Internet connection is necessary.
+# The Pod artifacts (code/libraries) are always available, even if the source of a Pod (e.g. GitHub) were to go down.
+# The Pod artifacts are guaranteed to be identical to those in the original installation after cloning the repo.
