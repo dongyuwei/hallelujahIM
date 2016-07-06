@@ -8,6 +8,7 @@ extern BOOL                     defaultEnglishMode;
 typedef NSInteger KeyCode;
 static const KeyCode
 KEY_RETURN = 36,
+KEY_SPACE = 49, //why not 31?
 KEY_DELETE = 51,
 KEY_ESC = 53,
 KEY_BACKSPACE = 117,
@@ -67,27 +68,37 @@ KEY_MOVE_DOWN = 125;
     _currentClient = sender;
     NSUInteger modifiers = [event modifierFlags];
     NSInteger keyCode = [event keyCode];
-    NSString* string = [event characters];
+    NSString* characters = [event characters];
     
     if ([self shouldIgnoreKey:keyCode modifiers:modifiers]){
         [self reset];
         return NO;
     }
     
+    NSString* bufferedText = [self originalBuffer];
+    Boolean* hasInputedText = bufferedText && [bufferedText length] > 0;
     if(keyCode == KEY_DELETE){
-        NSString* bufferedText = [self originalBuffer];
-        
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasInputedText) {
             return [self deleteBackward:sender];
         }
         
         return NO;
     }
     
-    NSString* bufferedText = [self originalBuffer];
-    
+    NSLog(@"ime log keyCode: %ld characters: %@", keyCode, characters);
     if(keyCode == KEY_RETURN){
-        if ( [bufferedText length] > 0 ) {
+        if (hasInputedText) {
+            [self commitComposition:sender];
+            return YES;
+        }
+        return NO;
+    }
+    
+    if(keyCode == KEY_SPACE){
+        NSAttributedString* selectedCandidateString = [sharedCandidates selectedCandidateString];
+        if (hasInputedText && selectedCandidateString) {
+            NSLog(@"selectedCandidateString:%@", selectedCandidateString);
+            [self setComposedBuffer: [[sharedCandidates selectedCandidateString] string]];
             [self commitComposition:sender];
             return YES;
         }
@@ -95,7 +106,7 @@ KEY_MOVE_DOWN = 125;
     }
     
     if(keyCode == KEY_ESC){
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasInputedText) {
             [self cancelComposition];
             [self commitComposition:sender];
             
@@ -104,23 +115,22 @@ KEY_MOVE_DOWN = 125;
         return NO;
     }
     
-    char ch = [string characterAtIndex:0];
+    char ch = [characters characterAtIndex:0];
     if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ){
-        [self originalBufferAppend:string client:sender];
+        [self originalBufferAppend:characters client:sender];
         
         [sharedCandidates updateCandidates];
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
     }else{
         if ([bufferedText length] > 0 ) {
-            [self originalBufferAppend:string client:sender];
+            [self originalBufferAppend:characters client:sender];
             [self commitComposition: sender];
             return YES;
         }else{
             [sharedCandidates hide];
             return NO;
         }
-        
     }
     
     return NO;
