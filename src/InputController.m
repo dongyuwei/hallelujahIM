@@ -13,13 +13,8 @@ extern NSDictionary*            substitutions;
 
 typedef NSInteger KeyCode;
 static const KeyCode
-KEY_RETURN = 36,
 KEY_DELETE = 51,
-KEY_ESC = 53,
-KEY_BACKSPACE = 117,
-KEY_MOVE_LEFT = 123,
-KEY_MOVE_RIGHT = 124,
-KEY_MOVE_DOWN = 125;
+KEY_ESC = 53;
 
 @implementation InputController
 
@@ -71,14 +66,8 @@ KEY_MOVE_DOWN = 125;
 
 -(BOOL)onKeyEvent:(NSEvent*)event client:(id)sender{
     _currentClient = sender;
-    NSUInteger modifiers = [event modifierFlags];
     NSInteger keyCode = [event keyCode];
     NSString* string = [event characters];
-    
-    if ([self shouldIgnoreKey:keyCode modifiers:modifiers]){
-        [self reset];
-        return NO;
-    }
     
     if(keyCode == KEY_DELETE){
         NSString* bufferedText = [self originalBuffer];
@@ -92,14 +81,6 @@ KEY_MOVE_DOWN = 125;
     
     NSString* bufferedText = [self originalBuffer];
     
-    if(keyCode == KEY_RETURN){
-        if ( [bufferedText length] > 0 ) {
-            [self commitComposition:sender];
-            return YES;
-        }
-        return NO;
-    }
-    
     if(keyCode == KEY_ESC){
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self cancelComposition];
@@ -110,20 +91,6 @@ KEY_MOVE_DOWN = 125;
         return NO;
     }
     
-    if ( [bufferedText length] == 0  && [string  isEqualToString: @":"]) {
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    if ( [bufferedText isEqualToString: @":"] && [string isEqualToString: @"!"] ) {
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    if ( [bufferedText hasPrefix:@":!"] ) {
-        _is_cmd_mode = YES;
-        [self appendToOriginalBuffer:string client:sender];
-        return YES;
-    }
-    
     char ch = [string characterAtIndex:0];
     if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ){
         [self originalBufferAppend:string client:sender];
@@ -131,16 +98,6 @@ KEY_MOVE_DOWN = 125;
         [sharedCandidates updateCandidates];
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
-    }else{
-        if ([bufferedText length] > 0 ) {
-            [self originalBufferAppend:string client:sender];
-            [self commitComposition: sender];
-            return YES;
-        }else{
-            [sharedCandidates hide];
-            return NO;
-        }
-        
     }
     
     return NO;
@@ -168,17 +125,6 @@ KEY_MOVE_DOWN = 125;
         return YES;
     }
     return NO;
-}
-
-- (BOOL) shouldIgnoreKey:(NSInteger)keyCode modifiers:(NSUInteger)flags{
-    return (keyCode == KEY_BACKSPACE
-            || keyCode == KEY_MOVE_LEFT
-            || keyCode == KEY_MOVE_RIGHT
-            || keyCode == KEY_MOVE_DOWN
-            || (flags & NSCommandKeyMask)
-            || (flags & NSControlKeyMask)
-            || (flags & NSAlternateKeyMask)
-            || (flags & NSNumericPadKeyMask));
 }
 
 -(void)commitComposition:(id)sender{
