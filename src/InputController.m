@@ -68,6 +68,11 @@ KEY_ESC = 53;
     _currentClient = sender;
     NSInteger keyCode = [event keyCode];
     NSString* string = [event characters];
+    NSUInteger modifiers = [event modifierFlags];
+    if ([self shouldIgnoreKey:keyCode modifiers:modifiers]){
+        [self reset];
+        return NO;
+    }
     
     if(keyCode == KEY_DELETE){
         NSString* bufferedText = [self originalBuffer];
@@ -101,6 +106,10 @@ KEY_ESC = 53;
     }
     
     return NO;
+}
+
+- (BOOL) shouldIgnoreKey:(NSInteger)keyCode modifiers:(NSUInteger)flags{
+    return (flags & NSCommandKeyMask);
 }
 
 - (BOOL)deleteBackward:(id)sender{
