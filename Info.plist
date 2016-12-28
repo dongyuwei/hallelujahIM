@@ -24,8 +24,8 @@
 	<string>Hallelujah_1_Connection</string>
 	<key>InputMethodServerControllerClass</key>
 	<string>InputController</string>
-	<key>LSBackgroundOnly</key>
-	<string>1</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
