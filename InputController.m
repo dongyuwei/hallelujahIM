@@ -286,13 +286,19 @@ Here are the three approaches:
             
             
             if(definition && definition.length > 0){
-                NSRect rect = [sharedCandidates candidateFrame];
-                NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(rect), NSMaxY(rect));
-                
+                NSRect currentFrame = [sharedCandidates candidateFrame];
+                NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
+                NSRect rect;
                 rect.origin = windowInsertionPoint;
-                [sharedCandidates hide];//for test
-                [_annotationWin setAnnotation:definition];
-                [_annotationWin showWindow:rect  level:CGShieldingWindowLevel() + 1];
+                rect.size.width = 200;
+                rect.size.height = 100;
+                
+                AnnotationWinController *AWin = [AnnotationWinController sharedController];
+
+                [AWin setAnnotation:definition];
+                [AWin showWindow:rect level: CGShieldingWindowLevel() + 1];
+                
+                NSLog(@"definition: %@, rect: %@, _annotationWin: %@", definition, CGRectCreateDictionaryRepresentation(rect), AWin);
             }
         }
         @catch (NSException *exception) {
