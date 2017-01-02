@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
+#import <AnnotationWinController.h>
 
 @interface InputController : IMKInputController {
     NSMutableString*				_composedBuffer;
@@ -10,6 +11,7 @@
     BOOL                            _is_cmd_mode;
     NSUInteger                      _lastModifiers[2];
     NSEventType                     _lastEventTypes[2];
+    AnnotationWinController*        _annotationWin;
 }
 
 -(NSMutableString*)composedBuffer;

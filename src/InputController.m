@@ -4,7 +4,6 @@
 #import <CoreServices/CoreServices.h>
 
 extern IMKCandidates*           sharedCandidates;
-extern IMKCandidates*           subCandidates;
 extern PJTernarySearchTree*     trie;
 extern NSMutableDictionary*     wordsWithFrequency;
 extern BOOL                     defaultEnglishMode;
@@ -158,7 +157,7 @@ KEY_ESC = 53;
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    [subCandidates hide];
+    [_annotationWin hideWindow];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -283,40 +282,43 @@ KEY_ESC = 53;
     
     _insertionIndex = [candidateString length];
     
-    [self showSubCandidates: candidateString];
+    [self showAnnotation: candidateString];
 }
 
--(void)showSubCandidates:(NSAttributedString*)candidateString{
-    NSInteger candidateIdentifier = [sharedCandidates selectedCandidate];
-    NSInteger subCandidateStringIdentifier = [sharedCandidates candidateStringIdentifier: candidateString];
-
-    if (candidateIdentifier == subCandidateStringIdentifier) {
-        NSArray* subList = [self getSubCandidates: candidateString];
-        if(subList && subList.count > 0){
-            NSString* phoneticSymbol = [self getPhoneticSymbolOfWord: candidateString];
-            if([phoneticSymbol length] > 0){
-                NSArray* list = @[phoneticSymbol];
-                [subCandidates setCandidateData: [list arrayByAddingObjectsFromArray:subList]];
-            }else{
-                [subCandidates setCandidateData: subList];
-            }
-            
-            NSRect currentFrame = [sharedCandidates candidateFrame];
-            NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
-            [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
-            
-            
-            [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
-            [sharedCandidates showChild];
-        }else{
-            [subCandidates hide];
-        }
-    }else{
-        [subCandidates hide];
+- (void)activateServer:(id)sender {
+    if (_annotationWin == nil){
+        _annotationWin = [AnnotationWinController sharedController];
     }
 }
 
--(NSArray*)getSubCandidates: (NSAttributedString*)candidateString{
+- (void)deactivateServer:(id)sender {
+    [_annotationWin hideWindow];
+}
+
+-(void)showAnnotation:(NSAttributedString*)candidateString{
+    NSArray* subList = [self getTranslations: candidateString];
+    if(subList && subList.count > 0){
+        NSString* translations;
+        NSString* phoneticSymbol = [self getPhoneticSymbolOfWord: candidateString];
+        if([phoneticSymbol length] > 0){
+            NSArray* list = @[phoneticSymbol];
+            translations = [[list arrayByAddingObjectsFromArray:subList] componentsJoinedByString: @"\n"];
+        }else{
+            translations = [subList componentsJoinedByString: @"\n"];
+        }
+        NSRect currentFrame = [sharedCandidates candidateFrame];
+        NSRect tempRect;
+        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&tempRect];
+        NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
+        windowInsertionPoint.x = windowInsertionPoint.x + currentFrame.size.width;
+        [_annotationWin setAnnotation: translations];
+        [_annotationWin showWindow: windowInsertionPoint];
+    }else{
+        [_annotationWin hideWindow];
+    }
+}
+
+-(NSArray*)getTranslations: (NSAttributedString*)candidateString{
     return translationes[[[candidateString string] lowercaseString]];
 }
 

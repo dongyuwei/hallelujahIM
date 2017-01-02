@@ -5,7 +5,6 @@
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
 IMKCandidates*          sharedCandidates;
-IMKCandidates*          subCandidates;
 PJTernarySearchTree*    trie;
 NSMutableDictionary*    wordsWithFrequency;
 BOOL                    defaultEnglishMode;
@@ -70,7 +69,6 @@ int main(int argc, char *argv[])
                             bundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
     
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
-    subCandidates    = [[IMKCandidates alloc] initWithServer:nil    panelType:kIMKSingleColumnScrollingCandidatePanel];
     
     if (!sharedCandidates){
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);
