@@ -19,26 +19,10 @@ KEY_MOVE_RIGHT = 124,
 KEY_MOVE_DOWN = 125;
 
 @implementation InputController
-/*
-Implement one of the three ways to receive input from the client. 
-Here are the three approaches:
-                 
- 1.  Support keybinding.  
-        In this approach the system takes each keydown and trys to map the keydown to an action method that the input method has implemented.  If an action is found the system calls didCommandBySelector:client:.  If no action method is found inputText:client: is called.  An input method choosing this approach should implement
-        -(BOOL)inputText:(NSString*)string client:(id)sender;
-        -(BOOL)didCommandBySelector:(SEL)aSelector client:(id)sender;
-        
-2. Receive all key events without the keybinding, but do "unpack" the relevant text data.
-        Key events are broken down into the Unicodes, the key code that generated them, and modifier flags.  This data is then sent to the input method's inputText:key:modifiers:client: method.  For this approach implement:
-        -(BOOL)inputText:(NSString*)string key:(NSInteger)keyCode modifiers:(NSUInteger)flags client:(id)sender;
-        
-3. Receive events directly from the Text Services Manager as NSEvent objects.  For this approach implement:
-        -(BOOL)handleEvent:(NSEvent*)event client:(id)sender;
-*/
+
 -(BOOL)inputText:(NSString*)string key:(NSInteger)keyCode modifiers:(NSUInteger)flags client:(id)sender{
-    //tail -f /var/log/system.log
-    NSLog(@"text:%@, keycode:%ld, flags:%lu, bundleIdentifier: %@",
-          string, (long)keyCode,(unsigned long)flags, [sender bundleIdentifier]);
+//    NSLog(@"text:%@, keycode:%ld, flags:%lu, bundleIdentifier: %@",
+//          string, (long)keyCode,(unsigned long)flags, [sender bundleIdentifier]);
     
     _currentClient = sender;
     
@@ -61,6 +45,7 @@ Here are the three approaches:
     if(keyCode == KEY_RETURN){
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self commitComposition:sender];
+            [_annotationWin hideWindow];
             return YES;
         }
         return NO;
@@ -70,6 +55,7 @@ Here are the three approaches:
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self cancelComposition];
             [self commitComposition:sender];
+            [_annotationWin hideWindow];
 
             return YES;
         }
@@ -90,6 +76,7 @@ Here are the three approaches:
             return YES;
         }else{
             [sharedCandidates hide];
+            [_annotationWin hideWindow];
             return NO;
         }
         
@@ -98,14 +85,14 @@ Here are the three approaches:
     return NO;
 }
 
-- (id)initWithServer:(IMKServer*)server delegate:(id)delegate client:(id)inputClient{
-    if (self = [super initWithServer:server delegate:delegate client:inputClient]) {
-        _currentClient = nil;
-        
-        _annotationWin = [[AnnotationWinController alloc] init];
+- (void)activateServer:(id)sender {
+    if (_annotationWin == nil){
+        _annotationWin = [AnnotationWinController sharedController];
     }
-    
-    return self;
+}
+
+- (void)deactivateServer:(id)sender {
+    [_annotationWin hideWindow];
 }
 
 - (BOOL)deleteBackward:(id)sender{
@@ -136,11 +123,7 @@ Here are the three approaches:
 }
 
 - (BOOL) shouldIgnoreKey:(NSInteger)keyCode modifiers:(NSUInteger)flags{
-    return (keyCode == KEY_BACKSPACE
-            || keyCode == KEY_MOVE_LEFT
-            || keyCode == KEY_MOVE_RIGHT
-            || keyCode == KEY_MOVE_DOWN
-            || (flags & NSCommandKeyMask)
+    return ((flags & NSCommandKeyMask)
             || (flags & NSControlKeyMask)
             || (flags & NSAlternateKeyMask)
             || (flags & NSNumericPadKeyMask));
@@ -167,7 +150,9 @@ Here are the three approaches:
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    _candidateSelected = NO; 
+    _candidateSelected = NO;
+    
+    [_annotationWin hideWindow];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -200,14 +185,6 @@ Here are the three approaches:
 -(void)setOriginalBuffer:(NSString*)string{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer setString:string];
-}
-
-- (void) activateServer:(id)client{
-    NSLog(@"him activateServer");
-}
-
--(void) :(id)sender{
-    [sharedCandidates hide];
 }
 
 - (NSArray*)candidates:(id)sender{
@@ -287,18 +264,15 @@ Here are the three approaches:
             
             if(definition && definition.length > 0){
                 NSRect currentFrame = [sharedCandidates candidateFrame];
-                NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
-                NSRect rect;
-                rect.origin = windowInsertionPoint;
-                rect.size.width = 200;
-                rect.size.height = 100;
+                NSRect tempRect;
+                [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&tempRect];
+                NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
+                windowInsertionPoint.x = windowInsertionPoint.x + currentFrame.size.width;
                 
-                AnnotationWinController *AWin = [AnnotationWinController sharedController];
-
-                [AWin setAnnotation:definition];
-                [AWin showWindow:rect level: CGShieldingWindowLevel() + 1];
-                
-                NSLog(@"definition: %@, rect: %@, _annotationWin: %@", definition, CGRectCreateDictionaryRepresentation(rect), AWin);
+                [_annotationWin setAnnotation: definition];
+                [_annotationWin showWindow: windowInsertionPoint];
+            } else {
+                [_annotationWin hideWindow];
             }
         }
         @catch (NSException *exception) {
@@ -312,7 +286,7 @@ Here are the three approaches:
     [self setComposedBuffer:[candidateString string]];
     [self commitComposition:_currentClient];
     
-    NSLog(@"candidateSelected, %@", candidateString);
+    [_annotationWin hideWindow];
 }
 
 -(void)dealloc{
