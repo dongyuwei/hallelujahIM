@@ -12,6 +12,8 @@ extern NSDictionary*            substitutions;
 
 typedef NSInteger KeyCode;
 static const KeyCode
+KEY_RETURN = 36,
+KEY_SPACE = 49,
 KEY_DELETE = 51,
 KEY_ESC = 53;
 
@@ -84,6 +86,14 @@ KEY_ESC = 53;
     }
     
     NSString* bufferedText = [self originalBuffer];
+    
+    if(keyCode == KEY_RETURN || keyCode == KEY_SPACE){
+        if ( bufferedText && [bufferedText length] > 0 ) {
+            [self commitComposition:sender];
+            return YES;
+        }
+        return NO;
+    }
     
     if(keyCode == KEY_ESC){
         if ( bufferedText && [bufferedText length] > 0 ) {
@@ -278,6 +288,10 @@ KEY_ESC = 53;
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
+    NSString* candidate = [candidateString string];
+    [self setComposedBuffer:candidate];
+    [self setOriginalBuffer:candidate];
+    
     [self showPreeditString: [candidateString string]];
     
     _insertionIndex = [candidateString length];
