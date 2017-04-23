@@ -75,17 +75,19 @@ KEY_ESC = 53;
     NSInteger keyCode = [event keyCode];
     NSString* string = [event characters];
     
+    NSString* bufferedText = [self originalBuffer];
+    
+//    NSLog(@"text:%@, keycode:%ld,  %ld, bufferedText:%@", string, (long)keyCode,
+//          [event modifierFlags] & NSShiftKeyMask, bufferedText);
+
+    
     if(keyCode == KEY_DELETE){
-        NSString* bufferedText = [self originalBuffer];
-        
         if ( bufferedText && [bufferedText length] > 0 ) {
             return [self deleteBackward:sender];
         }
         
         return NO;
     }
-    
-    NSString* bufferedText = [self originalBuffer];
     
     if(keyCode == KEY_RETURN || keyCode == KEY_SPACE){
         if ( bufferedText && [bufferedText length] > 0 ) {
@@ -142,18 +144,13 @@ KEY_ESC = 53;
 }
 
 -(void)commitComposition:(id)sender{
-    NSString*		text = [self composedBuffer];
+    NSString* text = [self composedBuffer];
     
     if ( text == nil || [text length] == 0 ) {
         text = [self originalBuffer];
     }
     
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
-    
-    int frequency = [[wordsWithFrequency objectForKey: text] intValue];
-    if(!defaultEnglishMode){
-        [wordsWithFrequency setValue: [NSNumber numberWithInt: frequency + 1] forKey: text];
-    }
     
     [self reset];
 }
@@ -185,6 +182,12 @@ KEY_ESC = 53;
     return _originalBuffer;
 }
 
+
+-(void)setOriginalBuffer:(NSString*)string{
+    NSMutableString*		buffer = [self originalBuffer];
+    [buffer setString:string];
+}
+
 -(void)showPreeditString:(NSString*)string{
     NSDictionary*       attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, [string length])];
     NSAttributedString* attrString;
@@ -211,12 +214,6 @@ KEY_ESC = 53;
 -(void)appendToOriginalBuffer:(NSString*)string client:(id)sender{
     NSMutableString*		buffer = [self originalBuffer];
     [buffer appendString: string];
-}
-
-
--(void)setOriginalBuffer:(NSString*)string{
-    NSMutableString*		buffer = [self originalBuffer];
-    [buffer setString:string];
 }
 
 - (NSArray*)candidates:(id)sender{
@@ -284,15 +281,29 @@ KEY_ESC = 53;
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString*)candidateString{
-    NSString* candidate = [candidateString string];
-    [self setComposedBuffer:candidate];
-    [self setOriginalBuffer:candidate];
+    [self _updateComposedBuffer: candidateString];
     
     [self showPreeditString: [candidateString string]];
     
     _insertionIndex = [candidateString length];
     
     [self showAnnotation: candidateString];
+}
+
+- (void)candidateSelected:(NSAttributedString*)candidateString {
+    [self _updateComposedBuffer: candidateString];
+    
+    [self commitComposition:_currentClient];
+}
+
+- (void)_updateComposedBuffer:(NSAttributedString*)candidateString {
+    NSString* originalBuff = [NSString stringWithString:[self originalBuffer]];
+    NSString* composed = [candidateString string];
+    if([composed hasPrefix: [originalBuff lowercaseString]]){
+        [self setComposedBuffer: [NSString stringWithFormat: @"%@%@", originalBuff, [composed substringFromIndex: originalBuff.length]]];
+    }else{
+        [self setComposedBuffer:composed];
+    }
 }
 
 - (void)activateServer:(id)sender {
@@ -354,17 +365,6 @@ KEY_ESC = 53;
     }
     
     return phoneticSymbol;
-}
-
-- (void)candidateSelected:(NSAttributedString*)candidateString{
-    NSString* originalBuff = [NSString stringWithString:[self originalBuffer]];
-    NSString* composed = [candidateString string];
-    if([composed hasPrefix: [originalBuff lowercaseString]]){
-        [self setComposedBuffer: [NSString stringWithFormat: @"%@%@", originalBuff, [composed substringFromIndex: originalBuff.length]]];
-    }else{
-        [self setComposedBuffer:composed];
-    }
-    [self commitComposition:_currentClient];
 }
 
 -(NSArray*) getGoogleSuggestion: (NSString*)word{
