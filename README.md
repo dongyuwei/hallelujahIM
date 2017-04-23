@@ -18,6 +18,14 @@ download and install
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
 4. switch to hallelujah input method
 
+update/reinstall
+======
+1. delete the hallelujah from `Input Sources`
+2. kill the old hallelujah Process
+3. replace the hallelujah app in `/Library/Input Methods/`.
+4. add the hallelujah to `Input Sources`
+5. switch to hallelujah, use it.
+
 setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
