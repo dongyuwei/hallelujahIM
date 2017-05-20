@@ -89,14 +89,23 @@ KEY_ESC = 53;
         return NO;
     }
     
-    if(keyCode == KEY_RETURN || keyCode == KEY_SPACE){
+    if(keyCode == KEY_RETURN){
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self commitComposition:sender];
             return YES;
         }
         return NO;
     }
-    
+
+    if(keyCode == KEY_SPACE){
+        if ( bufferedText && [bufferedText length] > 0 ) {
+            [self appendToComposedBuffer: @" "];
+            [self commitComposition:sender];
+            return YES;
+        }
+        return NO;
+    }
+
     if(keyCode == KEY_ESC){
         if ( bufferedText && [bufferedText length] > 0 ) {
             [self cancelComposition];
