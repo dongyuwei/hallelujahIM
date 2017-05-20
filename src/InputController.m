@@ -116,6 +116,15 @@ KEY_ESC = 53;
         return YES;
     }
     
+    if ([[NSCharacterSet punctuationCharacterSet] characterIsMember: ch] ||
+        [[NSCharacterSet symbolCharacterSet] characterIsMember: ch]) {
+        if (bufferedText && [bufferedText length] > 0) {
+            [self appendToComposedBuffer: string];
+            [self commitComposition:sender];
+            return YES;
+        }
+    }
+    
     return NO;
 }
 
@@ -211,8 +220,8 @@ KEY_ESC = 53;
     [self showPreeditString: buffer];
 }
 
--(void)appendToOriginalBuffer:(NSString*)string client:(id)sender{
-    NSMutableString*		buffer = [self originalBuffer];
+-(void)appendToComposedBuffer:(NSString*)string {
+    NSMutableString* buffer = [self composedBuffer];
     [buffer appendString: string];
 }
 
