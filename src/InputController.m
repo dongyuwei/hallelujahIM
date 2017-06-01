@@ -76,13 +76,14 @@ KEY_ESC = 53;
     NSString* string = [event characters];
     
     NSString* bufferedText = [self originalBuffer];
+    bool hasBufferedText = bufferedText && [bufferedText length] > 0;
     
 //    NSLog(@"text:%@, keycode:%ld,  %ld, bufferedText:%@", string, (long)keyCode,
 //          [event modifierFlags] & NSShiftKeyMask, bufferedText);
 
     
     if(keyCode == KEY_DELETE){
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasBufferedText) {
             return [self deleteBackward:sender];
         }
         
@@ -90,7 +91,7 @@ KEY_ESC = 53;
     }
     
     if(keyCode == KEY_RETURN){
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasBufferedText) {
             [self commitComposition:sender];
             return YES;
         }
@@ -98,7 +99,7 @@ KEY_ESC = 53;
     }
 
     if(keyCode == KEY_SPACE){
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasBufferedText) {
             [self appendToComposedBuffer: @" "];
             [self commitComposition:sender];
             return YES;
@@ -107,11 +108,11 @@ KEY_ESC = 53;
     }
 
     if(keyCode == KEY_ESC){
-        if ( bufferedText && [bufferedText length] > 0 ) {
+        if (hasBufferedText) {
             [self cancelComposition];
+            [self setComposedBuffer:@""];
+            [self setOriginalBuffer:@""];
             [self commitComposition:sender];
-            
-            return YES;
         }
         return NO;
     }
@@ -127,7 +128,7 @@ KEY_ESC = 53;
     
     if ([[NSCharacterSet punctuationCharacterSet] characterIsMember: ch] ||
         [[NSCharacterSet symbolCharacterSet] characterIsMember: ch]) {
-        if (bufferedText && [bufferedText length] > 0) {
+        if (hasBufferedText) {
             [self appendToComposedBuffer: string];
             [self commitComposition:sender];
             return YES;
