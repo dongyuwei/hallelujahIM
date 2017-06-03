@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
-#import <AnnotationWinController.h>
+#import "AnnotationWinController.h"
 
 @interface InputController : IMKInputController {
     NSMutableString*				_composedBuffer;

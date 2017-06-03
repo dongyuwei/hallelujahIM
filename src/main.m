@@ -12,6 +12,7 @@ NSDictionary*           translationes;
 NSDictionary*           substitutions;
 
 PJTernarySearchTree* buildTrieFromFile(){
+    NSDate *start = [NSDate date];
     NSString* path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"json"];
     
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
@@ -22,6 +23,9 @@ PJTernarySearchTree* buildTrieFromFile(){
     
     wordsWithFrequency = [dict mutableCopy];
     [inputStream close];
+    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+    NSLog(@"read json:%f", timeInterval);
+    NSDate *start2 = [NSDate date];
     
     PJTernarySearchTree * tree = [[PJTernarySearchTree alloc] init];
     
@@ -29,7 +33,21 @@ PJTernarySearchTree* buildTrieFromFile(){
     for(NSString* word in allWords){
         [tree insertString: word];
     }
+    NSTimeInterval timeInterval2 = [start2 timeIntervalSinceNow];
+    NSLog(@"build trie:%f", timeInterval2);
     
+    NSDate *start3 = [NSDate date];
+    NSString* savePath =[NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.hallelujah_data"];
+    [tree saveTreeToFile: savePath];
+    
+    NSTimeInterval timeInterval3 = [start3 timeIntervalSinceNow];
+    NSLog(@"save trie:%f", timeInterval3);
+    
+    NSDate *start4 = [NSDate date];
+    PJTernarySearchTree * tree2 = [PJTernarySearchTree treeWithFile: savePath];
+    NSTimeInterval timeInterval4 = [start4 timeIntervalSinceNow];
+    NSLog(@"rebuild trie:%f", timeInterval4);
+
     return tree;
 }
 
@@ -57,6 +75,7 @@ NSDictionary* getUserDefinedSubstitutions(){
                                                                       error:nil];
     
     [inputStream close];
+    NSLog(@"substitutions:%@", substitutions);
     return substitutions;
 }
 
