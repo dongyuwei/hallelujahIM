@@ -2,6 +2,7 @@
 #import "PJTernarySearchTree.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
+#import <GitHubUpdates/GitHubUpdates.h>
 
 extern IMKCandidates*           sharedCandidates;
 extern PJTernarySearchTree*     trie;
@@ -328,6 +329,13 @@ KEY_ESC = 53;
 - (void)activateServer:(id)sender {
     if (_annotationWin == nil){
         _annotationWin = [AnnotationWinController sharedController];
+        
+        
+        updater            = [ GitHubUpdater new];
+        updater.user       = @"dongyuwei";
+        updater.repository = @"https://github.com/dongyuwei/hallelujahIM/";
+        
+        [updater checkForUpdatesInBackground ];
     }
 }
 

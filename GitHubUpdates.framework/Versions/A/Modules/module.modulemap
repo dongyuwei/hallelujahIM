@@ -1,0 +1,6 @@
+framework module GitHubUpdates {
+  umbrella header "GitHubUpdates.h"
+
+  export *
+  module * { export * }
+}
