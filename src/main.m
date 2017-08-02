@@ -2,6 +2,8 @@
 #import <InputMethodKit/InputMethodKit.h>
 #import "PJTernarySearchTree.h"
 
+//#import "marisa.h"
+
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
 IMKCandidates*          sharedCandidates;
@@ -62,6 +64,17 @@ NSDictionary* getUserDefinedSubstitutions(){
 
 int main(int argc, char *argv[])
 {
+//    marisa::Keyset keyset;
+//    keyset.push_back("a");
+//    keyset.push_back("app");
+//    keyset.push_back("apple");
+//    
+//    marisa::Trie trie;
+//    trie.build(keyset);
+//    
+//    marisa::Agent agent;
+//    agent.set_query("apple");
+    
     NSString*       identifier;
     
     identifier = [[NSBundle mainBundle] bundleIdentifier];

@@ -18,6 +18,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
+		F1563BD61F321F7400E8A2C9 /* libmarisa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1563BD51F321F7400E8A2C9 /* libmarisa.a */; };
 		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
 		F1CDA2B01B551A55005086C6 /* InputController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A51B55180A005086C6 /* InputController.m */; };
 		F1CDA2B11B551A55005086C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A61B55180A005086C6 /* main.m */; };
@@ -42,6 +43,7 @@
 		E93074B60A5C264700470842 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = /System/Library/Frameworks/InputMethodKit.framework; sourceTree = "<absolute>"; };
 		F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnotationWinController.m; path = src/AnnotationWinController.m; sourceTree = "<group>"; };
 		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
+		F1563BD51F321F7400E8A2C9 /* libmarisa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmarisa.a; path = lib/libmarisa.a; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
 		F1CDA2A51B55180A005086C6 /* InputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputController.m; path = src/InputController.m; sourceTree = "<group>"; };
 		F1CDA2A61B55180A005086C6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/main.m; sourceTree = "<group>"; };
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1563BD61F321F7400E8A2C9 /* libmarisa.a in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
@@ -131,6 +134,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1563BD51F321F7400E8A2C9 /* libmarisa.a */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -255,8 +259,13 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
@@ -272,8 +281,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
