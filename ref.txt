@@ -1,0 +1,4 @@
+
+http://s-yata.github.io/marisa-trie/docs/readme.en.html
+
+https://www.raywenderlich.com/41377/creating-a-static-library-in-ios-tutorial
