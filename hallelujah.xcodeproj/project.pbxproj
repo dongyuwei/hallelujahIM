@@ -9,30 +9,27 @@
 /* Begin PBXBuildFile section */
 		0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D29160719519CE500C4CE58 /* AppKit.framework */; };
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
-		0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DC72DCB195A914A009888F6 /* google_227800_words.json */; };
 		0DE74BFE1978EC6A00040F3C /* him.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFD1978EC6A00040F3C /* him.png */; };
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
-		0DE7AF5A1AA2DE640009DEDF /* transformed_translation.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DE7AF591AA2DE640009DEDF /* transformed_translation.json */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
+		F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F102C5A31F487D5A0005B03F /* libmarisa.a */; };
+		F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */ = {isa = PBXBuildFile; fileRef = F102C5A51F487DE80005B03F /* google_227800_words.bin */; };
+		F102C5A81F48818A0005B03F /* words_with_frequency_and_translation.json in Resources */ = {isa = PBXBuildFile; fileRef = F102C5A71F48818A0005B03F /* words_with_frequency_and_translation.json */; };
+		F102C5AA1F4882C80005B03F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5A91F4882C80005B03F /* main.mm */; };
+		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
 		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
-		F1CDA2B01B551A55005086C6 /* InputController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A51B55180A005086C6 /* InputController.m */; };
-		F1CDA2B11B551A55005086C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A61B55180A005086C6 /* main.m */; };
-		F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */; };
-		F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0D29160719519CE500C4CE58 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		0D2BFD8E194588F400DE18D9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = hallelujah/Images.xcassets; sourceTree = "<group>"; };
-		0DC72DCB195A914A009888F6 /* google_227800_words.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_227800_words.json; path = dictionary/google_227800_words.json; sourceTree = "<group>"; };
 		0DE74BFD1978EC6A00040F3C /* him.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = him.png; sourceTree = "<group>"; };
 		0DE74BFF1978F18E00040F3C /* him.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = him.icns; sourceTree = "<group>"; };
-		0DE7AF591AA2DE640009DEDF /* transformed_translation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = transformed_translation.json; path = dictionary/transformed_translation.json; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -40,13 +37,14 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* hallelujah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hallelujah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93074B60A5C264700470842 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = /System/Library/Frameworks/InputMethodKit.framework; sourceTree = "<absolute>"; };
+		F102C5A31F487D5A0005B03F /* libmarisa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmarisa.a; path = lib/libmarisa.a; sourceTree = "<group>"; };
+		F102C5A51F487DE80005B03F /* google_227800_words.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = google_227800_words.bin; path = dictionary/google_227800_words.bin; sourceTree = "<group>"; };
+		F102C5A71F48818A0005B03F /* words_with_frequency_and_translation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = words_with_frequency_and_translation.json; path = dictionary/words_with_frequency_and_translation.json; sourceTree = "<group>"; };
+		F102C5A91F4882C80005B03F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = "<group>"; };
+		F102C5AB1F4882D30005B03F /* InputController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InputController.mm; path = src/InputController.mm; sourceTree = "<group>"; };
 		F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnotationWinController.m; path = src/AnnotationWinController.m; sourceTree = "<group>"; };
 		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
-		F1CDA2A51B55180A005086C6 /* InputController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputController.m; path = src/InputController.m; sourceTree = "<group>"; };
-		F1CDA2A61B55180A005086C6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/main.m; sourceTree = "<group>"; };
-		F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PJTernarySearchTree.h; path = src/PJTernarySearchTree.h; sourceTree = "<group>"; };
-		F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PJTernarySearchTree.m; path = src/PJTernarySearchTree.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
@@ -66,13 +65,11 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F102C5A91F4882C80005B03F /* main.mm */,
+				F102C5AB1F4882D30005B03F /* InputController.mm */,
 				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
 				F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */,
 				F1CDA2A41B55180A005086C6 /* InputController.h */,
-				F1CDA2A51B55180A005086C6 /* InputController.m */,
-				F1CDA2A61B55180A005086C6 /* main.m */,
-				F1CDA2A91B55180A005086C6 /* PJTernarySearchTree.h */,
-				F1CDA2AA1B55180A005086C6 /* PJTernarySearchTree.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -117,8 +114,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0DE7AF591AA2DE640009DEDF /* transformed_translation.json */,
-				0DC72DCB195A914A009888F6 /* google_227800_words.json */,
+				F102C5A71F48818A0005B03F /* words_with_frequency_and_translation.json */,
+				F102C5A51F487DE80005B03F /* google_227800_words.bin */,
 				0D2BFD8E194588F400DE18D9 /* Images.xcassets */,
 				E93396E20A9A0AAD0073E6C4 /* images */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -131,6 +128,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F102C5A31F487D5A0005B03F /* libmarisa.a */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -198,11 +196,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
-				0DE7AF5A1AA2DE640009DEDF /* transformed_translation.json in Resources */,
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
+				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
+				F102C5A81F48818A0005B03F /* words_with_frequency_and_translation.json in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
 				0DE74C001978F18E00040F3C /* him.icns in Resources */,
-				0DC72DCC195A914A009888F6 /* google_227800_words.json in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,11 +212,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
 				F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */,
-				F1CDA2B01B551A55005086C6 /* InputController.m in Sources */,
-				F1CDA2B11B551A55005086C6 /* main.m in Sources */,
-				F1CDA2B41B551A55005086C6 /* PJTernarySearchTree.h in Sources */,
-				F1CDA2B51B551A55005086C6 /* PJTernarySearchTree.m in Sources */,
+				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,
 				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,8 +251,13 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
@@ -272,8 +273,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
+				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
