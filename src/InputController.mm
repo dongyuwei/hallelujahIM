@@ -351,8 +351,9 @@ KEY_ESC = 53;
 }
 
 - (void)deactivateServer:(id)sender {
-    [_annotationWin hideWindow];
+    [self reset];
 }
+
 
 -(void)showAnnotation:(NSAttributedString*)candidateString{
     NSArray* subList = [self getTranslations: candidateString];
