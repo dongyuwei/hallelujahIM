@@ -369,11 +369,37 @@ KEY_ESC = 53;
         NSRect currentFrame = [sharedCandidates candidateFrame];
         NSRect tempRect;
         [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&tempRect];
+        NSPoint insertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
         NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
         windowInsertionPoint.x = windowInsertionPoint.x + currentFrame.size.width;
+        NSRect rect = [[NSScreen mainScreen] frame];
+        int screenWidth = (int)rect.size.width;
+        
+        
+        if ((insertionPoint.x + currentFrame.size.width + 170 + 20) >= screenWidth) {
+            windowInsertionPoint.x = insertionPoint.x - 170 - 20;
+        }
+        
+        if (screenWidth - insertionPoint.x < 170) {
+            windowInsertionPoint.x  = screenWidth - currentFrame.size.width - 170 - 20;
+        }
+        
+        if (windowInsertionPoint.y <= currentFrame.size.height) {
+            windowInsertionPoint.y = currentFrame.size.height + windowInsertionPoint.y + 28; //28 is line-height
+        } else {
+            windowInsertionPoint.y = windowInsertionPoint.y - 6;
+        }
+        
+        
         [_annotationWin setAnnotation: translations];
         [_annotationWin showWindow: windowInsertionPoint];
-    }else{
+        
+//        int screenHeight = (int)rect.size.height;
+//        NSLog(@"sharedCandidates currentFrame: %@, windowInsertionPoint:%@, screen width: %d screen height %d",
+//              NSStringFromRect(currentFrame),
+//              NSStringFromPoint(windowInsertionPoint),
+//              screenWidth, screenHeight);
+    } else {
         [_annotationWin hideWindow];
     }
 }

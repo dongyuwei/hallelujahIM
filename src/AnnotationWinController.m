@@ -27,7 +27,7 @@ static AnnotationWinController *sharedController;
 - (void)showWindow:(NSPoint)origin {
     NSSize size;
     size.width = 170;
-    size.height = 258;
+    size.height = 256;// max-height of sharedCandidates
     [[self panel] setMinSize:size];
     [[self panel] setContentSize: size];
     [[self panel] setAlphaValue: 0.9];
