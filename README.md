@@ -57,4 +57,11 @@ If functional you need is missing but you're ready to pay for it, feel free to c
 
 ## about libmarisa / marisa-trie
 1. the static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f` 
-2. to build the `libmarisa.a` lib, run `configure --enable-static && make`
+2. to build the `libmarisa.a` lib, run:
+```bash
+git clone git://github.com/s-yata/marisa-trie.git
+cd marisa-trie
+autoreconf -i
+./configure --enable-static
+make
+```
