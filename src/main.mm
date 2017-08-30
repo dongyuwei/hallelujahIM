@@ -2,6 +2,10 @@
 #import <InputMethodKit/InputMethodKit.h>
 #import "marisa.h"
 
+#import "GCDWebServer.h"
+#import "GCDWebServerURLEncodedFormRequest.h"
+#import "GCDWebServerDataResponse.h"
+
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
 IMKCandidates*          sharedCandidates;
@@ -9,7 +13,13 @@ marisa::Trie            trie;
 BOOL                    defaultEnglishMode;
 NSDictionary*           wordsWithFrequencyAndTranslation;
 NSDictionary*           substitutions;
+NSMutableDictionary*    preference;
 
+void initPreference() {
+    preference = [NSMutableDictionary dictionary];
+    [preference setObject:@true forKey:@"showTranslation"];
+    [preference setObject:@"baidu" forKey:@"pinyinApi"];
+}
 
 NSDictionary* getWordsWithFrequencyAndTranslation(){
     NSString* path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation" ofType:@"json"];
@@ -26,7 +36,7 @@ NSDictionary* getWordsWithFrequencyAndTranslation(){
 }
 
 NSDictionary* getUserDefinedSubstitutions(){
-    NSString* path =[NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
+    NSString* path = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
     
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
     [inputStream  open];
@@ -36,6 +46,39 @@ NSDictionary* getUserDefinedSubstitutions(){
     
     [inputStream close];
     return substitutions;
+}
+
+void startHttpServer() {
+    initPreference();
+    
+    GCDWebServer* webServer = [[GCDWebServer alloc] init];
+    [webServer addGETHandlerForBasePath:@"/"
+                          directoryPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"web"]
+                          indexFilename:nil
+                               cacheAge:3600
+                     allowRangeRequests:YES];
+    
+    [webServer addHandlerForMethod:@"GET"
+                              path:@"/preference"
+                      requestClass:[GCDWebServerRequest class]
+                      processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+                          return [GCDWebServerDataResponse responseWithJSONObject: preference];
+                     
+    }];
+
+    
+    [webServer addHandlerForMethod:@"POST"
+                              path:@"/preference"
+                      requestClass:[GCDWebServerURLEncodedFormRequest class]
+                      processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
+                          //todo: update preference
+                          return [GCDWebServerDataResponse responseWithJSONObject:@{@"data": [(GCDWebServerURLEncodedFormRequest*)request arguments]}];
+    }];
+    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+    [options setObject:@62718 forKey:GCDWebServerOption_Port];
+    [options setObject:@YES forKey:GCDWebServerOption_BindToLocalhost];
+    
+    [webServer startWithOptions:options error:nil];
 }
 
 int main(int argc, char *argv[])
@@ -64,7 +107,8 @@ int main(int argc, char *argv[])
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];
     
-	[[NSApplication sharedApplication] run];
-    
+    startHttpServer();
+
+    [[NSApplication sharedApplication] run];
     return 0;
 }

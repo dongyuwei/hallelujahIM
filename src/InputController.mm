@@ -8,6 +8,7 @@ extern marisa::Trie             trie;
 extern NSMutableDictionary*     wordsWithFrequencyAndTranslation;
 extern BOOL                     defaultEnglishMode;
 extern NSDictionary*            substitutions;
+extern NSMutableDictionary*     preference;
 
 typedef NSInteger KeyCode;
 static const KeyCode
