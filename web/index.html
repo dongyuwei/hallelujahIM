@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hallelujah input method preference</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div id="app">
+        <form action="/" method="POST" v-on:submit.prevent='updatePreference()'>
+            <label>
+                Show Translation:
+                <input v-if='preference.showTranslation' type="checkbox" 
+                    name='showTranslation' v-model='preference.showTranslation' checked>
+                <input v-if='!preference.showTranslation' type="checkbox" 
+                    name='showTranslation' v-model='showTranslation' >
+            </label>
+            
+            <label>
+                Use Pinyin API:
+                <select name="pinyinApi" v-model='preference.pinyinApi'>
+                    <option value=""></option>
+                    <option value="baidu">Baidu   Pinyin API</option>
+                    <option value="google">Google Pinyin API</option>
+                </select>
+            </label>
+            <input type="submit" value='submit'>
+        </form>
+    </div>
+    <script src="./vue.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
