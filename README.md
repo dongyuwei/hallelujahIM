@@ -55,7 +55,12 @@ spell check:<br/>
 
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
 
-## about libmarisa / marisa-trie
+## Build project
+1. `pod install` 
+2. `open hallelujah.xcworkspace`
+3. build the project.
+
+## About libmarisa / marisa-trie
 1. the static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f` 
 2. to build the `libmarisa.a` lib, run:
 ```bash
