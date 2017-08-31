@@ -1,4 +1,5 @@
 #import "InputController.h"
+#import "InputApplicationDelegate.h"
 #import "marisa.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
@@ -353,6 +354,11 @@ KEY_ESC = 53;
 
 - (void)deactivateServer:(id)sender {
     [self reset];
+}
+
+-(NSMenu*)menu
+{
+    return [[NSApp delegate] performSelector:NSSelectorFromString(@"menu")];
 }
 
 
