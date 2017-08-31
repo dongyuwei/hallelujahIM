@@ -11,9 +11,9 @@
             <label>
                 Show Translation:
                 <input v-if='preference.showTranslation' type="checkbox" 
-                    name='showTranslation' v-model='preference.showTranslation' checked>
+                    v-model='preference.showTranslation' checked>
                 <input v-if='!preference.showTranslation' type="checkbox" 
-                    name='showTranslation' v-model='showTranslation' >
+                    v-model='preference.showTranslation' >
             </label>
             
             <label>
