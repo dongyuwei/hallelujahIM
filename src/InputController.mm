@@ -327,6 +327,13 @@ KEY_ESC = 53;
     
     _insertionIndex = [candidateString length];
     
+    bool showTranslations = [[NSUserDefaults standardUserDefaults] boolForKey: @"showTranslations"];
+    
+    NSArray* pinyinApi = [[NSUserDefaults standardUserDefaults] arrayForKey: @"showTranslations"];
+    
+    NSLog(@"showTranslations: %@, pinyinApi: %@", showTranslations, pinyinApi);
+
+    
     [self showAnnotation: candidateString];
 }
 
