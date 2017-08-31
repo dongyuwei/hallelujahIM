@@ -5,6 +5,7 @@
 #import "GCDWebServer.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
 #import "GCDWebServerDataResponse.h"
+#import "GCDWebServerDataRequest.h"
 
 const NSString*         kConnectionName = @"Hallelujah_1_Connection";
 IMKServer*              server;
@@ -72,7 +73,7 @@ void startHttpServer() {
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
                           //todo: update preference
-                          return [GCDWebServerDataResponse responseWithJSONObject:@{@"data": [(GCDWebServerURLEncodedFormRequest*)request arguments]}];
+                          return [GCDWebServerDataResponse responseWithJSONObject: [(GCDWebServerDataRequest*)request jsonObject] ];
     }];
     NSMutableDictionary* options = [NSMutableDictionary dictionary];
     [options setObject:@62718 forKey:GCDWebServerOption_Port];

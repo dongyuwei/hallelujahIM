@@ -21,6 +21,10 @@ var app = new Vue({
         updatePreference: function () {
             fetch('http://localhost:62718/preference', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(this.preference)
             })
             .then(function (res) {
