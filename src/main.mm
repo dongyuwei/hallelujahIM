@@ -108,6 +108,10 @@ int main(int argc, char *argv[])
                                   owner:[NSApplication sharedApplication]
                         topLevelObjects:nil];
     
+    [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu"
+                                  owner:[NSApplication sharedApplication]
+                        topLevelObjects:nil];
+    
     startHttpServer();
 
     [[NSApplication sharedApplication] run];
