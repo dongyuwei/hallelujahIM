@@ -21,7 +21,7 @@ download and install
 update/reinstall
 ======
 1. delete the hallelujah from `Input Sources`
-2. kill the old hallelujah Process
+2. kill the old hallelujah Process (kill it by `pkill -9 hallelujah`, check it been killed via `ps ax|grep hallelujah` )
 3. replace the hallelujah app in `/Library/Input Methods/`.
 4. add the hallelujah to `Input Sources`
 5. switch to hallelujah, use it.
