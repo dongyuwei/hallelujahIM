@@ -1,4 +1,34 @@
+#app {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    margin-top: 100px; 
+    padding: 20px;
+    border: 1px solid #666;
+    background: hsla(31,15%,50%,.1);
+    border-radius: 5px;
+}
+
+form .form-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
 label {
     display: block;
     margin-bottom: 10px;
+    border: dotted 1px #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+label select {
+    margin-top: 10px;
+}
+
+p {
+    margin: 0;
 }

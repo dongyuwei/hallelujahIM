@@ -14,13 +14,7 @@ marisa::Trie            trie;
 BOOL                    defaultEnglishMode;
 NSDictionary*           wordsWithFrequencyAndTranslation;
 NSDictionary*           substitutions;
-NSMutableDictionary*    preference;
-
-void initPreference() {
-    preference = [NSMutableDictionary dictionary];
-    [preference setObject:@true forKey:@"showTranslation"];
-    [preference setObject:@"baidu" forKey:@"pinyinApi"];
-}
+NSUserDefaults*         preference;
 
 NSDictionary* getWordsWithFrequencyAndTranslation(){
     NSString* path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation" ofType:@"json"];
@@ -49,6 +43,26 @@ NSDictionary* getUserDefinedSubstitutions(){
     return substitutions;
 }
 
+void initPreference() {
+    preference = [NSUserDefaults standardUserDefaults];
+    if ([preference objectForKey:@"showTranslation"] == nil) {
+        [preference setBool:YES forKey:@"showTranslation"];
+    }
+    
+    if ([preference objectForKey:@"pinyinApi"] == nil) {
+        [preference setObject: @"baidu" forKey: @"pinyinApi"];
+    }
+    
+}
+
+NSDictionary* getDictionaryRepresentationOfPreference(){
+    NSMutableDictionary* dict = [NSMutableDictionary dictionary];
+    BOOL showTranslation = [preference boolForKey:@"showTranslation"];
+    [dict setObject: [NSNumber numberWithBool: showTranslation] forKey:@"showTranslation"];
+    [dict setObject:[preference objectForKey:@"pinyinApi"] forKey:@"pinyinApi"];
+    return dict;
+}
+
 void startHttpServer() {
     initPreference();
     
@@ -63,7 +77,7 @@ void startHttpServer() {
                               path:@"/preference"
                       requestClass:[GCDWebServerRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
-                          return [GCDWebServerDataResponse responseWithJSONObject: preference];
+                          return [GCDWebServerDataResponse responseWithJSONObject: getDictionaryRepresentationOfPreference()];
                      
     }];
 
@@ -72,8 +86,11 @@ void startHttpServer() {
                               path:@"/preference"
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest* request) {
-                          //todo: update preference
-                          return [GCDWebServerDataResponse responseWithJSONObject: [(GCDWebServerDataRequest*)request jsonObject] ];
+                          NSDictionary *data = [(GCDWebServerDataRequest*)request jsonObject];
+                          bool showTranslation = [[data objectForKey:@"showTranslation"] boolValue];
+                          [preference setBool: showTranslation forKey:@"showTranslation"];
+                          [preference setObject: [data objectForKey:@"pinyinApi"] forKey: @"pinyinApi"];
+                          return [GCDWebServerDataResponse responseWithJSONObject: data];
     }];
     NSMutableDictionary* options = [NSMutableDictionary dictionary];
     [options setObject:@62718 forKey:GCDWebServerOption_Port];
@@ -82,8 +99,7 @@ void startHttpServer() {
     [webServer startWithOptions:options error:nil];
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     NSString*       identifier;
     
     identifier = [[NSBundle mainBundle] bundleIdentifier];
