@@ -11,12 +11,11 @@
 
 -(void)awakeFromNib
 {
-	NSMenuItem*		preferences = [_menu itemWithTag:1];
+	NSMenuItem*		preferenceMenu = [_menu itemWithTag:1];
 	
-	if ( preferences ) {
-		[preferences setAction:@selector(showPreferences:)];
+	if ( preferenceMenu ) {
+		[preferenceMenu setAction:@selector(showPreferences:)];
 	}
-	
 }
 
 @end
