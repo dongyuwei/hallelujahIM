@@ -12,8 +12,6 @@
 		0DE74BFE1978EC6A00040F3C /* him.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFD1978EC6A00040F3C /* him.png */; };
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
-		389468CD1F57BC4D00EF1F5E /* preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 389468CC1F57BC4D00EF1F5E /* preferences.nib */; };
-		389468CF1F57BC5B00EF1F5E /* preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 389468CE1F57BC5B00EF1F5E /* preferences.plist */; };
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
 		38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38DD40191F5800A400A276CB /* PreferencesMenu.xib */; };
 		56DAA2D1B676B02B33021777 /* libPods-hallelujah.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */; };
@@ -42,8 +40,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		389468CA1F56A34A00EF1F5E /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
-		389468CC1F57BC4D00EF1F5E /* preferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = preferences.nib; sourceTree = "<group>"; };
-		389468CE1F57BC5B00EF1F5E /* preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = preferences.plist; sourceTree = "<group>"; };
 		389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputApplicationDelegate.h; path = src/InputApplicationDelegate.h; sourceTree = "<group>"; };
 		389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputApplicationDelegate.m; path = src/InputApplicationDelegate.m; sourceTree = "<group>"; };
 		38DD40191F5800A400A276CB /* PreferencesMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesMenu.xib; sourceTree = "<group>"; };
@@ -133,9 +129,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				389468CC1F57BC4D00EF1F5E /* preferences.nib */,
 				38DD40191F5800A400A276CB /* PreferencesMenu.xib */,
-				389468CE1F57BC5B00EF1F5E /* preferences.plist */,
 				389468CA1F56A34A00EF1F5E /* web */,
 				F102C5A71F48818A0005B03F /* words_with_frequency_and_translation.json */,
 				F102C5A51F487DE80005B03F /* google_227800_words.bin */,
@@ -240,9 +234,7 @@
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
 				38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */,
 				0DE74C001978F18E00040F3C /* him.icns in Resources */,
-				389468CF1F57BC5B00EF1F5E /* preferences.plist in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				389468CD1F57BC4D00EF1F5E /* preferences.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ extern marisa::Trie             trie;
 extern NSMutableDictionary*     wordsWithFrequencyAndTranslation;
 extern BOOL                     defaultEnglishMode;
 extern NSDictionary*            substitutions;
-extern NSMutableDictionary*     preference;
+extern NSUserDefaults*          preference;
 
 typedef NSInteger KeyCode;
 static const KeyCode
@@ -327,14 +327,11 @@ KEY_ESC = 53;
     
     _insertionIndex = [candidateString length];
     
-    bool showTranslations = [[NSUserDefaults standardUserDefaults] boolForKey: @"showTranslations"];
-    
-    NSArray* pinyinApi = [[NSUserDefaults standardUserDefaults] arrayForKey: @"showTranslations"];
-    
-    NSLog(@"showTranslations: %@, pinyinApi: %@", showTranslations, pinyinApi);
-
-    
-    [self showAnnotation: candidateString];
+    BOOL showTranslation = [preference boolForKey: @"showTranslation"];
+    NSLog(@"showTranslation: %hhd", showTranslation);
+    if (showTranslation) {
+        [self showAnnotation: candidateString];
+    }
 }
 
 - (void)candidateSelected:(NSAttributedString*)candidateString {
@@ -363,9 +360,12 @@ KEY_ESC = 53;
     [self reset];
 }
 
--(NSMenu*)menu
-{
+-(NSMenu*)menu {
     return [[NSApp delegate] performSelector:NSSelectorFromString(@"menu")];
+}
+
+- (void)showPreferences:(id)sender {
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString: @"http://localhost:62718/index.html"]];
 }
 
 
