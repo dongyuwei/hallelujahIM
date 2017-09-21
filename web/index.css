@@ -23,6 +23,7 @@ label {
     border: dotted 1px #ccc;
     padding: 10px;
     border-radius: 5px;
+    background: hsla(31,15%,50%,.1);
 }
 
 label select {
