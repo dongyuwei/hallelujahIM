@@ -241,27 +241,24 @@ KEY_ESC = 53;
     NSMutableArray* result = [[NSMutableArray alloc] init];
     
     if(buffer && buffer.length > 0){
-        if(substitutions && substitutions[buffer]){
+        if(substitutions && substitutions[buffer]) {
             result = [NSMutableArray arrayWithArray: @[substitutions[buffer]]];
-        }
-        else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
+        } else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
             result = [NSMutableArray arrayWithArray: [self getGoogleSuggestion: [buffer substringFromIndex:2]]];
-        }else if([buffer hasPrefix:@"pinyin"] && [buffer length] > 6){
+        } else if([buffer hasPrefix:@"pinyin"] && [buffer length] > 6){
             result = [NSMutableArray arrayWithArray: [self getPinyinCandidates:[buffer substringFromIndex:6]]];
-        }else{
-            
+        } else {
             NSMutableArray *filtered = [self queryTrie: buffer];
             if(filtered && filtered.count > 0){
                 NSMutableArray* frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
                 if(frequentWords && frequentWords.count > 0){
                     result = frequentWords;
-                }else{
+                } else {
                     result = [NSMutableArray arrayWithArray:filtered];
                 }
-            }else{
+            } else {
                 result = [self getSuggestionOfSpellChecker:buffer];
             }
-            
             if(result.count > 50){
                 result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
             }
