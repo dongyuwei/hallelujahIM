@@ -14,6 +14,7 @@ marisa::Trie            trie;
 BOOL                    defaultEnglishMode;
 NSDictionary*           wordsWithFrequencyAndTranslation;
 NSDictionary*           substitutions;
+NSDictionary*           pinyinDict;
 NSUserDefaults*         preference;
 
 NSDictionary* getWordsWithFrequencyAndTranslation(){
@@ -41,6 +42,19 @@ NSDictionary* getUserDefinedSubstitutions(){
     
     [inputStream close];
     return substitutions;
+}
+
+NSDictionary* getPinyinData(){
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"cedict" ofType:@"json"];
+    
+    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath: path];
+    [inputStream  open];
+    NSDictionary* pinyinDict = [NSJSONSerialization JSONObjectWithStream:inputStream
+                                                                    options:nil
+                                                                      error:nil];
+    
+    [inputStream close];
+    return pinyinDict;
 }
 
 void initPreference() {
@@ -119,6 +133,7 @@ int main(int argc, char *argv[]) {
     
     wordsWithFrequencyAndTranslation = getWordsWithFrequencyAndTranslation();
     substitutions = getUserDefinedSubstitutions();
+    pinyinDict = getPinyinData();
     
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:[NSApplication sharedApplication]

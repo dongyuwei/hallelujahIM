@@ -9,6 +9,7 @@ extern marisa::Trie             trie;
 extern NSMutableDictionary*     wordsWithFrequencyAndTranslation;
 extern BOOL                     defaultEnglishMode;
 extern NSDictionary*            substitutions;
+extern NSDictionary*            pinyinDict;
 extern NSUserDefaults*          preference;
 
 typedef NSInteger KeyCode;
@@ -243,10 +244,6 @@ KEY_ESC = 53;
     if(buffer && buffer.length > 0){
         if(substitutions && substitutions[buffer]) {
             result = [NSMutableArray arrayWithArray: @[substitutions[buffer]]];
-        } else if([buffer hasPrefix:@"gs"] && [buffer length] > 2){//get Google Suggestion if inputed word has prefix `gs`
-            result = [NSMutableArray arrayWithArray: [self getGoogleSuggestion: [buffer substringFromIndex:2]]];
-        } else if([buffer hasPrefix:@"pinyin"] && [buffer length] > 6){
-            result = [NSMutableArray arrayWithArray: [self getPinyinCandidates:[buffer substringFromIndex:6]]];
         } else {
             NSMutableArray *filtered = [self queryTrie: buffer];
             if(filtered && filtered.count > 0){
@@ -259,6 +256,11 @@ KEY_ESC = 53;
             } else {
                 result = [self getSuggestionOfSpellChecker:buffer];
             }
+            
+            if(pinyinDict && pinyinDict[buffer]) {
+                [result addObjectsFromArray: pinyinDict[buffer]];
+            }
+            
             if(result.count > 50){
                 result = [NSMutableArray arrayWithArray: [result subarrayWithRange:NSMakeRange(0, 49)]];
             }
