@@ -10,8 +10,6 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 5. You can swith to the default English input mode(the normal||quiet||silent mode) by press the shift key. Press shift again, it switch to the auto-suggestion mode
 
 
-[![Code Sponsor](https://app.codesponsor.io/embed/xyPK9Ye7szU3KavpR7K9Dmux/dongyuwei/hallelujahIM.svg)](https://app.codesponsor.io/link/xyPK9Ye7szU3KavpR7K9Dmux/dongyuwei/hallelujahIM)
-
 download and install
 ======
 1. download releases
