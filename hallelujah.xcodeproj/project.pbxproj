@@ -25,7 +25,7 @@
 		F102C5AA1F4882C80005B03F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5A91F4882C80005B03F /* main.mm */; };
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
-		F1B9523B1FC5C76C00EFBC27 /* cedict.json in Resources */ = {isa = PBXBuildFile; fileRef = F1B9523A1FC5C76C00EFBC27 /* cedict.json */; };
+		F174745F1FDC2C9400AD2B84 /* cedict.json in Resources */ = {isa = PBXBuildFile; fileRef = F174745E1FDC2C9400AD2B84 /* cedict.json */; };
 		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
 /* End PBXBuildFile section */
 
@@ -56,7 +56,7 @@
 		F102C5AB1F4882D30005B03F /* InputController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InputController.mm; path = src/InputController.mm; sourceTree = "<group>"; };
 		F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnotationWinController.m; path = src/AnnotationWinController.m; sourceTree = "<group>"; };
 		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
-		F1B9523A1FC5C76C00EFBC27 /* cedict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = cedict.json; path = dictionary/cedict.json; sourceTree = "<group>"; };
+		F174745E1FDC2C9400AD2B84 /* cedict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = cedict.json; path = dictionary/cedict.json; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,7 +131,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F1B9523A1FC5C76C00EFBC27 /* cedict.json */,
+				F174745E1FDC2C9400AD2B84 /* cedict.json */,
 				38DD40191F5800A400A276CB /* PreferencesMenu.xib */,
 				389468CA1F56A34A00EF1F5E /* web */,
 				F102C5A71F48818A0005B03F /* words_with_frequency_and_translation.json */,
@@ -230,7 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
-				F1B9523B1FC5C76C00EFBC27 /* cedict.json in Resources */,
+				F174745F1FDC2C9400AD2B84 /* cedict.json in Resources */,
 				389468CB1F56A34A00EF1F5E /* web in Resources */,
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
