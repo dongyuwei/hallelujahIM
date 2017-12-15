@@ -35,9 +35,6 @@ auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
 
-auto suggestions from Google Suggestion(for any word startsWith `gs`):<br>
-![Google Suggestion](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/google_suggestions.png)
-
 Text Expander: <br/>
 ![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
 ![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)

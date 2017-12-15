@@ -62,18 +62,12 @@ void initPreference() {
     if ([preference objectForKey:@"showTranslation"] == nil) {
         [preference setBool:YES forKey:@"showTranslation"];
     }
-    
-    if ([preference objectForKey:@"pinyinApi"] == nil) {
-        [preference setObject: @"baidu" forKey: @"pinyinApi"];
-    }
-    
 }
 
 NSDictionary* getDictionaryRepresentationOfPreference(){
     NSMutableDictionary* dict = [NSMutableDictionary dictionary];
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
     [dict setObject: [NSNumber numberWithBool: showTranslation] forKey:@"showTranslation"];
-    [dict setObject:[preference objectForKey:@"pinyinApi"] forKey:@"pinyinApi"];
     return dict;
 }
 
@@ -103,7 +97,6 @@ void startHttpServer() {
                           NSDictionary *data = [(GCDWebServerDataRequest*)request jsonObject];
                           bool showTranslation = [[data objectForKey:@"showTranslation"] boolValue];
                           [preference setBool: showTranslation forKey:@"showTranslation"];
-                          [preference setObject: [data objectForKey:@"pinyinApi"] forKey: @"pinyinApi"];
                           return [GCDWebServerDataResponse responseWithJSONObject: data];
     }];
     NSMutableDictionary* options = [NSMutableDictionary dictionary];
