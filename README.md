@@ -49,6 +49,14 @@ spell check:<br/>
 ![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
 ![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
 
+pinyin in, English out: <br/>
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
+
 ## Paid Support
 
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
