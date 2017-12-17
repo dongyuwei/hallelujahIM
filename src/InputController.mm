@@ -363,7 +363,12 @@ KEY_ESC = 53;
 }
 
 - (void)showPreferences:(id)sender {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString: @"http://localhost:62718/index.html"]];
+    NSWorkspace * ws = [NSWorkspace sharedWorkspace];
+    [ws openURLs: @[[NSURL URLWithString: @"http://localhost:62718/index.html"]]
+withAppBundleIdentifier: @"com.apple.Safari"
+         options: NSWorkspaceLaunchDefault
+additionalEventParamDescriptor: NULL
+launchIdentifiers: NULL];
 }
 
 
