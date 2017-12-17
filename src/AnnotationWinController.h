@@ -1,7 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
-@interface AnnotationWinController : NSWindowController{
-
+@interface AnnotationWinController : NSWindowController {
 }
 
 - (void)showWindow:(NSPoint)origin;

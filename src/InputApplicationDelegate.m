@@ -1,21 +1,17 @@
 #import "InputApplicationDelegate.h"
 
-
 @implementation InputApplicationDelegate
 
--(NSMenu*)menu
-{
-	return _menu;
+- (NSMenu *)menu {
+    return _menu;
 }
 
+- (void)awakeFromNib {
+    NSMenuItem *preferenceMenu = [_menu itemWithTag:1];
 
--(void)awakeFromNib
-{
-	NSMenuItem*		preferenceMenu = [_menu itemWithTag:1];
-	
-	if ( preferenceMenu ) {
-		[preferenceMenu setAction:@selector(showPreferences:)];
-	}
+    if (preferenceMenu) {
+        [preferenceMenu setAction:@selector(showPreferences:)];
+    }
 }
 
 @end
