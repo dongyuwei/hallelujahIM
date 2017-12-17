@@ -27,6 +27,10 @@ update/reinstall
 4. add the hallelujah to `Input Sources`
 5. switch to hallelujah, use it.
 
+preferences setting
+======
+click `Preferences...` or visit web ui: http://localhost:62718/index.html
+
 setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 
