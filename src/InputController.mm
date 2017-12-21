@@ -236,27 +236,23 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     if (buffer && buffer.length > 0) {
         if (substitutions && substitutions[buffer]) {
-            result = [NSMutableArray arrayWithArray:@[ substitutions[buffer] ]];
+            [result addObject:substitutions[buffer]];
+        }
+
+        NSMutableArray *filtered = [self queryTrie:buffer];
+        if (filtered && filtered.count > 0) {
+            NSArray *sorted = [self sortByFrequency:filtered];
+            [result addObjectsFromArray:sorted];
         } else {
-            NSMutableArray *filtered = [self queryTrie:buffer];
-            if (filtered && filtered.count > 0) {
-                NSMutableArray *frequentWords = [NSMutableArray arrayWithArray:[self sortByFrequency:filtered]];
-                if (frequentWords && frequentWords.count > 0) {
-                    result = frequentWords;
-                } else {
-                    result = [NSMutableArray arrayWithArray:filtered];
-                }
-            } else {
-                result = [self getSuggestionOfSpellChecker:buffer];
-            }
+            [result addObjectsFromArray:[self getSuggestionOfSpellChecker:buffer]];
+        }
 
-            if (pinyinDict && pinyinDict[buffer]) {
-                [result addObjectsFromArray:pinyinDict[buffer]];
-            }
+        if (pinyinDict && pinyinDict[buffer]) {
+            [result addObjectsFromArray:pinyinDict[buffer]];
+        }
 
-            if (result.count > 50) {
-                result = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, 49)]];
-            }
+        if (result.count > 50) {
+            result = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, 49)]];
         }
 
         [result removeObject:buffer];
@@ -280,13 +276,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return filtered;
 }
 
-- (NSMutableArray *)getSuggestionOfSpellChecker:(NSString *)buffer {
+- (NSArray *)getSuggestionOfSpellChecker:(NSString *)buffer {
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
     NSRange range = NSMakeRange(0, [buffer length]);
-    NSMutableArray *suggestion =
-        [NSMutableArray arrayWithArray:[checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0]];
-
-    return suggestion;
+    return [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
 }
 
 - (NSArray *)sortByFrequency:(NSArray *)filtered {
