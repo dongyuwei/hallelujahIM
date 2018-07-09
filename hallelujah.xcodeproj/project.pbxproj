@@ -11,6 +11,7 @@
 		0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2BFD8E194588F400DE18D9 /* Images.xcassets */; };
 		0DE74BFE1978EC6A00040F3C /* him.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFD1978EC6A00040F3C /* him.png */; };
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
+		3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
 		38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38DD40191F5800A400A276CB /* PreferencesMenu.xib */; };
@@ -40,6 +41,8 @@
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSScreen+PointConversion.m"; path = "src/NSScreen+PointConversion.m"; sourceTree = "<group>"; };
+		3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSScreen+PointConversion.h"; path = "src/NSScreen+PointConversion.h"; sourceTree = "<group>"; };
 		389468CA1F56A34A00EF1F5E /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputApplicationDelegate.h; path = src/InputApplicationDelegate.h; sourceTree = "<group>"; };
 		389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputApplicationDelegate.m; path = src/InputApplicationDelegate.m; sourceTree = "<group>"; };
@@ -86,6 +89,8 @@
 				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
 				F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */,
 				F1CDA2A41B55180A005086C6 /* InputController.h */,
+				3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */,
+				3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
+				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
 				F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,

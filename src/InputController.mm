@@ -3,6 +3,7 @@
 #import "marisa.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
+#import "NSScreen+PointConversion.h"
 
 extern IMKCandidates *sharedCandidates;
 extern marisa::Trie trie;
@@ -362,37 +363,41 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         } else {
             translations = [subList componentsJoinedByString:@"\n"];
         }
-        NSRect currentFrame = [sharedCandidates candidateFrame];
-        NSRect tempRect;
-        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&tempRect];
-        NSPoint insertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
-        NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
-        windowInsertionPoint.x = windowInsertionPoint.x + currentFrame.size.width;
-        NSRect rect = [[NSScreen mainScreen] frame];
+        NSRect candidateFrame = [sharedCandidates candidateFrame];
+        NSRect lineRect;
+        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+        NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
+        NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
+        positionPoint.x = positionPoint.x + candidateFrame.size.width;
+        NSScreen *currentScreen = [NSScreen currentScreenForMouseLocation];
+        NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates: cursorPoint];
+        NSRect rect = [currentScreen frame];
         int screenWidth = (int)rect.size.width;
+        int margin = 2;
+        int annotationWindowWidth = _annotationWin.width + margin;
+        int lineHeight = lineRect.size.height;
+//        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect), NSStringFromPoint(currentPoint));
 
-        if ((insertionPoint.x + currentFrame.size.width + 170 + 20) >= screenWidth) {
-            windowInsertionPoint.x = insertionPoint.x - 170 - 20;
+        if ((positionPoint.x + annotationWindowWidth) >= screenWidth) {
+            positionPoint.x = cursorPoint.x - candidateFrame.size.width - annotationWindowWidth;
+        }
+        
+        if (screenWidth - currentPoint.x <= candidateFrame.size.width) {
+            positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
+        }
+        
+        if (currentPoint.x > (screenWidth - candidateFrame.size.width - annotationWindowWidth - 20)) {
+            positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
         }
 
-        if (screenWidth - insertionPoint.x < 170) {
-            windowInsertionPoint.x = screenWidth - currentFrame.size.width - 170 - 20;
-        }
-
-        if (windowInsertionPoint.y <= currentFrame.size.height) {
-            windowInsertionPoint.y = currentFrame.size.height + windowInsertionPoint.y + 28; // 28 is line-height
+        if (fabs(currentPoint.y) < _annotationWin.height + lineHeight) {
+            positionPoint.y = positionPoint.y + _annotationWin.height + lineHeight;
         } else {
-            windowInsertionPoint.y = windowInsertionPoint.y - 6;
+            positionPoint.y = positionPoint.y - 6;
         }
 
         [_annotationWin setAnnotation:translations];
-        [_annotationWin showWindow:windowInsertionPoint];
-
-        //        int screenHeight = (int)rect.size.height;
-        //        NSLog(@"sharedCandidates currentFrame: %@, windowInsertionPoint:%@, screen width: %d screen height %d",
-        //              NSStringFromRect(currentFrame),
-        //              NSStringFromPoint(windowInsertionPoint),
-        //              screenWidth, screenHeight);
+        [_annotationWin showWindow:positionPoint];
     } else {
         [_annotationWin hideWindow];
     }

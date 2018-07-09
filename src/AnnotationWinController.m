@@ -17,6 +17,8 @@ static AnnotationWinController *sharedController;
 
 - (void)awakeFromNib {
     sharedController = self;
+    self.width = 170;
+    self.height = 256; // max-height of sharedCandidates
     [[self panel] setStyleMask:NSBorderlessWindowMask];
     [[self panel] setOpaque:NO];
     [[self panel] setBackgroundColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.0]];
@@ -25,8 +27,8 @@ static AnnotationWinController *sharedController;
 
 - (void)showWindow:(NSPoint)origin {
     NSSize size;
-    size.width = 170;
-    size.height = 256; // max-height of sharedCandidates
+    size.width = self.width;
+    size.height = self.height;
     [[self panel] setMinSize:size];
     [[self panel] setContentSize:size];
     [[self panel] setAlphaValue:0.9];

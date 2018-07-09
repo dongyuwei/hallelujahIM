@@ -3,6 +3,9 @@
 @interface AnnotationWinController : NSWindowController {
 }
 
+@property int width;
+@property int height;
+
 - (void)showWindow:(NSPoint)origin;
 
 - (void)hideWindow;
