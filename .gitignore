@@ -29,6 +29,7 @@ hallelujah.xcodeproj/xcuserdata/
 
 .idea/
 hallelujahIM.iml
+hallelujah.xcworkspace/xcshareddata/
 *.xcuserstate
-hallelujah.xcworkspace/xcuserdata/
-Pods/Pods.xcodeproj/xcuserdata/
+*/xcuserdata/*
+*xcworkspace/xcuserdata/*
