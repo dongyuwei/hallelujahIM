@@ -1,4 +1,5 @@
 language: objective-c
+osx_image: xcode9.4
 xcode_workspace: hallelujah.xcworkspace
 xcode_scheme: hallelujah
-# xcodebuild -workspace hallelujah.xcworkspace/ -scheme hallelujah -configuration Release
+script: ./build.sh
