@@ -27,7 +27,6 @@
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
 		F174745F1FDC2C9400AD2B84 /* cedict.json in Resources */ = {isa = PBXBuildFile; fileRef = F174745E1FDC2C9400AD2B84 /* cedict.json */; };
-		F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = F1CDA2A41B55180A005086C6 /* InputController.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -307,7 +306,6 @@
 			files = (
 				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
-				F1CDA2AF1B551A55005086C6 /* InputController.h in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,
 				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
