@@ -1,6 +1,7 @@
+ [![Build Status](https://travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)](https://travis-ci.com/dongyuwei/hallelujahIM)
+ 
 hallelujahIM
 ============
-
 hallelujahIM is  an english input method with auto-suggestions and spell check features, Mac only(supports 10.9+ OSX).
 
 1. The auto-suggestion words come from google's  [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged it to 227800 words (all wrong words removed). Candidates words are sorted by frequency.
