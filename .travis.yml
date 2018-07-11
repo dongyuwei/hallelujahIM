@@ -1,0 +1,4 @@
+language: objective-c
+xcode_workspace: hallelujah.xcworkspace
+xcode_scheme: hallelujah
+# xcodebuild -workspace hallelujah.xcworkspace/ -scheme hallelujah -configuration Release
