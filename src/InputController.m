@@ -158,7 +158,7 @@ KEY_ESC = 53;
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     [sharedCandidates hide];
-    [subCandidates hide];
+//    [subCandidates hide];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -292,7 +292,9 @@ KEY_ESC = 53;
 
     if (candidateIdentifier == subCandidateStringIdentifier) {
         NSArray* subList = [self getSubCandidates: candidateString];
+        NSLog(@"sublist:%@", subList);
         if(subList && subList.count > 0){
+            NSLog(@"sublist2222");
             NSString* phoneticSymbol = [self getPhoneticSymbolOfWord: candidateString];
             if([phoneticSymbol length] > 0){
                 NSArray* list = @[phoneticSymbol];
@@ -305,10 +307,17 @@ KEY_ESC = 53;
             NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
             [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
             
-            
+            NSLog(@"sublist333333");
+//            [subCandidates showCandidates];
+//            [subCandidates show: kIMKLocateCandidatesRightHint];
             [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
+            [subCandidates showCandidates];
+//            [subCandidates show: kIMKLocateCandidatesRightHint];
             [sharedCandidates showChild];
+            
+            NSLog(@"sublist4444");
         }else{
+            NSLog(@"hide subCandidates");
             [subCandidates hide];
         }
     }else{

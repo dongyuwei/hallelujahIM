@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
                             bundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
     
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
-    subCandidates    = [[IMKCandidates alloc] initWithServer:nil    panelType:kIMKSingleColumnScrollingCandidatePanel];
+    subCandidates    = [[IMKCandidates alloc] initWithServer:nil    panelType:kIMKSingleColumnScrollingCandidatePanel styleType: kIMKSubList];
     
     if (!sharedCandidates){
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);
