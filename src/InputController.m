@@ -157,8 +157,9 @@ KEY_ESC = 53;
     [self setComposedBuffer:@""];
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
+    [sharedCandidates hideChild];
     [sharedCandidates hide];
-//    [subCandidates hide];
+    [subCandidates hide];
 }
 
 -(NSMutableString*)composedBuffer{
@@ -301,21 +302,23 @@ KEY_ESC = 53;
                 [subCandidates setCandidateData: subList];
             }
             
-//            NSRect currentFrame = [sharedCandidates candidateFrame];
+            NSRect currentFrame = [sharedCandidates candidateFrame];
 //            NSPoint windowInsertionPoint = NSMakePoint(NSMaxX(currentFrame), NSMaxY(currentFrame));
             NSRect tempRect;
             NSDictionary* clientData = [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&tempRect];
             NSLog(@"%@ime clientData", clientData);
-            NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect), NSMinY(tempRect));
+            NSPoint windowInsertionPoint = NSMakePoint(NSMinX(tempRect) + currentFrame.size.width, NSMinY(tempRect));
             [subCandidates setCandidateFrameTopLeft:windowInsertionPoint];
             [subCandidates showCandidates];
 //            [subCandidates show: kIMKLocateCandidatesRightHint];
             [sharedCandidates attachChild:subCandidates toCandidate:(NSInteger)candidateIdentifier type:kIMKSubList];
             [sharedCandidates showChild];
         }else{
+            [sharedCandidates hideChild];
             [subCandidates hide];
         }
     }else{
+        [sharedCandidates hideChild];
         [subCandidates hide];
     }
 }
