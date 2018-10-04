@@ -69,7 +69,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (BOOL)onKeyEvent:(NSEvent *)event client:(id)sender {
     _currentClient = sender;
     NSInteger keyCode = [event keyCode];
-    NSString *string = [event characters];
+    NSString *characters = [event characters];
 
     NSString *bufferedText = [self originalBuffer];
     bool hasBufferedText = bufferedText && [bufferedText length] > 0;
@@ -114,26 +114,51 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     
     if (keyCode == KEY_ARROW_DOWN) {
         [sharedCandidates moveDown:self];
+        _currentCandidateIndex++;
         return NO;
     }
     
     if (keyCode == KEY_ARROW_UP) {
         [sharedCandidates moveUp:self];
+        _currentCandidateIndex--;
         return NO;
     }
 
-    char ch = [string characterAtIndex:0];
+    char ch = [characters characterAtIndex:0];
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-        [self originalBufferAppend:string client:sender];
+        [self originalBufferAppend:characters client:sender];
 
         [sharedCandidates updateCandidates];
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
     }
+    
+    if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
+        if (!hasBufferedText) {
+            [self appendToComposedBuffer:characters];
+            [self commitComposition:sender];
+            return YES;
+        }
+        
+        if ([sharedCandidates isVisible]) {//use 1~9 digital numbers as selection keys
+            int pressedNumber = [characters intValue];
+            NSString * candidate;
+            if(_currentCandidateIndex <= 9) {
+                candidate = _candidates[pressedNumber - 1];
+            } else {
+                candidate = _candidates[9 * (_currentCandidateIndex / 9 - 1) +  (_currentCandidateIndex % 9) + pressedNumber - 1] ;
+            }
+            [self cancelComposition];
+            [self setComposedBuffer:candidate];
+            [self setOriginalBuffer:candidate];
+            [self commitComposition:sender];
+            return YES;
+        }
+    }
 
     if ([[NSCharacterSet punctuationCharacterSet] characterIsMember:ch] || [[NSCharacterSet symbolCharacterSet] characterIsMember:ch]) {
         if (hasBufferedText) {
-            [self appendToComposedBuffer:string];
+            [self appendToComposedBuffer:characters];
             [self commitComposition:sender];
             return YES;
         }
@@ -182,8 +207,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setComposedBuffer:@""];
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
+    _currentCandidateIndex = 1;
     [sharedCandidates hide];
     [_annotationWin hideWindow];
+    _candidates = [[NSMutableArray alloc] init];
 }
 
 - (NSMutableString *)composedBuffer {
@@ -269,6 +296,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [result insertObject:buffer atIndex:0];
     }
 
+    _candidates = [NSMutableArray arrayWithArray: result];
     return [NSArray arrayWithArray:result];
 }
 
@@ -342,6 +370,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (_annotationWin == nil) {
         _annotationWin = [AnnotationWinController sharedController];
     }
+    _currentCandidateIndex = 1;
+    _candidates = [[NSMutableArray alloc] init];
 }
 
 - (void)deactivateServer:(id)sender {
@@ -374,7 +404,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         NSRect candidateFrame = [sharedCandidates candidateFrame];
         NSRect lineRect;
-        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+        NSDictionary* attributes = [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
         NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         positionPoint.x = positionPoint.x + candidateFrame.size.width;
@@ -385,6 +415,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         int margin = 2;
         int annotationWindowWidth = _annotationWin.width + margin;
         int lineHeight = lineRect.size.height;
+        NSNumber * imkLineHeight = [attributes objectForKey:@"IMKLineHeight"];
+        if (imkLineHeight != nil) {
+            lineHeight = [imkLineHeight intValue];
+        }
 //        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect), NSStringFromPoint(currentPoint));
 
         if ((positionPoint.x + annotationWindowWidth) >= screenWidth) {

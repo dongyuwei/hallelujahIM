@@ -6,6 +6,8 @@
     NSMutableString *_composedBuffer;
     NSMutableString *_originalBuffer;
     NSInteger _insertionIndex;
+    NSInteger _currentCandidateIndex;
+    NSMutableArray *_candidates;
     BOOL _didConvert;
     id _currentClient;
     NSUInteger _lastModifiers[2];
