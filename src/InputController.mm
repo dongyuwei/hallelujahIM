@@ -14,7 +14,7 @@ extern NSDictionary *pinyinDict;
 extern NSUserDefaults *preference;
 
 typedef NSInteger KeyCode;
-static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53;
+static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126;
 
 @implementation InputController
 
@@ -63,7 +63,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _lastEventTypes[0] = _lastEventTypes[1];
     _lastModifiers[1] = modifiers;
     _lastEventTypes[1] = [event type];
-
     return handled;
 }
 
@@ -110,6 +109,16 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             [self setOriginalBuffer:@""];
             [self commitComposition:sender];
         }
+        return NO;
+    }
+    
+    if (keyCode == KEY_ARROW_DOWN) {
+        [sharedCandidates moveDown:self];
+        return NO;
+    }
+    
+    if (keyCode == KEY_ARROW_UP) {
+        [sharedCandidates moveUp:self];
         return NO;
     }
 
