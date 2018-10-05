@@ -404,7 +404,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         NSRect candidateFrame = [sharedCandidates candidateFrame];
         NSRect lineRect;
-        NSDictionary *attributes = [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
         NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         positionPoint.x = positionPoint.x + candidateFrame.size.width;
@@ -415,10 +415,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         int margin = 2;
         int annotationWindowWidth = _annotationWin.width + margin;
         int lineHeight = lineRect.size.height;
-        NSNumber *imkLineHeight = [attributes objectForKey:@"IMKLineHeight"];
-        if (imkLineHeight != nil) {
-            lineHeight = [imkLineHeight intValue];
-        }
         //        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect),
         //        NSStringFromPoint(currentPoint));
 
