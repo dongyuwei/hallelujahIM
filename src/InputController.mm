@@ -1,9 +1,9 @@
 #import "InputController.h"
 #import "InputApplicationDelegate.h"
+#import "NSScreen+PointConversion.h"
 #import "marisa.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
-#import "NSScreen+PointConversion.h"
 
 extern IMKCandidates *sharedCandidates;
 extern marisa::Trie trie;
@@ -111,13 +111,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         return NO;
     }
-    
+
     if (keyCode == KEY_ARROW_DOWN) {
         [sharedCandidates moveDown:self];
         _currentCandidateIndex++;
         return NO;
     }
-    
+
     if (keyCode == KEY_ARROW_UP) {
         [sharedCandidates moveUp:self];
         _currentCandidateIndex--;
@@ -132,21 +132,21 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
     }
-    
+
     if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
         if (!hasBufferedText) {
             [self appendToComposedBuffer:characters];
             [self commitComposition:sender];
             return YES;
         }
-        
-        if ([sharedCandidates isVisible]) {//use 1~9 digital numbers as selection keys
+
+        if ([sharedCandidates isVisible]) { // use 1~9 digital numbers as selection keys
             int pressedNumber = [characters intValue];
-            NSString * candidate;
-            if(_currentCandidateIndex <= 9) {
+            NSString *candidate;
+            if (_currentCandidateIndex <= 9) {
                 candidate = _candidates[pressedNumber - 1];
             } else {
-                candidate = _candidates[9 * (_currentCandidateIndex / 9 - 1) +  (_currentCandidateIndex % 9) + pressedNumber - 1] ;
+                candidate = _candidates[9 * (_currentCandidateIndex / 9 - 1) + (_currentCandidateIndex % 9) + pressedNumber - 1];
             }
             [self cancelComposition];
             [self setComposedBuffer:candidate];
@@ -296,7 +296,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [result insertObject:buffer atIndex:0];
     }
 
-    _candidates = [NSMutableArray arrayWithArray: result];
+    _candidates = [NSMutableArray arrayWithArray:result];
     return [NSArray arrayWithArray:result];
 }
 
@@ -404,31 +404,32 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         NSRect candidateFrame = [sharedCandidates candidateFrame];
         NSRect lineRect;
-        NSDictionary* attributes = [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+        NSDictionary *attributes = [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
         NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         positionPoint.x = positionPoint.x + candidateFrame.size.width;
         NSScreen *currentScreen = [NSScreen currentScreenForMouseLocation];
-        NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates: cursorPoint];
+        NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
         NSRect rect = [currentScreen frame];
         int screenWidth = (int)rect.size.width;
         int margin = 2;
         int annotationWindowWidth = _annotationWin.width + margin;
         int lineHeight = lineRect.size.height;
-        NSNumber * imkLineHeight = [attributes objectForKey:@"IMKLineHeight"];
+        NSNumber *imkLineHeight = [attributes objectForKey:@"IMKLineHeight"];
         if (imkLineHeight != nil) {
             lineHeight = [imkLineHeight intValue];
         }
-//        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect), NSStringFromPoint(currentPoint));
+        //        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect),
+        //        NSStringFromPoint(currentPoint));
 
         if ((positionPoint.x + annotationWindowWidth) >= screenWidth) {
             positionPoint.x = cursorPoint.x - candidateFrame.size.width - annotationWindowWidth;
         }
-        
+
         if (screenWidth - currentPoint.x <= candidateFrame.size.width) {
             positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
         }
-        
+
         if (currentPoint.x > (screenWidth - candidateFrame.size.width - annotationWindowWidth - 20)) {
             positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
         }
