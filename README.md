@@ -14,9 +14,8 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 download and install
 ======
 1. download releases
- * for 10.9 ~ 10.11 mac user: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
- * for 10.12 ~ 10.13: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.2.8
- * for macOS Mojave 10.14 https://github.com/dongyuwei/hallelujahIM/releases/latest
+ * for macOS 10.9 ~ 10.11 mac user: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
+ * for macOS 10.12 ~ 10.14: https://github.com/dongyuwei/hallelujahIM/releases/latest
 2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
 4. switch to hallelujah input method
