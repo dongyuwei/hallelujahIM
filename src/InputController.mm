@@ -111,19 +111,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         return NO;
     }
-
-    if (keyCode == KEY_ARROW_DOWN) {
-        [sharedCandidates moveDown:self];
-        _currentCandidateIndex++;
-        return NO;
-    }
-
-    if (keyCode == KEY_ARROW_UP) {
-        [sharedCandidates moveUp:self];
-        _currentCandidateIndex--;
-        return NO;
-    }
-
+    
     char ch = [characters characterAtIndex:0];
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
         [self originalBufferAppend:characters client:sender];
@@ -132,27 +120,42 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [sharedCandidates show:kIMKLocateCandidatesBelowHint];
         return YES;
     }
-
-    if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
-        if (!hasBufferedText) {
-            [self appendToComposedBuffer:characters];
-            [self commitComposition:sender];
-            return YES;
+    
+    if ([self isMojaveAndLaterSystem]) {
+        if (keyCode == KEY_ARROW_DOWN) {
+            [sharedCandidates moveDown:self];
+            _currentCandidateIndex++;
+            return NO;
         }
-
-        if ([sharedCandidates isVisible]) { // use 1~9 digital numbers as selection keys
-            int pressedNumber = [characters intValue];
-            NSString *candidate;
-            if (_currentCandidateIndex <= 9) {
-                candidate = _candidates[pressedNumber - 1];
-            } else {
-                candidate = _candidates[9 * (_currentCandidateIndex / 9 - 1) + (_currentCandidateIndex % 9) + pressedNumber - 1];
+        
+        if (keyCode == KEY_ARROW_UP) {
+            [sharedCandidates moveUp:self];
+            _currentCandidateIndex--;
+            return NO;
+        }
+        
+        if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
+            if (!hasBufferedText) {
+                [self appendToComposedBuffer:characters];
+                [self commitComposition:sender];
+                return YES;
             }
-            [self cancelComposition];
-            [self setComposedBuffer:candidate];
-            [self setOriginalBuffer:candidate];
-            [self commitComposition:sender];
-            return YES;
+            
+            if ([sharedCandidates isVisible]) { // use 1~9 digital numbers as selection keys
+                int pressedNumber = [characters intValue];
+                NSString *candidate;
+                int pageSize = 9;
+                if (_currentCandidateIndex <= pageSize) {
+                    candidate = _candidates[pressedNumber - 1];
+                } else {
+                    candidate = _candidates[pageSize * (_currentCandidateIndex / pageSize - 1) + (_currentCandidateIndex % pageSize) + pressedNumber - 1];
+                }
+                [self cancelComposition];
+                [self setComposedBuffer:candidate];
+                [self setOriginalBuffer:candidate];
+                [self commitComposition:sender];
+                return YES;
+            }
         }
     }
 
@@ -165,6 +168,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     return NO;
+}
+
+- (BOOL)isMojaveAndLaterSystem {
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    return version.majorVersion == 10 && version.minorVersion > 13;
 }
 
 - (BOOL)deleteBackward:(id)sender {
