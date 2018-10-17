@@ -1,4 +1,4 @@
-#import <AnnotationWinController.h>
+#import "AnnotationWinController.h"
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
 
@@ -8,7 +8,7 @@
     NSInteger _insertionIndex;
     NSInteger _currentCandidateIndex;
     NSMutableArray *_candidates;
-    BOOL _didConvert;
+    BOOL _defaultEnglishMode;
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];

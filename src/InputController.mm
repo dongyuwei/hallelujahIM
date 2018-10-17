@@ -8,7 +8,6 @@
 extern IMKCandidates *sharedCandidates;
 extern marisa::Trie trie;
 extern NSMutableDictionary *wordsWithFrequencyAndTranslation;
-extern BOOL defaultEnglishMode;
 extern NSDictionary *substitutions;
 extern NSDictionary *pinyinDict;
 extern NSUserDefaults *preference;
@@ -34,8 +33,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (modifiers == 0 && _lastEventTypes[1] == NSFlagsChanged && _lastModifiers[1] == NSShiftKeyMask &&
             !(_lastModifiers[0] & NSShiftKeyMask)) {
 
-            defaultEnglishMode = !defaultEnglishMode;
-            if (defaultEnglishMode) {
+            _defaultEnglishMode = !_defaultEnglishMode;
+            if (_defaultEnglishMode) {
                 NSString *bufferedText = [self originalBuffer];
                 if (bufferedText && [bufferedText length] > 0) {
                     [self cancelComposition];
@@ -45,7 +44,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         break;
     case NSKeyDown:
-        if (defaultEnglishMode) {
+        if (_defaultEnglishMode) {
             break;
         }
 

@@ -11,7 +11,6 @@ const NSString *kConnectionName = @"Hallelujah_1_Connection";
 IMKServer *server;
 IMKCandidates *sharedCandidates;
 marisa::Trie trie;
-BOOL defaultEnglishMode;
 NSDictionary *wordsWithFrequencyAndTranslation;
 NSDictionary *substitutions;
 NSDictionary *pinyinDict;
