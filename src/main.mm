@@ -16,38 +16,28 @@ NSDictionary *substitutions;
 NSDictionary *pinyinDict;
 NSUserDefaults *preference;
 
-NSDictionary *getWordsWithFrequencyAndTranslation() {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation" ofType:@"json"];
-
+NSDictionary *deserializeJSON(NSString* path) {
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
     [inputStream open];
-    NSDictionary *words = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
-
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
+    
     [inputStream close];
-
-    return words;
+    return dict;
 }
 
-NSDictionary *getUserDefinedSubstitutions() {
-    NSString *path = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
-
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
-    [inputStream open];
-    NSDictionary *substitutions = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
-
-    [inputStream close];
-    return substitutions;
+NSDictionary *getWordsWithFrequencyAndTranslation() {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation" ofType:@"json"];
+    return deserializeJSON(path);
 }
 
 NSDictionary *getPinyinData() {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"cedict" ofType:@"json"];
+    return deserializeJSON(path);
+}
 
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
-    [inputStream open];
-    NSDictionary *pinyinDict = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
-
-    [inputStream close];
-    return pinyinDict;
+NSDictionary *getUserDefinedSubstitutions() {
+    NSString *path = [NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.you_expand_me.json"];
+    return deserializeJSON(path);
 }
 
 void initPreference() {
