@@ -9,7 +9,7 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 3. hallelujahIM is also a __Text-Expander__: it will load the file `~/.you_expand_me.json` in your Home directory. You can define your favorite substitutions, such as `{"te":"text expander", "yem":"you expand me"}`. 
 4. Instant translation when you typing the word(translate to Chinese right now, but the translation dictionary can be configured).
 5. Pinyin in, English out: you can input Hanyu Pinyin and get the corresponding English word. 
-6. You can swith to the default English input mode(the normal||quiet||silent mode) by press the shift key. Press shift again, it switch to the auto-suggestion mode
+6. You can swith to the default English input mode(the normal||quiet||silent mode) by pressing the shift key. Pressing shift again, it will switch to the auto-suggestion mode.
 
 
 download and install
