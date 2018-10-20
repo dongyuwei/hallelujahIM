@@ -7,7 +7,7 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 1. The auto-suggestion words come from google's  [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged it to 227800 words (almost all wrong words removed). Candidates words are sorted by frequency.
 2. hallelujahIM is also a __Spell-Checker__: when you input wrong word, it will give you the right candidates.
 3. hallelujahIM is also a __Text-Expander__: it will load the file `~/.you_expand_me.json` in your Home directory. You can define your favorite substitutions, such as `{"te":"text expander", "yem":"you expand me"}`. 
-4. Instant translation when you typing the word(translate to Chinese right now, but the translation dictionary can be configured).
+4. Instant translation when you type word(currently it supports English-to-Chinese only, but the translation dictionary can be configured later on).
 5. Pinyin in, English out: you can input Hanyu Pinyin and get the corresponding English word. 
 6. You can swith to the default English input mode(the normal||quiet||silent mode) by pressing the shift key. Pressing shift again, it will switch to the auto-suggestion mode.
 
@@ -15,7 +15,7 @@ hallelujahIM is  an english input method with auto-suggestions and spell check f
 download and install
 ======
 1. download releases
- * for macOS 10.9 ~ 10.11 mac user: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
+ * for macOS 10.9 ~ 10.11: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
  * for macOS 10.12 ~ 10.14: https://github.com/dongyuwei/hallelujahIM/releases/latest
 2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
