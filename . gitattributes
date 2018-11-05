@@ -1,0 +1,2 @@
+* linguist-vendored
+*.mm linguist-vendored=false
