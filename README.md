@@ -29,6 +29,10 @@ update/reinstall
 4. add the hallelujah to `Input Sources`
 5. switch to hallelujah, use it.
 
+Why it's named hallelujahIM? 
+======
+Inspired by [hallelujah_autocompletion](https://daringfireball.net/2006/10/hallelujah_autocompletion).
+
 preferences setting
 ======
 click `Preferences...` or visit web ui: http://localhost:62718/index.html
