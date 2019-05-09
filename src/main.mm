@@ -26,7 +26,7 @@ NSDictionary *deserializeJSON(NSString* path) {
 }
 
 NSDictionary *getWordsWithFrequencyAndTranslation() {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation" ofType:@"json"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation_and_ipa" ofType:@"json"];
     return deserializeJSON(path);
 }
 

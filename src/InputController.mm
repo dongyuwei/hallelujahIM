@@ -456,24 +456,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (NSString *)getPhoneticSymbolOfWord:(NSAttributedString *)candidateString {
-    NSString *phoneticSymbol = nil;
     if (candidateString && candidateString.length > 3) {
-        @try {
-            NSString *definition = (__bridge NSString *)DCSCopyTextDefinition(NULL, (__bridge CFStringRef)[candidateString string],
-                                                                              CFRangeMake(0, [[candidateString string] length]));
-
-            if (definition && definition.length > 0) {
-                NSArray *arr = [definition componentsSeparatedByString:@"|"];
-                if ([arr count] > 0) {
-                    phoneticSymbol = [NSString stringWithFormat:@"[ %@ ]", arr[1]];
-                }
-            }
-        } @catch (NSException *exception) {
-            NSLog(@"error when call showPhoneticSymbolOfWord %@", exception.reason);
-        }
+        NSString *word = [[candidateString string] lowercaseString];
+        return [[wordsWithFrequencyAndTranslation objectForKey:word] objectForKey:@"ipa"];
     }
-
-    return phoneticSymbol;
+    return nil;
 }
 
 @end
