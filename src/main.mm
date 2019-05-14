@@ -16,11 +16,11 @@ NSDictionary *substitutions;
 NSDictionary *pinyinDict;
 NSUserDefaults *preference;
 
-NSDictionary *deserializeJSON(NSString* path) {
+NSDictionary *deserializeJSON(NSString *path) {
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
     [inputStream open];
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
-    
+
     [inputStream close];
     return dict;
 }
@@ -69,7 +69,6 @@ void startHttpServer() {
                       requestClass:[GCDWebServerRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                           return [GCDWebServerDataResponse responseWithJSONObject:getDictionaryRepresentationOfPreference()];
-
                       }];
 
     [webServer addHandlerForMethod:@"POST"

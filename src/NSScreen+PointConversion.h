@@ -10,7 +10,7 @@
 
 @interface NSScreen (PointConversion)
 
-/* 
+/*
  Returns the screen where the mouse resides
 */
 + (NSScreen *)currentScreenForMouseLocation;
