@@ -404,7 +404,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         NSString *translations;
         NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:candidateString];
         if ([phoneticSymbol length] > 0) {
-            NSArray *list = @[ phoneticSymbol ];
+            NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
             translations = [[list arrayByAddingObjectsFromArray:subList] componentsJoinedByString:@"\n"];
         } else {
             translations = [subList componentsJoinedByString:@"\n"];
