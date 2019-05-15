@@ -4,7 +4,7 @@
 
 hallelujahIM is an english input method with auto-suggestions and spell check features, Mac only(supports 10.9+ OSX).
 
-1. The auto-suggestion words come from google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged them to 227800 words (almost all misspelled words removed). Candidate words are sorted by frequency.
+1. The auto-suggestion words come from google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged them to 140402 words (almost all misspelled words removed). Candidate words are sorted by frequency.
 2. hallelujahIM is also a **Spell-Checker**: when you input wrong word, it will give you the right candidates.
 3. hallelujahIM is also a **Text-Expander**: it will load the file `~/.you_expand_me.json` in your Home directory. You can define your favorite substitutions, such as `{"te":"text expander", "yem":"you expand me"}`.
 4. Instant translation when you type words(currently it supports English-to-Chinese only, but the translation dictionary can be configured later on).
