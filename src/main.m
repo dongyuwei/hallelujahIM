@@ -24,7 +24,7 @@ PJTernarySearchTree* buildTrieFromFile(){
     wordsWithFrequency = [dict mutableCopy];
     [inputStream close];
     NSTimeInterval timeInterval = [start timeIntervalSinceNow];
-    NSLog(@"read json:%f", timeInterval);
+    NSLog(@"read json:%f", timeInterval);// 0.103535s not so bad
     NSDate *start2 = [NSDate date];
     
     PJTernarySearchTree * tree = [[PJTernarySearchTree alloc] init];
@@ -34,19 +34,19 @@ PJTernarySearchTree* buildTrieFromFile(){
         [tree insertString: word];
     }
     NSTimeInterval timeInterval2 = [start2 timeIntervalSinceNow];
-    NSLog(@"build trie:%f", timeInterval2);
+    NSLog(@"build trie:%f", timeInterval2);// 0.349201s slow
     
     NSDate *start3 = [NSDate date];
     NSString* savePath =[NSString stringWithFormat:@"%@%@", NSHomeDirectory(), @"/.hallelujah_data"];
     [tree saveTreeToFile: savePath];
     
     NSTimeInterval timeInterval3 = [start3 timeIntervalSinceNow];
-    NSLog(@"save trie:%f", timeInterval3);
+    NSLog(@"save trie:%f", timeInterval3);// 3.877789s slow
     
     NSDate *start4 = [NSDate date];
     PJTernarySearchTree * tree2 = [PJTernarySearchTree treeWithFile: savePath];
     NSTimeInterval timeInterval4 = [start4 timeIntervalSinceNow];
-    NSLog(@"rebuild trie:%f", timeInterval4);
+    NSLog(@"rebuild trie:%f", timeInterval4);//1.912802 slow
 
     return tree;
 }
