@@ -1,0 +1,24 @@
+//
+//  FBObjC.pch
+//  flatbuf-objc
+//
+//  Created by SC on 16/6/4.
+//  Copyright © 2016年 SC. All rights reserved.
+//
+
+#ifndef FBObjC_pch
+#define FBObjC_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#ifdef __ObjC__
+#import <Foundation/Foundation.h>
+#import "FBConstants.h"
+#import "FBMutableArray.h"
+#import "FBMutableData.h"
+#import "FBTable.h"
+
+#endif
+
+#endif /* FBObjC_pch */

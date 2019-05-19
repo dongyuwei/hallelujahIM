@@ -13,8 +13,14 @@
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
 		3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */; };
 		3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */ = {isa = PBXBuildFile; fileRef = 3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */; };
+		384726AD22915C4D007D77EE /* Word.m in Sources */ = {isa = PBXBuildFile; fileRef = 384726AA22915C4D007D77EE /* Word.m */; };
+		384726AE22915C4D007D77EE /* Dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 384726AB22915C4D007D77EE /* Dictionary.m */; };
+		384726B72291638F007D77EE /* FBMutableData.m in Sources */ = {isa = PBXBuildFile; fileRef = 384726B12291638F007D77EE /* FBMutableData.m */; };
+		384726B82291638F007D77EE /* FBTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 384726B52291638F007D77EE /* FBTable.m */; };
+		384726B92291638F007D77EE /* FBMutableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 384726B62291638F007D77EE /* FBMutableArray.m */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
+		38BA76BF2291442900799212 /* dictionary.bin in Resources */ = {isa = PBXBuildFile; fileRef = 38BA76BE2291442900799212 /* dictionary.bin */; };
 		38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38DD40191F5800A400A276CB /* PreferencesMenu.xib */; };
 		56DAA2D1B676B02B33021777 /* libPods-hallelujah.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -43,9 +49,22 @@
 		3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSScreen+PointConversion.m"; path = "src/NSScreen+PointConversion.m"; sourceTree = "<group>"; };
 		3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSScreen+PointConversion.h"; path = "src/NSScreen+PointConversion.h"; sourceTree = "<group>"; };
 		3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = words_with_frequency_and_translation_and_ipa.json; path = dictionary/words_with_frequency_and_translation_and_ipa.json; sourceTree = "<group>"; };
+		384726A922915C4D007D77EE /* Word.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Word.h; path = src/Word.h; sourceTree = "<group>"; };
+		384726AA22915C4D007D77EE /* Word.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Word.m; path = src/Word.m; sourceTree = "<group>"; };
+		384726AB22915C4D007D77EE /* Dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Dictionary.m; path = src/Dictionary.m; sourceTree = "<group>"; };
+		384726AC22915C4D007D77EE /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dictionary.h; path = src/Dictionary.h; sourceTree = "<group>"; };
+		384726AF2291638F007D77EE /* FBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBConstants.h; path = src/FBConstants.h; sourceTree = "<group>"; };
+		384726B02291638F007D77EE /* FBMutableData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBMutableData.h; path = src/FBMutableData.h; sourceTree = "<group>"; };
+		384726B12291638F007D77EE /* FBMutableData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBMutableData.m; path = src/FBMutableData.m; sourceTree = "<group>"; };
+		384726B22291638F007D77EE /* FBMutableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBMutableArray.h; path = src/FBMutableArray.h; sourceTree = "<group>"; };
+		384726B32291638F007D77EE /* FBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTable.h; path = src/FBTable.h; sourceTree = "<group>"; };
+		384726B42291638F007D77EE /* FBObjC.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBObjC.pch; path = src/FBObjC.pch; sourceTree = "<group>"; };
+		384726B52291638F007D77EE /* FBTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTable.m; path = src/FBTable.m; sourceTree = "<group>"; };
+		384726B62291638F007D77EE /* FBMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBMutableArray.m; path = src/FBMutableArray.m; sourceTree = "<group>"; };
 		389468CA1F56A34A00EF1F5E /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputApplicationDelegate.h; path = src/InputApplicationDelegate.h; sourceTree = "<group>"; };
 		389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputApplicationDelegate.m; path = src/InputApplicationDelegate.m; sourceTree = "<group>"; };
+		38BA76BE2291442900799212 /* dictionary.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = dictionary.bin; path = dictionary/dictionary.bin; sourceTree = "<group>"; };
 		38DD40191F5800A400A276CB /* PreferencesMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesMenu.xib; sourceTree = "<group>"; };
 		83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-hallelujah.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +100,18 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				384726AF2291638F007D77EE /* FBConstants.h */,
+				384726B22291638F007D77EE /* FBMutableArray.h */,
+				384726B62291638F007D77EE /* FBMutableArray.m */,
+				384726B02291638F007D77EE /* FBMutableData.h */,
+				384726B12291638F007D77EE /* FBMutableData.m */,
+				384726B42291638F007D77EE /* FBObjC.pch */,
+				384726B32291638F007D77EE /* FBTable.h */,
+				384726B52291638F007D77EE /* FBTable.m */,
+				384726AC22915C4D007D77EE /* Dictionary.h */,
+				384726AB22915C4D007D77EE /* Dictionary.m */,
+				384726A922915C4D007D77EE /* Word.h */,
+				384726AA22915C4D007D77EE /* Word.m */,
 				389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */,
 				389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */,
 				F102C5A91F4882C80005B03F /* main.mm */,
@@ -135,6 +166,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				38BA76BE2291442900799212 /* dictionary.bin */,
 				3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */,
 				F174745E1FDC2C9400AD2B84 /* cedict.json */,
 				38DD40191F5800A400A276CB /* PreferencesMenu.xib */,
@@ -240,6 +272,7 @@
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
+				38BA76BF2291442900799212 /* dictionary.bin in Resources */,
 				38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */,
 				3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */,
 				0DE74C001978F18E00040F3C /* him.icns in Resources */,
@@ -307,9 +340,14 @@
 			files = (
 				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
+				384726B92291638F007D77EE /* FBMutableArray.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
+				384726AE22915C4D007D77EE /* Dictionary.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,
 				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
+				384726B72291638F007D77EE /* FBMutableData.m in Sources */,
+				384726AD22915C4D007D77EE /* Word.m in Sources */,
+				384726B82291638F007D77EE /* FBTable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +392,7 @@
 					"$(PROJECT_DIR)/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
+				PRODUCT_BUNDLE_IDENTIFIER = us.erlang.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -371,14 +409,14 @@
 				GCC_MODEL_TUNING = G5;
 				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
+				PRODUCT_BUNDLE_IDENTIFIER = us.erlang.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
 				WRAPPER_EXTENSION = app;
 			};

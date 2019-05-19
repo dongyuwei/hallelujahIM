@@ -7,6 +7,9 @@
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
 
+#import "Dictionary.h"
+#import "Word.h"
+
 const NSString *kConnectionName = @"Hallelujah_1_Connection";
 IMKServer *server;
 IMKCandidates *sharedCandidates;
@@ -26,8 +29,24 @@ NSDictionary *deserializeJSON(NSString *path) {
 }
 
 NSDictionary *getWordsWithFrequencyAndTranslation() {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation_and_ipa" ofType:@"json"];
-    return deserializeJSON(path);
+    NSDate *start = [NSDate date];
+    NSMutableDictionary* words = [[NSMutableDictionary alloc] init];
+    NSString *dictPath = [[NSBundle mainBundle] pathForResource:@"dictionary" ofType:@"bin"];
+    NSData *data = [[NSFileManager defaultManager] contentsAtPath:dictPath];
+    Dictionary* dict = [Dictionary getRootAs:data];
+    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+    NSLog(@"time to parse binary data: %f", timeInterval);//0.009632s very fast
+
+    NSDate *start2 = [NSDate date];
+//    Word* word = [dict entries][0];
+//    NSLog(@"word key:%@, translation:%@, ipa:%@, frequency:%lld", [word key], [word translation], [word ipa], [word frequency]);
+    for(Word* word in [dict entries]) {
+        [words setObject: word forKey: [word key]];
+    }
+    NSTimeInterval timeInterval2 = [start2 timeIntervalSinceNow];
+    NSLog(@"time to convert list to dict: %f", timeInterval2);//0.304043s slow
+
+    return [words copy];
 }
 
 NSDictionary *getPinyinData() {

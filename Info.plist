@@ -30,15 +30,15 @@
 	<string>NO</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Latn</string>
