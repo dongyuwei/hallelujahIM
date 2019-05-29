@@ -96,3 +96,7 @@ make
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)
 3. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
+
+### Contact me
+wechat: dongyuwei
+gmail: newdongyuwei
