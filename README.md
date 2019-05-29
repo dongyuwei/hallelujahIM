@@ -98,5 +98,5 @@ make
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
 
 ### Contact me
-wechat: dongyuwei
-gmail: newdongyuwei
+- wechat: dongyuwei
+- gmail: newdongyuwei
