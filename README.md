@@ -77,7 +77,7 @@ If functional you need is missing but you're ready to pay for it, feel free to c
 1. `open hallelujah.xcworkspace`
 2. build the project.
 
-## license
+## License
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## About libmarisa / marisa-trie
