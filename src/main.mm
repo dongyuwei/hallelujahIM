@@ -2,10 +2,7 @@
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
 
-#import "GCDWebServer.h"
-#import "GCDWebServerDataRequest.h"
-#import "GCDWebServerDataResponse.h"
-#import "GCDWebServerURLEncodedFormRequest.h"
+#import "WebServer.h"
 
 const NSString *kConnectionName = @"Hallelujah_1_Connection";
 IMKServer *server;
@@ -40,53 +37,6 @@ NSDictionary *getUserDefinedSubstitutions() {
     return deserializeJSON(path);
 }
 
-void initPreference() {
-    preference = [NSUserDefaults standardUserDefaults];
-    if ([preference objectForKey:@"showTranslation"] == nil) {
-        [preference setBool:YES forKey:@"showTranslation"];
-    }
-}
-
-NSDictionary *getDictionaryRepresentationOfPreference() {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    [dict setObject:[NSNumber numberWithBool:showTranslation] forKey:@"showTranslation"];
-    return dict;
-}
-
-void startHttpServer() {
-    initPreference();
-
-    GCDWebServer *webServer = [[GCDWebServer alloc] init];
-    [webServer addGETHandlerForBasePath:@"/"
-                          directoryPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"web"]
-                          indexFilename:nil
-                               cacheAge:3600
-                     allowRangeRequests:YES];
-
-    [webServer addHandlerForMethod:@"GET"
-                              path:@"/preference"
-                      requestClass:[GCDWebServerRequest class]
-                      processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                          return [GCDWebServerDataResponse responseWithJSONObject:getDictionaryRepresentationOfPreference()];
-                      }];
-
-    [webServer addHandlerForMethod:@"POST"
-                              path:@"/preference"
-                      requestClass:[GCDWebServerURLEncodedFormRequest class]
-                      processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                          NSDictionary *data = [(GCDWebServerDataRequest *)request jsonObject];
-                          bool showTranslation = [[data objectForKey:@"showTranslation"] boolValue];
-                          [preference setBool:showTranslation forKey:@"showTranslation"];
-                          return [GCDWebServerDataResponse responseWithJSONObject:data];
-                      }];
-    NSMutableDictionary *options = [NSMutableDictionary dictionary];
-    [options setObject:@62718 forKey:GCDWebServerOption_Port];
-    [options setObject:@YES forKey:GCDWebServerOption_BindToLocalhost];
-
-    [webServer startWithOptions:options error:nil];
-}
-
 int main(int argc, char *argv[]) {
     NSString *identifier;
 
@@ -112,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
-    startHttpServer();
+    [[WebServer sharedServer] start];
 
     [[NSApplication sharedApplication] run];
     return 0;
