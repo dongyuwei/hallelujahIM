@@ -40,7 +40,6 @@ static AnnotationWinController *sharedController;
 }
 
 - (void)hideWindow {
-    //    [[self panel] orderOut:nil];
     NSRect rect;
     rect.size.width = 0;
     rect.size.height = 0;

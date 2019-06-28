@@ -121,17 +121,21 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([self isMojaveAndLaterSystem]) {
-        if (keyCode == KEY_ARROW_DOWN) {
-            [sharedCandidates moveDown:self];
-            _currentCandidateIndex++;
-            return NO;
+        BOOL isCandidatesVisible = [sharedCandidates isVisible];
+        if (isCandidatesVisible) {
+            if (keyCode == KEY_ARROW_DOWN) {
+                [sharedCandidates moveDown:self];
+                _currentCandidateIndex++;
+                return NO;
+            }
+            
+            if (keyCode == KEY_ARROW_UP) {
+                [sharedCandidates moveUp:self];
+                _currentCandidateIndex--;
+                return NO;
+            }
         }
-
-        if (keyCode == KEY_ARROW_UP) {
-            [sharedCandidates moveUp:self];
-            _currentCandidateIndex--;
-            return NO;
-        }
+        
 
         if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
             if (!hasBufferedText) {
@@ -140,7 +144,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                 return YES;
             }
 
-            if ([sharedCandidates isVisible]) { // use 1~9 digital numbers as selection keys
+            if (isCandidatesVisible) { // use 1~9 digital numbers as selection keys
                 int pressedNumber = [characters intValue];
                 NSString *candidate;
                 int pageSize = 9;
@@ -216,9 +220,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     _currentCandidateIndex = 1;
+    [sharedCandidates clearSelection];
     [sharedCandidates hide];
-    [_annotationWin hideWindow];
     _candidates = [[NSMutableArray alloc] init];
+    [sharedCandidates setCandidateData: @[]];
+    [_annotationWin hideWindow];
 }
 
 - (NSMutableString *)composedBuffer {
