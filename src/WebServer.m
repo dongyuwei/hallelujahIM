@@ -19,10 +19,9 @@ NSDictionary *getDictionaryRepresentationOfPreference() {
     return dict;
 }
 
-
 @interface WebServer ()
 
-@property (nonatomic, strong) GCDWebServer *server;
+@property(nonatomic, strong) GCDWebServer *server;
 
 @end
 
@@ -44,21 +43,21 @@ static int port = 62718;
         return;
     }
     initPreference();
-    
+
     GCDWebServer *webServer = [[GCDWebServer alloc] init];
     [webServer addGETHandlerForBasePath:@"/"
                           directoryPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"web"]
                           indexFilename:nil
                                cacheAge:3600
                      allowRangeRequests:YES];
-    
+
     [webServer addHandlerForMethod:@"GET"
                               path:@"/preference"
                       requestClass:[GCDWebServerRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                           return [GCDWebServerDataResponse responseWithJSONObject:getDictionaryRepresentationOfPreference()];
                       }];
-    
+
     [webServer addHandlerForMethod:@"POST"
                               path:@"/preference"
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
@@ -71,7 +70,7 @@ static int port = 62718;
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
     [options setObject:[NSNumber numberWithInt:port] forKey:GCDWebServerOption_Port];
     [options setObject:@YES forKey:GCDWebServerOption_BindToLocalhost];
-    
+
     [webServer startWithOptions:options error:nil];
 }
 

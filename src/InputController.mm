@@ -128,14 +128,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                 _currentCandidateIndex++;
                 return NO;
             }
-            
+
             if (keyCode == KEY_ARROW_UP) {
                 [sharedCandidates moveUp:self];
                 _currentCandidateIndex--;
                 return NO;
             }
         }
-        
 
         if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
             if (!hasBufferedText) {
@@ -223,7 +222,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates clearSelection];
     [sharedCandidates hide];
     _candidates = [[NSMutableArray alloc] init];
-    [sharedCandidates setCandidateData: @[]];
+    [sharedCandidates setCandidateData:@[]];
     [_annotationWin hideWindow];
 }
 
