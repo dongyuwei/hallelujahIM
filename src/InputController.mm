@@ -400,15 +400,15 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
-    NSArray *subList = [self getTranslations:candidateString];
-    if (subList && subList.count > 0) {
-        NSString *translations;
+    NSArray *translation = [self getTranslations:candidateString];
+    if (translation && translation.count > 0) {
+        NSString *translationText;
         NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:candidateString];
         if ([phoneticSymbol length] > 0) {
             NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
-            translations = [[list arrayByAddingObjectsFromArray:subList] componentsJoinedByString:@"\n"];
+            translationText = [[list arrayByAddingObjectsFromArray:translation] componentsJoinedByString:@"\n"];
         } else {
-            translations = [subList componentsJoinedByString:@"\n"];
+            translationText = [translation componentsJoinedByString:@"\n"];
         }
         NSRect candidateFrame = [sharedCandidates candidateFrame];
         NSRect lineRect;
@@ -444,7 +444,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             positionPoint.y = positionPoint.y - 6;
         }
 
-        [_annotationWin setAnnotation:translations];
+        [_annotationWin setAnnotation:translationText];
         [_annotationWin showWindow:positionPoint];
     } else {
         [_annotationWin hideWindow];
