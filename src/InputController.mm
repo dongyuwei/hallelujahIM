@@ -252,16 +252,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)showPreeditString:(NSString *)input {
     NSDictionary *attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, [input length])];
-    NSAttributedString *attrString;
-
-    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
-    if ([[input lowercaseString] hasPrefix:[originalBuff lowercaseString]]) {
-        attrString = [[NSAttributedString alloc]
-            initWithString:[NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]]
-                attributes:attrs];
-    } else {
-        attrString = [[NSAttributedString alloc] initWithString:input attributes:attrs];
-    }
+    NSString *originalBuff = [self originalBuffer];
+    NSAttributedString *attrString = [[NSAttributedString alloc]
+        initWithString:[NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]]
+            attributes:attrs];
 
     [_currentClient setMarkedText:attrString
                    selectionRange:NSMakeRange(input.length, 0)
@@ -281,7 +275,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (NSArray *)candidates:(id)sender {
-    NSString *buffer = [[self originalBuffer] lowercaseString];
+    NSString *originalInput = [self originalBuffer];
+    NSString *buffer = [originalInput lowercaseString];
     NSMutableArray *result = [[NSMutableArray alloc] init];
 
     if (buffer && buffer.length > 0) {
@@ -309,8 +304,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [result insertObject:buffer atIndex:0];
     }
 
-    _candidates = [NSMutableArray arrayWithArray:result];
-    return [NSArray arrayWithArray:result];
+    NSMutableArray *result2 = [[NSMutableArray alloc] init];
+    for (NSString *word in result) {
+        // case sensitive input
+        [result2 addObject:[NSString stringWithFormat:@"%@%@", originalInput, [word substringFromIndex:originalInput.length]]];
+    }
+    _candidates = [NSMutableArray arrayWithArray:result2];
+    return [NSArray arrayWithArray:result2];
 }
 
 - (NSMutableArray *)queryTrie:(NSString *)buffer {
@@ -370,13 +370,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)_updateComposedBuffer:(NSAttributedString *)candidateString {
-    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
-    NSString *composed = [candidateString string];
-    if ([composed hasPrefix:[originalBuff lowercaseString]]) {
-        [self setComposedBuffer:[NSString stringWithFormat:@"%@%@", originalBuff, [composed substringFromIndex:originalBuff.length]]];
-    } else {
-        [self setComposedBuffer:composed];
-    }
+    [self setComposedBuffer:[candidateString string]];
 }
 
 - (void)activateServer:(id)sender {
