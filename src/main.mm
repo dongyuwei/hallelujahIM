@@ -38,10 +38,8 @@ NSDictionary *getUserDefinedSubstitutions() {
 }
 
 int main(int argc, char *argv[]) {
-    NSString *identifier;
-
-    identifier = [[NSBundle mainBundle] bundleIdentifier];
-    server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
+    NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
+    server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
 
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
 
