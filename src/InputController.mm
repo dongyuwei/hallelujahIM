@@ -380,13 +380,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)_updateComposedBuffer:(NSAttributedString *)candidateString {
-    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
-    NSString *composed = [candidateString string];
-    if ([composed hasPrefix:[originalBuff lowercaseString]]) {
-        [self setComposedBuffer:[NSString stringWithFormat:@"%@%@", originalBuff, [composed substringFromIndex:originalBuff.length]]];
-    } else {
-        [self setComposedBuffer:composed];
-    }
+    [self setComposedBuffer:[candidateString string]];
 }
 
 - (void)activateServer:(id)sender {
