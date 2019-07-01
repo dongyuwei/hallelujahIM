@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -14,9 +14,15 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="Menu" id="H8n-qw-MXu">
             <items>
-                <menuItem title="Preferences..." tag="1" id="lKW-or-zoD"/>
+                <menuItem title="Preferences" tag="1" id="lKW-or-zoD"/>
+                <menuItem title="Upgrade" id="W4U-UV-5uT">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="About" id="qhh-J9-DhA">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
             </items>
-            <point key="canvasLocation" x="139" y="165.5"/>
+            <point key="canvasLocation" x="139" y="165"/>
         </menu>
         <customObject id="xeQ-fJ-niv" userLabel="InputApplicationDelegate" customClass="InputApplicationDelegate">
             <connections>

@@ -399,9 +399,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return [[NSApp delegate] performSelector:NSSelectorFromString(@"menu")];
 }
 
-- (void)showPreferences:(id)sender {
+- (void)showIMEPreferences:(id)sender {
+    [self openUrl:@"http://localhost:62718/index.html"];
+}
+
+- (void)clickAbout:(NSMenuItem *)sender {
+    [self openUrl:@"https://github.com/dongyuwei/hallelujahIM"];
+}
+
+- (void)openUrl:(NSString *)url {
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-    [ws openURLs:@[ [NSURL URLWithString:@"http://localhost:62718/index.html"] ]
+    [ws openURLs:@[ [NSURL URLWithString:url] ]
                withAppBundleIdentifier:@"com.apple.Safari"
                                options:NSWorkspaceLaunchDefault
         additionalEventParamDescriptor:NULL

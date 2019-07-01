@@ -7,10 +7,15 @@
 }
 
 - (void)awakeFromNib {
-    NSMenuItem *preferenceMenu = [_menu itemWithTag:1];
+    NSMenuItem *preferenceMenuItem = [_menu itemWithTitle:@"Preferences"];
+    NSMenuItem *aboutMenuItem = [_menu itemWithTitle:@"About"];
 
-    if (preferenceMenu) {
-        [preferenceMenu setAction:@selector(showPreferences:)];
+    if (preferenceMenuItem) {
+        [preferenceMenuItem setAction:@selector(showIMEPreferences:)];
+    }
+
+    if (aboutMenuItem) {
+        [aboutMenuItem setAction:@selector(clickAbout:)];
     }
 }
 
