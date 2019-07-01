@@ -252,10 +252,16 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)showPreeditString:(NSString *)input {
     NSDictionary *attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, [input length])];
-    NSString *originalBuff = [self originalBuffer];
-    NSAttributedString *attrString = [[NSAttributedString alloc]
-        initWithString:[NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]]
-            attributes:attrs];
+    NSAttributedString *attrString;
+
+    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
+    if ([[input lowercaseString] hasPrefix:[originalBuff lowercaseString]]) {
+        attrString = [[NSAttributedString alloc]
+            initWithString:[NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]]
+                attributes:attrs];
+    } else {
+        attrString = [[NSAttributedString alloc] initWithString:input attributes:attrs];
+    }
 
     [_currentClient setMarkedText:attrString
                    selectionRange:NSMakeRange(input.length, 0)
@@ -307,7 +313,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSMutableArray *result2 = [[NSMutableArray alloc] init];
     for (NSString *word in result) {
         // case sensitive input
-        [result2 addObject:[NSString stringWithFormat:@"%@%@", originalInput, [word substringFromIndex:originalInput.length]]];
+        if ([word hasPrefix:buffer]) {
+            [result2 addObject:[NSString stringWithFormat:@"%@%@", originalInput, [word substringFromIndex:originalInput.length]]];
+        } else {
+            [result2 addObject:word];
+        }
     }
     _candidates = [NSMutableArray arrayWithArray:result2];
     return [NSArray arrayWithArray:result2];
@@ -370,7 +380,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)_updateComposedBuffer:(NSAttributedString *)candidateString {
-    [self setComposedBuffer:[candidateString string]];
+    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
+    NSString *composed = [candidateString string];
+    if ([composed hasPrefix:[originalBuff lowercaseString]]) {
+        [self setComposedBuffer:[NSString stringWithFormat:@"%@%@", originalBuff, [composed substringFromIndex:originalBuff.length]]];
+    } else {
+        [self setComposedBuffer:composed];
+    }
 }
 
 - (void)activateServer:(id)sender {
