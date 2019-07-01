@@ -427,8 +427,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         } else {
             translationText = [translation componentsJoinedByString:@"\n"];
         }
-        NSRect candidateFrame = [sharedCandidates candidateFrame];
-        NSRect lineRect;
+        NSRect candidateFrame = [sharedCandidates candidateFrame]; // system bug: candidateFrame.origin always be (0,0)
+        NSRect lineRect;                                           // line-box of current input text: (width:1, height:17)
         [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
         NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
         NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
@@ -437,30 +437,27 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
         NSRect rect = [currentScreen frame];
         int screenWidth = (int)rect.size.width;
-        int margin = 2;
-        int annotationWindowWidth = _annotationWin.width + margin;
-        int lineHeight = lineRect.size.height;
-        //        NSLog(@"candidateFrame:%@; lineRect: %@; currentPoint: %@", NSStringFromRect(candidateFrame), NSStringFromRect(lineRect),
-        //        NSStringFromPoint(currentPoint));
-
-        if ((positionPoint.x + annotationWindowWidth) >= screenWidth) {
-            positionPoint.x = cursorPoint.x - candidateFrame.size.width - annotationWindowWidth;
-        }
-
-        if (screenWidth - currentPoint.x <= candidateFrame.size.width) {
+        int screenHeight = (int)rect.size.height;
+        int marginToCandidateFrame = 20;
+        int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
+        int lineHeight = lineRect.size.height; // 17px
+        //        Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
+        if (screenWidth - currentPoint.x >=
+            candidateFrame.size.width) { // safe distance to display candidateFrame at current cursor's left-side.
+            if (screenWidth - currentPoint.x < candidateFrame.size.width + annotationWindowWidth) {
+                positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
+            }
+        } else {
+            // assume candidateFrame will display at current cursor's right-side.
             positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
         }
 
-        if (currentPoint.x > (screenWidth - candidateFrame.size.width - annotationWindowWidth - 20)) {
-            positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
-        }
-
-        if (fabs(currentPoint.y) < _annotationWin.height + lineHeight) {
-            positionPoint.y = positionPoint.y + _annotationWin.height + lineHeight;
-        } else {
+        if (currentPoint.y >= candidateFrame.size.height + lineHeight) {
+            // safe distance to dispaly candidateFrame
             positionPoint.y = positionPoint.y - 6;
+        } else {
+            positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight;
         }
-
         [_annotationWin setAnnotation:translationText];
         [_annotationWin showWindow:positionPoint];
     } else {
