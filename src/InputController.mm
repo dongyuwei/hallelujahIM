@@ -18,20 +18,20 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 @implementation InputController
 
 - (NSUInteger)recognizedEvents:(id)sender {
-    return NSKeyDownMask | NSFlagsChangedMask;
+    return NSEventMaskKeyDown | NSEventMaskFlagsChanged;
 }
 
 - (BOOL)handleEvent:(NSEvent *)event client:(id)sender {
     NSUInteger modifiers = [event modifierFlags];
     bool handled = NO;
     switch ([event type]) {
-    case NSFlagsChanged:
-        if (_lastEventTypes[1] == NSFlagsChanged && _lastModifiers[1] == modifiers) {
+    case NSEventTypeFlagsChanged:
+        if (_lastEventTypes[1] == NSEventTypeFlagsChanged && _lastModifiers[1] == modifiers) {
             return YES;
         }
 
-        if (modifiers == 0 && _lastEventTypes[1] == NSFlagsChanged && _lastModifiers[1] == NSShiftKeyMask &&
-            !(_lastModifiers[0] & NSShiftKeyMask)) {
+        if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && _lastModifiers[1] == NSEventModifierFlagShift &&
+            !(_lastModifiers[0] & NSEventModifierFlagShift)) {
 
             _defaultEnglishMode = !_defaultEnglishMode;
             if (_defaultEnglishMode) {
@@ -43,13 +43,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             }
         }
         break;
-    case NSKeyDown:
+    case NSEventTypeKeyDown:
         if (_defaultEnglishMode) {
             break;
         }
 
         // ignore Command+X hotkeys.
-        if (modifiers & NSCommandKeyMask)
+        if (modifiers & NSEventModifierFlagCommand)
             break;
 
         handled = [self onKeyEvent:event client:sender];
@@ -437,7 +437,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
         NSRect rect = [currentScreen frame];
         int screenWidth = (int)rect.size.width;
-        int screenHeight = (int)rect.size.height;
         int marginToCandidateFrame = 20;
         int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
         int lineHeight = lineRect.size.height; // 17px
@@ -453,7 +452,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
 
         if (currentPoint.y >= candidateFrame.size.height + lineHeight) {
-            // safe distance to dispaly candidateFrame
             positionPoint.y = positionPoint.y - 6;
         } else {
             positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight;

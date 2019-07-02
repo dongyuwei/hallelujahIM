@@ -17,6 +17,7 @@
 		3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */ = {isa = PBXBuildFile; fileRef = 3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
+		38A9EAC722CB424F003CCF52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A9EAC622CB424F003CCF52 /* Carbon.framework */; };
 		38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38DD40191F5800A400A276CB /* PreferencesMenu.xib */; };
 		56DAA2D1B676B02B33021777 /* libPods-hallelujah.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -31,7 +32,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0D29160719519CE500C4CE58 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		0D2BFD8E194588F400DE18D9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = hallelujah/Images.xcassets; sourceTree = "<group>"; };
 		0DE74BFD1978EC6A00040F3C /* him.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = him.png; sourceTree = "<group>"; };
@@ -42,13 +42,15 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSScreen+PointConversion.m"; path = "src/NSScreen+PointConversion.m"; sourceTree = "<group>"; };
 		3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSScreen+PointConversion.h"; path = "src/NSScreen+PointConversion.h"; sourceTree = "<group>"; };
-		38133A1C22C9AF0D004960E3 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/AnnotationWindow.nib; sourceTree = "<group>"; };
 		381CD8C422C60D610098764F /* WebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebServer.h; path = src/WebServer.h; sourceTree = "<group>"; };
 		381CD8C522C60D610098764F /* WebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebServer.m; path = src/WebServer.m; sourceTree = "<group>"; };
 		3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = words_with_frequency_and_translation_and_ipa.json; path = dictionary/words_with_frequency_and_translation_and_ipa.json; sourceTree = "<group>"; };
 		389468CA1F56A34A00EF1F5E /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputApplicationDelegate.h; path = src/InputApplicationDelegate.h; sourceTree = "<group>"; };
 		389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputApplicationDelegate.m; path = src/InputApplicationDelegate.m; sourceTree = "<group>"; };
+		38A9EAC422CB4132003CCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/AnnotationWindow.nib; sourceTree = "<group>"; };
+		38A9EAC522CB4136003CCF52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		38A9EAC622CB424F003CCF52 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		38DD40191F5800A400A276CB /* PreferencesMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesMenu.xib; sourceTree = "<group>"; };
 		83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-hallelujah.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38A9EAC722CB424F003CCF52 /* Carbon.framework in Frameworks */,
 				F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
@@ -157,6 +160,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				38A9EAC622CB424F003CCF52 /* Carbon.framework */,
 				F102C5A31F487D5A0005B03F /* libmarisa.a */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -214,15 +218,15 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 1020;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "hallelujah" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* NumberInput */;
 			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
@@ -325,7 +329,7 @@
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C165DFE840E0CC02AAC07 /* English */,
+				38A9EAC522CB4136003CCF52 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -333,7 +337,7 @@
 		38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				38133A1C22C9AF0D004960E3 /* English */,
+				38A9EAC422CB4132003CCF52 /* Base */,
 			);
 			name = AnnotationWindow.nib;
 			sourceTree = "<group>";
@@ -349,7 +353,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
@@ -359,8 +362,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -377,14 +380,14 @@
 				GCC_MODEL_TUNING = G5;
 				"HEADER_SEARCH_PATHS[arch=*]" = $SOURCE_ROOT/include;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = im.session.inputmethod.hallelujahInputMethod;
+				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
 				WRAPPER_EXTENSION = app;
 			};
@@ -393,21 +396,71 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

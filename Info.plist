@@ -26,19 +26,21 @@
 	<string>Hallelujah_1_Connection</string>
 	<key>InputMethodServerControllerClass</key>
 	<string>InputController</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
 	<key>LSBackgroundOnly</key>
 	<string>NO</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>NSMainNibFile</key>
-	<string>AnnotationWindow</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSMainNibFile</key>
+	<string>AnnotationWindow</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Latn</string>

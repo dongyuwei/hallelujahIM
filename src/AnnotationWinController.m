@@ -19,7 +19,7 @@ static AnnotationWinController *sharedController;
     sharedController = self;
     self.width = 170;
     self.height = 256; // max-height of sharedCandidates
-    [[self panel] setStyleMask:NSBorderlessWindowMask];
+    [[self panel] setStyleMask:NSWindowStyleMaskBorderless];
     [[self panel] setOpaque:NO];
     [[self panel] setBackgroundColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.0]];
     [self hideWindow];
