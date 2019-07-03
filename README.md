@@ -100,6 +100,10 @@ pinyin in, English out: <br/>
 
 `sh dev.sh`
 
+## build dmg
+
+`sh build-dmg.sh`
+
 ## 开源协议
 
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
