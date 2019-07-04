@@ -223,7 +223,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates hide];
     _candidates = [[NSMutableArray alloc] init];
     [sharedCandidates setCandidateData:@[]];
-    [_annotationWin hideWindow];
+    [_annotationWin hide];
 }
 
 - (NSMutableString *)composedBuffer {
@@ -369,7 +369,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
     if (showTranslation) {
-        [self showAnnotation:candidateString];
+        [self showTranslation:candidateString];
     }
 }
 
@@ -416,17 +416,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                      launchIdentifiers:NULL];
 }
 
-- (void)showAnnotation:(NSAttributedString *)candidateString {
+- (void)showTranslation:(NSAttributedString *)candidateString {
     NSArray *translation = [self getTranslations:candidateString];
     if (translation && translation.count > 0) {
-        NSString *translationText;
+        NSMutableArray *translations = [translation mutableCopy];
         NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:candidateString];
         if ([phoneticSymbol length] > 0) {
-            NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
-            translationText = [[list arrayByAddingObjectsFromArray:translation] componentsJoinedByString:@"\n"];
-        } else {
-            translationText = [translation componentsJoinedByString:@"\n"];
+            [translations insertObject:phoneticSymbol atIndex:0];
         }
+        [_annotationWin setTranslations:translations];
+        NSLog(@"halle 000 showTranslation, translations:%@", translations);
+        
         NSRect candidateFrame = [sharedCandidates candidateFrame]; // system bug: candidateFrame.origin always be (0,0)
         NSRect lineRect;                                           // line-box of current input text: (width:1, height:17)
         [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
@@ -450,18 +450,22 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             // assume candidateFrame will display at current cursor's right-side.
             positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
         }
-
+        
         if (currentPoint.y >= candidateFrame.size.height + lineHeight) {
             positionPoint.y = positionPoint.y - 6;
         } else {
             positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight;
         }
-        [_annotationWin setAnnotation:translationText];
-        [_annotationWin showWindow:positionPoint];
+
+        [_annotationWin show: positionPoint];
     } else {
-        [_annotationWin hideWindow];
+        [_annotationWin hide];
     }
 }
+
+//- (NSPoint)calculatePositionOfTranslationWindow {
+//        return positionPoint;
+//}
 
 - (NSArray *)getTranslations:(NSAttributedString *)candidate {
     NSString *word = [[candidate string] lowercaseString];

@@ -1,16 +1,17 @@
 #import <Cocoa/Cocoa.h>
 
-@interface AnnotationWinController : NSWindowController {
+@interface AnnotationWinController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate> {
 }
 
 @property int width;
 @property int height;
+@property(nonatomic, strong) NSMutableArray *translations;
 
-- (void)showWindow:(NSPoint)origin;
+- (void)show:(NSPoint)origin;
 
-- (void)hideWindow;
+- (void)hide;
 
-- (void)setAnnotation:(NSString *)annotation;
+- (void)setTranslations:(NSMutableArray *)translations;
 
 + (id)sharedController;
 
