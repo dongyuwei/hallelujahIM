@@ -437,8 +437,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (NSPoint)calculatePositionOfTranslationWindow {
-    NSRect candidateFrame = [sharedCandidates candidateFrame]; // system bug: candidateFrame.origin always be (0,0)
-    NSRect lineRect;                                           // line-box of current input text: (width:1, height:17)
+    // Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
+    // Notice: there is a System bug: candidateFrame.origin always be (0,0), so we can't depending on the origin point.
+    NSRect candidateFrame = [sharedCandidates candidateFrame];
+
+    // line-box of current input text: (width:1, height:17)
+    NSRect lineRect;
     [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
     NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
     NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
@@ -450,9 +454,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     int marginToCandidateFrame = 20;
     int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
     int lineHeight = lineRect.size.height; // 17px
-    //        Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
-    if (screenWidth - currentPoint.x >=
-        candidateFrame.size.width) { // safe distance to display candidateFrame at current cursor's left-side.
+
+    if (screenWidth - currentPoint.x >= candidateFrame.size.width) {
+        // safe distance to display candidateFrame at current cursor's left-side.
         if (screenWidth - currentPoint.x < candidateFrame.size.width + annotationWindowWidth) {
             positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
         }
