@@ -427,40 +427,46 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         } else {
             translationText = [translation componentsJoinedByString:@"\n"];
         }
-        NSRect candidateFrame = [sharedCandidates candidateFrame]; // system bug: candidateFrame.origin always be (0,0)
-        NSRect lineRect;                                           // line-box of current input text: (width:1, height:17)
-        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
-        NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
-        NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
-        positionPoint.x = positionPoint.x + candidateFrame.size.width;
-        NSScreen *currentScreen = [NSScreen currentScreenForMouseLocation];
-        NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
-        NSRect rect = [currentScreen frame];
-        int screenWidth = (int)rect.size.width;
-        int marginToCandidateFrame = 20;
-        int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
-        int lineHeight = lineRect.size.height; // 17px
-        //        Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
-        if (screenWidth - currentPoint.x >=
-            candidateFrame.size.width) { // safe distance to display candidateFrame at current cursor's left-side.
-            if (screenWidth - currentPoint.x < candidateFrame.size.width + annotationWindowWidth) {
-                positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
-            }
-        } else {
-            // assume candidateFrame will display at current cursor's right-side.
-            positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
-        }
 
-        if (currentPoint.y >= candidateFrame.size.height + lineHeight) {
-            positionPoint.y = positionPoint.y - 6;
-        } else {
-            positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight;
-        }
         [_annotationWin setAnnotation:translationText];
-        [_annotationWin showWindow:positionPoint];
+
+        [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
     } else {
         [_annotationWin hideWindow];
     }
+}
+
+- (NSPoint)calculatePositionOfTranslationWindow {
+    NSRect candidateFrame = [sharedCandidates candidateFrame]; // system bug: candidateFrame.origin always be (0,0)
+    NSRect lineRect;                                           // line-box of current input text: (width:1, height:17)
+    [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+    NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
+    NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
+    positionPoint.x = positionPoint.x + candidateFrame.size.width;
+    NSScreen *currentScreen = [NSScreen currentScreenForMouseLocation];
+    NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
+    NSRect rect = [currentScreen frame];
+    int screenWidth = (int)rect.size.width;
+    int marginToCandidateFrame = 20;
+    int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
+    int lineHeight = lineRect.size.height; // 17px
+    //        Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
+    if (screenWidth - currentPoint.x >=
+        candidateFrame.size.width) { // safe distance to display candidateFrame at current cursor's left-side.
+        if (screenWidth - currentPoint.x < candidateFrame.size.width + annotationWindowWidth) {
+            positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
+        }
+    } else {
+        // assume candidateFrame will display at current cursor's right-side.
+        positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
+    }
+    if (currentPoint.y >= candidateFrame.size.height) {
+        positionPoint.y = positionPoint.y - 8; // Both 8 and 3 are magic numbers to adjust the position
+    } else {
+        positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight + 3;
+    }
+
+    return positionPoint;
 }
 
 - (NSArray *)getTranslations:(NSAttributedString *)candidate {

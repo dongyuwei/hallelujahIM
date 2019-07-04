@@ -4,7 +4,7 @@ static AnnotationWinController *sharedController;
 
 @interface AnnotationWinController ()
 @property(retain, nonatomic) IBOutlet NSPanel *panel;
-@property(retain, nonatomic) IBOutlet NSTextView *view;
+@property(retain, nonatomic) IBOutlet NSTextField *view;
 @end
 
 @implementation AnnotationWinController
@@ -17,11 +17,12 @@ static AnnotationWinController *sharedController;
 
 - (void)awakeFromNib {
     sharedController = self;
-    self.width = 170;
-    self.height = 256; // max-height of sharedCandidates
-    [[self panel] setStyleMask:NSWindowStyleMaskBorderless];
-    [[self panel] setOpaque:NO];
-    [[self panel] setBackgroundColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.0]];
+    self.width = 160;
+    self.height = 282;
+
+    [self.panel setStyleMask:NSWindowStyleMaskBorderless];
+    [self.panel setOpaque:YES];
+    [self.panel setBackgroundColor:[NSColor colorWithCalibratedRed:255.0 green:255.0 blue:255.0 alpha:0.95]];
     [self hideWindow];
 }
 
@@ -31,7 +32,7 @@ static AnnotationWinController *sharedController;
     size.height = self.height;
     [[self panel] setMinSize:size];
     [[self panel] setContentSize:size];
-    [[self panel] setAlphaValue:0.9];
+    [[self panel] setAlphaValue:0.95];
 
     [[self panel] setFrameTopLeftPoint:origin];
     [[self panel] orderFront:nil];
@@ -47,7 +48,7 @@ static AnnotationWinController *sharedController;
 }
 
 - (void)setAnnotation:(NSString *)annotation {
-    [[self view] setString:annotation];
+    [self.view setStringValue:annotation];
 }
 
 @end
