@@ -6,5 +6,3 @@ xcodebuild -workspace hallelujah.xcworkspace/ -scheme hallelujah -configuration 
 pkill -9 hallelujah
 sudo rm -rf  /Library/Input\ Methods/hallelujah.app/
 sudo cp -R ${HOME}/.hallelujah/debug/hallelujah.app /Library/Input\ Methods/hallelujah.app
-sudo /Library/Input\ Methods/hallelujah.app/Contents/MacOS/hallelujah --install
-echo "hallelujah IME is installed and activated. Wait a moment to use it..."
