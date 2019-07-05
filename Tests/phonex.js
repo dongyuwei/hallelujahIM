@@ -1,6 +1,9 @@
 /**
  * Talisman phonetics/phonex
  * ==========================
+ * Link: https://github.com/Yomguithereal/talisman/blob/master/src/phonetics/phonex.js
+ * License: The MIT License (MIT)
+ * Copyright (c) 2016 Guillaume Plique (Yomguithereal)
  *
  * Implementation of the "Phonex" algorithm.
  *
