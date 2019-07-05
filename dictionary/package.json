@@ -1,0 +1,12 @@
+{
+  "name": "dictionary",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "keywords": [],
+  "author": "Dong Yuwei",
+  "license": "ISC",
+  "devDependencies": {
+    "talisman": "^0.21.0"
+  }
+}

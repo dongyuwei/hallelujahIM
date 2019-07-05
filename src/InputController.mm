@@ -10,6 +10,7 @@ extern marisa::Trie trie;
 extern NSMutableDictionary *wordsWithFrequencyAndTranslation;
 extern NSDictionary *substitutions;
 extern NSDictionary *pinyinDict;
+extern NSDictionary *phonexEncoded;
 extern NSUserDefaults *preference;
 
 typedef NSInteger KeyCode;
@@ -340,7 +341,21 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (NSArray *)getSuggestionOfSpellChecker:(NSString *)buffer {
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
     NSRange range = NSMakeRange(0, [buffer length]);
-    return [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
+    NSArray *result = [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
+    
+    if(buffer.length > 3) {
+        NSLog(@"halle buffer:%@, phonex encoded: %@", buffer, [self phonexEncode:buffer]);
+        NSArray *wordsWithSimilarPhone = [phonexEncoded objectForKey:[self phonexEncode:buffer]];
+        if(wordsWithSimilarPhone && wordsWithSimilarPhone.count > 0) {
+            NSUInteger count = [result count];
+            NSUInteger max = count >= 4 ? 4 : count;
+            NSMutableArray *finalResult = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, max)]];
+            [finalResult addObjectsFromArray:wordsWithSimilarPhone];
+            NSLog(@"halle wordsWithSimilarPhone:%@", wordsWithSimilarPhone);
+            return finalResult;
+        }
+    }
+    return result;
 }
 
 - (NSArray *)sortByFrequency:(NSArray *)filtered {
@@ -383,12 +398,29 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setComposedBuffer:[candidateString string]];
 }
 
+- (NSString *)phonexEncode:(NSString *)word {
+    return [[_phonexFunc callWithArguments:@[ word ]] toString];
+}
+
 - (void)activateServer:(id)sender {
     if (_annotationWin == nil) {
         _annotationWin = [AnnotationWinController sharedController];
     }
+    if (_phonexFunc == nil) {
+        [self initPhonexEncoder];
+    }
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
+}
+
+-(void)initPhonexEncoder {
+    NSString *scriptPath = [[NSBundle mainBundle] pathForResource:@"phonex" ofType:@"js"];
+    NSString *scriptString = [NSString stringWithContentsOfFile:scriptPath encoding:NSUTF8StringEncoding error:nil];
+    
+    JSContext *context = [[JSContext alloc] init];
+    [context evaluateScript:scriptString];
+    _phonexFunc = context[@"phonex"];
+    NSLog(@"halle initPhonexEncoder scriptPath: %@, _phonexFunc:%@", scriptPath, _phonexFunc);
 }
 
 - (void)deactivateServer:(id)sender {

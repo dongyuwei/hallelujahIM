@@ -1,6 +1,7 @@
 #import "AnnotationWinController.h"
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @interface InputController : IMKInputController {
     NSMutableString *_composedBuffer;
@@ -13,6 +14,7 @@
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];
     AnnotationWinController *_annotationWin;
+    JSValue* _phonexFunc;
 }
 
 - (NSMutableString *)composedBuffer;

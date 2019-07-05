@@ -37,3 +37,4 @@ hallelujah.xcworkspace/xcuserdata
 hallelujah.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 util/releases.json
 .vscode/
+node_modules/

@@ -11,6 +11,7 @@ marisa::Trie trie;
 NSDictionary *wordsWithFrequencyAndTranslation;
 NSDictionary *substitutions;
 NSDictionary *pinyinDict;
+NSDictionary *phonexEncoded;
 NSUserDefaults *preference;
 
 NSDictionary *deserializeJSON(NSString *path) {
@@ -29,6 +30,11 @@ NSDictionary *getWordsWithFrequencyAndTranslation() {
 
 NSDictionary *getPinyinData() {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"cedict" ofType:@"json"];
+    return deserializeJSON(path);
+}
+
+NSDictionary *getPhonexEncodedWords() {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"phonex_encoded_words" ofType:@"json"];
     return deserializeJSON(path);
 }
 
@@ -55,6 +61,7 @@ int main(int argc, char *argv[]) {
     wordsWithFrequencyAndTranslation = getWordsWithFrequencyAndTranslation();
     substitutions = getUserDefinedSubstitutions();
     pinyinDict = getPinyinData();
+    phonexEncoded = getPhonexEncodedWords();
 
     [[NSBundle mainBundle] loadNibNamed:@"AnnotationWindow" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 

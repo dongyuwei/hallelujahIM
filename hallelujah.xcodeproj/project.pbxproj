@@ -13,8 +13,11 @@
 		0DE74C001978F18E00040F3C /* him.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0DE74BFF1978F18E00040F3C /* him.icns */; };
 		3802CD7C22CE034100A7E2F9 /* TestPhonex.m in Sources */ = {isa = PBXBuildFile; fileRef = 3802CD7B22CE034100A7E2F9 /* TestPhonex.m */; };
 		3802CD8622CEE7BB00A7E2F9 /* phonex.js in Resources */ = {isa = PBXBuildFile; fileRef = 3802CD8422CEE7BB00A7E2F9 /* phonex.js */; };
+		3802CD8C22CF43BD00A7E2F9 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */; };
+		3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */; };
 		3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */; };
 		38133A1D22C9AF0D004960E3 /* AnnotationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */; };
+		3817857B22D0E2240091268E /* phonex.js in Resources */ = {isa = PBXBuildFile; fileRef = 3817857A22D0E2240091268E /* phonex.js */; };
 		381CD8C622C60D610098764F /* WebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 381CD8C522C60D610098764F /* WebServer.m */; };
 		3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */ = {isa = PBXBuildFile; fileRef = 3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
@@ -56,8 +59,11 @@
 		3802CD7B22CE034100A7E2F9 /* TestPhonex.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestPhonex.m; sourceTree = "<group>"; };
 		3802CD7D22CE034100A7E2F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3802CD8422CEE7BB00A7E2F9 /* phonex.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = phonex.js; sourceTree = "<group>"; };
+		3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = phonex_encoded_words.json; path = dictionary/phonex_encoded_words.json; sourceTree = "<group>"; };
 		3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSScreen+PointConversion.m"; path = "src/NSScreen+PointConversion.m"; sourceTree = "<group>"; };
 		3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSScreen+PointConversion.h"; path = "src/NSScreen+PointConversion.h"; sourceTree = "<group>"; };
+		3817857A22D0E2240091268E /* phonex.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = phonex.js; path = src/phonex.js; sourceTree = "<group>"; };
 		381CD8C422C60D610098764F /* WebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebServer.h; path = src/WebServer.h; sourceTree = "<group>"; };
 		381CD8C522C60D610098764F /* WebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebServer.m; path = src/WebServer.m; sourceTree = "<group>"; };
 		3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = words_with_frequency_and_translation_and_ipa.json; path = dictionary/words_with_frequency_and_translation_and_ipa.json; sourceTree = "<group>"; };
@@ -95,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3802CD8C22CF43BD00A7E2F9 /* JavaScriptCore.framework in Frameworks */,
 				38A9EAC722CB424F003CCF52 /* Carbon.framework in Frameworks */,
 				F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */,
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
@@ -168,6 +175,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3817857A22D0E2240091268E /* phonex.js */,
+				3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */,
 				38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */,
 				3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */,
 				F174745E1FDC2C9400AD2B84 /* cedict.json */,
@@ -185,6 +194,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */,
 				38A9EAC622CB424F003CCF52 /* Carbon.framework */,
 				F102C5A31F487D5A0005B03F /* libmarisa.a */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
@@ -313,6 +323,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
+				3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */,
+				3817857B22D0E2240091268E /* phonex.js in Resources */,
 				F174745F1FDC2C9400AD2B84 /* cedict.json in Resources */,
 				389468CB1F56A34A00EF1F5E /* web in Resources */,
 				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
