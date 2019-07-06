@@ -1,0 +1,6 @@
+framework module MDCDamerauLevenshtein {
+  umbrella header "MDCDamerauLevenshtein-umbrella.h"
+
+  export *
+  module * { export * }
+}

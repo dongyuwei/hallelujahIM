@@ -24,9 +24,9 @@
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
 		38A9EAC722CB424F003CCF52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A9EAC622CB424F003CCF52 /* Carbon.framework */; };
 		38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38DD40191F5800A400A276CB /* PreferencesMenu.xib */; };
-		56DAA2D1B676B02B33021777 /* libPods-hallelujah.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
 		F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F102C5A31F487D5A0005B03F /* libmarisa.a */; };
 		F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */ = {isa = PBXBuildFile; fileRef = F102C5A51F487DE80005B03F /* google_227800_words.bin */; };
@@ -74,7 +74,7 @@
 		38A9EAC522CB4136003CCF52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		38A9EAC622CB424F003CCF52 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		38DD40191F5800A400A276CB /* PreferencesMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesMenu.xib; sourceTree = "<group>"; };
-		83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-hallelujah.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hallelujah.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* hallelujah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hallelujah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C821F631E5B6762735CA76CB /* Pods-hallelujah.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hallelujah.release.xcconfig"; path = "Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah.release.xcconfig"; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 				0D29160819519CE500C4CE58 /* AppKit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
-				56DAA2D1B676B02B33021777 /* libPods-hallelujah.a in Frameworks */,
+				DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +200,7 @@
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
-				83B7001F97014A6184CCEDD3 /* libPods-hallelujah.a */,
+				5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -262,8 +262,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				D0ABD044018E367C7063F78E /* [CP] Embed Pods Frameworks */,
-				BB7D1122D0516667B50FCD8F /* [CP] Copy Pods Resources */,
+				8564A7C414FB3688218ABA3D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -340,34 +339,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		BB7D1122D0516667B50FCD8F /* [CP] Copy Pods Resources */ = {
+		8564A7C414FB3688218ABA3D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D0ABD044018E367C7063F78E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hallelujah/Pods-hallelujah-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
+				"${BUILT_PRODUCTS_DIR}/MDCDamerauLevenshtein/MDCDamerauLevenshtein.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDCDamerauLevenshtein.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hallelujah/Pods-hallelujah-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E76BAAB332AD8608D185D1F3 /* [CP] Check Pods Manifest.lock */ = {
@@ -539,6 +528,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "\"${PODS_ROOT}/\"/**";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -563,6 +553,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "\"${PODS_ROOT}/\"/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

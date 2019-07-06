@@ -28,8 +28,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B60DC8FBE19DDB8AF853A37ED8CF8A15"
-               BuildableName = "libGCDWebServer.a"
+               BlueprintIdentifier = "AD904F32069787EFB2DFFE05EB82F5BD"
+               BuildableName = "GCDWebServer.framework"
                BlueprintName = "GCDWebServer"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
@@ -42,8 +42,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9ECDD582AE564B5493F2CF21A36409E6"
-               BuildableName = "libPods-hallelujah.a"
+               BlueprintIdentifier = "49347168B5DCF7A966B2EFDBEC509FB1"
+               BuildableName = "Pods_hallelujah.framework"
                BlueprintName = "Pods-hallelujah"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>

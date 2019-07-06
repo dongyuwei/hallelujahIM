@@ -1,0 +1,6 @@
+framework module Pods_hallelujah {
+  umbrella header "Pods-hallelujah-umbrella.h"
+
+  export *
+  module * { export * }
+}
