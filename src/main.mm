@@ -3,7 +3,6 @@
 #import <Carbon/Carbon.h>
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
-#import <MDCDamerauLevenshtein/MDCDamerauLevenshtein.h>
 
 const NSString *kConnectionName = @"Hallelujah_1_Connection";
 IMKServer *server;
@@ -45,9 +44,6 @@ NSDictionary *getUserDefinedSubstitutions() {
 }
 
 int main(int argc, char *argv[]) {
-    NSUInteger dis1 = [@"Central Park" mdc_levenshteinDistanceTo:@"Centarl Prak"];         // => 4
-    NSUInteger dis2 = [@"Central Park" mdc_damerauLevenshteinDistanceTo:@"Centarl Prak"];  // => 2
-    
     NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
     server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
 

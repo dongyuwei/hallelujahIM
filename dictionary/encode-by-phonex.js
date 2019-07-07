@@ -19,7 +19,7 @@ for (let code in map) {
     .sort((a, b) => {
       return words[b].frequency - words[a].frequency;
     })
-    .slice(0, 10);
+    .slice(0, 30);
 }
 
 fs.writeFileSync("./phonex_encoded_words.json", JSON.stringify(map), "utf-8");

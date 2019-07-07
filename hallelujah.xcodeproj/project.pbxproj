@@ -122,10 +122,10 @@
 				389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */,
 				389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */,
 				F102C5A91F4882C80005B03F /* main.mm */,
-				F102C5AB1F4882D30005B03F /* InputController.mm */,
-				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
-				F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */,
 				F1CDA2A41B55180A005086C6 /* InputController.h */,
+				F102C5AB1F4882D30005B03F /* InputController.mm */,
+				F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */,
+				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
 				3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */,
 				3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */,
 			);

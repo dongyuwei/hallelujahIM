@@ -4,6 +4,7 @@
 #import "marisa.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
+#import <MDCDamerauLevenshtein/MDCDamerauLevenshtein.h>
 
 extern IMKCandidates *sharedCandidates;
 extern marisa::Trie trie;
@@ -306,7 +307,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (result.count > 50) {
             result = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, 49)]];
         }
-
         [result removeObject:buffer];
         [result insertObject:buffer atIndex:0];
     }
@@ -320,8 +320,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             [result2 addObject:word];
         }
     }
-    _candidates = [NSMutableArray arrayWithArray:result2];
-    return [NSArray arrayWithArray:result2];
+    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:result2];
+    NSArray *arrayWithoutDuplicates = [orderedSet array];
+    _candidates = [NSMutableArray arrayWithArray:arrayWithoutDuplicates];
+    return [NSArray arrayWithArray:arrayWithoutDuplicates];
 }
 
 - (NSMutableArray *)queryTrie:(NSString *)buffer {
@@ -342,20 +344,41 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
     NSRange range = NSMakeRange(0, [buffer length]);
     NSArray *result = [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
-    
-    if(buffer.length > 3) {
-        NSLog(@"halle buffer:%@, phonex encoded: %@", buffer, [self phonexEncode:buffer]);
-        NSArray *wordsWithSimilarPhone = [phonexEncoded objectForKey:[self phonexEncode:buffer]];
-        if(wordsWithSimilarPhone && wordsWithSimilarPhone.count > 0) {
-            NSUInteger count = [result count];
-            NSUInteger max = count >= 4 ? 4 : count;
-            NSMutableArray *finalResult = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, max)]];
-            [finalResult addObjectsFromArray:wordsWithSimilarPhone];
-            NSLog(@"halle wordsWithSimilarPhone:%@", wordsWithSimilarPhone);
+
+    if (buffer.length > 3) {
+        NSArray *words = [phonexEncoded objectForKey:[self phonexEncode:buffer]];
+        NSArray *wordsWithSimilarPhone = [self sortByDamerauLevenshteinDistance:words inputText:buffer];
+        if (wordsWithSimilarPhone && wordsWithSimilarPhone.count > 0) {
+            NSUInteger range = 4; // 0~5
+            NSMutableArray *finalResult = [NSMutableArray arrayWithArray:[self subarrayWithRang:result range:range]];
+            [finalResult addObjectsFromArray:[self subarrayWithRang:wordsWithSimilarPhone range:range]];
             return finalResult;
         }
     }
     return result;
+}
+
+- (NSArray *)sortByDamerauLevenshteinDistance:(NSArray *)original inputText:(NSString *)text {
+    NSMutableArray *mutableArray = [NSMutableArray new];
+    for (NSString *word in original) {
+        NSUInteger distance = [text mdc_levenshteinDistanceTo:word];
+        if (distance <= 3) { // Max edit distance: 3
+            [mutableArray addObject:@{@"w" : word, @"d" : @(distance)}];
+        }
+    }
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"d" ascending:YES];
+    NSArray *sorted = [mutableArray sortedArrayUsingDescriptors:@[ descriptor ]];
+    NSMutableArray *result = [NSMutableArray new];
+    for (NSDictionary *obj in sorted) {
+        [result addObject:[obj objectForKey:@"w"]];
+    }
+    return [result copy];
+}
+
+- (NSArray *)subarrayWithRang:(NSArray *)array range:(NSUInteger)range {
+    NSUInteger count = [array count];
+    NSUInteger limit = count >= range ? range : count;
+    return [array subarrayWithRange:NSMakeRange(0, limit)];
 }
 
 - (NSArray *)sortByFrequency:(NSArray *)filtered {
@@ -413,14 +436,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _candidates = [[NSMutableArray alloc] init];
 }
 
--(void)initPhonexEncoder {
+- (void)initPhonexEncoder {
     NSString *scriptPath = [[NSBundle mainBundle] pathForResource:@"phonex" ofType:@"js"];
     NSString *scriptString = [NSString stringWithContentsOfFile:scriptPath encoding:NSUTF8StringEncoding error:nil];
-    
+
     JSContext *context = [[JSContext alloc] init];
     [context evaluateScript:scriptString];
     _phonexFunc = context[@"phonex"];
-    NSLog(@"halle initPhonexEncoder scriptPath: %@, _phonexFunc:%@", scriptPath, _phonexFunc);
 }
 
 - (void)deactivateServer:(id)sender {

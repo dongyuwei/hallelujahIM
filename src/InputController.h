@@ -14,7 +14,7 @@
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];
     AnnotationWinController *_annotationWin;
-    JSValue* _phonexFunc;
+    JSValue *_phonexFunc;
 }
 
 - (NSMutableString *)composedBuffer;
