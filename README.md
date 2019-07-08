@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)](https://travis-ci.com/dongyuwei/hallelujahIM)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[Enlish Readme](https://github.com/dongyuwei/hallelujahIM/blob/master/README-En.md)
+[English Readme](https://github.com/dongyuwei/hallelujahIM/blob/master/README-En.md)
 
 # 哈利路亚英文输入法
 
