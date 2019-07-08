@@ -24,7 +24,8 @@
 2. 解压压缩包，复制解压后的 hallelujah.app 到 `/Library/Input\ Methods/` 目录内。
 3. 通过 `System Preferences` --> `Input Sources` --> 点击 `+` --> 选中 `English` --> 选中 `hallelujah`
 4. 切换到 hallelujah 输入法即可使用，如果不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
-5. 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah.app，右键点击 `Open` 来打开输入法，即可正常使用。
+
+注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah.app，右键点击 `Open` 来打开输入法，即可正常使用。
 
 ![unidentified](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/unidentified.png?raw=true)
 
