@@ -39,12 +39,8 @@ static AnnotationWinController *sharedController;
 }
 
 - (BOOL)isDarkMode {
-    NSAppearance *appearance = NSAppearance.currentAppearance;
-    if (@available(*, macOS 10.14)) {
-        return appearance.name == NSAppearanceNameDarkAqua;
-    }
-
-    return NO;
+    NSString *interfaceStyle = [NSUserDefaults.standardUserDefaults valueForKey:@"AppleInterfaceStyle"];
+    return [interfaceStyle isEqualToString:@"Dark"];
 }
 
 - (void)showWindow:(NSPoint)origin {
