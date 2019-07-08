@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)](https://travis-ci.com/dongyuwei/hallelujahIM)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[Enlish Readme](https://github.com/dongyuwei/hallelujahIM/blob/master/README-En.md)
 
-# hallelujahIM
+# 哈利路亚英文输入法
 
-hallelujahIM 是 Mac(10.9+ OSX)平台上一款智能英语输入法。其特性如下：
+哈利路亚英文输入法 是 Mac(10.9+ OSX)平台上一款智能英语输入法。其特性如下：
 
 1. 离线词库较大较全，词频精准。参见 Google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt).
 2. 内置拼写校正功能。不要担心拼写错误，能记住大概字形、发音，本输入法就会自动显示最接近的候选词。
@@ -25,7 +26,7 @@ hallelujahIM 是 Mac(10.9+ OSX)平台上一款智能英语输入法。其特性�
 4. 切换到 hallelujah 输入法即可使用，如果不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
 5. 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah.app，右键点击 `Open` 来打开输入法，即可正常使用。
 
-![unidentified](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/unidentified.png?raw=true)
+![unidentified](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/unidentified.png?raw=true)
 
 # 升级或重新安装
 
