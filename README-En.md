@@ -22,6 +22,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 
 2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
+   ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 4. switch to hallelujah input method
 
 # update/reinstall
@@ -39,6 +40,7 @@ Inspired by [hallelujah_autocompletion](https://daringfireball.net/2006/10/halle
 # preferences setting
 
 click `Preferences...` or visit web ui: http://localhost:62718/index.html
+![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
 setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
@@ -80,6 +82,7 @@ If functional you need is missing but you're ready to pay for it, feel free to c
 2. build the project.
 
 ## License
+
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## About libmarisa / marisa-trie
@@ -103,5 +106,6 @@ make
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
 
 ### Contact me
+
 - wechat: dongyuwei
 - gmail: newdongyuwei

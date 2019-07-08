@@ -23,6 +23,7 @@
 
 2. 解压压缩包，复制解压后的 hallelujah.app 到 `/Library/Input\ Methods/` 目录内。
 3. 通过 `System Preferences` --> `Input Sources` --> 点击 `+` --> 选中 `English` --> 选中 `hallelujah`
+   ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 4. 切换到 hallelujah 输入法即可使用，如果不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
 
 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah.app，右键点击 `Open` 来打开输入法，即可正常使用。
@@ -43,11 +44,9 @@
 # 偏好设置
 
 点击输入法的 `Preferences` 或者直接访问本地 HTTP 服务: http://localhost:62718/index.html
+![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
 一些截图：<br/>
-
-![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
-
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
