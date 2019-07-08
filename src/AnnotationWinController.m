@@ -5,11 +5,13 @@ static AnnotationWinController *sharedController;
 @interface AnnotationWinController ()
 @property(retain, nonatomic) IBOutlet NSPanel *panel;
 @property(retain, nonatomic) IBOutlet NSTextField *view;
+@property(retain, nonatomic) IBOutlet NSTextFieldCell *label;
 @end
 
 @implementation AnnotationWinController
 @synthesize view;
 @synthesize panel;
+@synthesize label;
 
 + (id)sharedController {
     return sharedController;
@@ -22,8 +24,27 @@ static AnnotationWinController *sharedController;
 
     [self.panel setStyleMask:NSWindowStyleMaskBorderless];
     [self.panel setOpaque:YES];
-    [self.panel setBackgroundColor:[NSColor colorWithCalibratedRed:255.0 green:255.0 blue:255.0 alpha:0.95]];
+
+    if ([self isDarkMode]) {
+        NSColor *bgColor = [NSColor colorWithCalibratedRed:0.133f green:0.152f blue:0.172f alpha:1.0f];
+        [self.panel setBackgroundColor:bgColor];
+        [self.view setBackgroundColor:bgColor];
+        [self.label setBackgroundColor:bgColor];
+        NSColor *textColor = [NSColor colorWithCalibratedRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+        [self.view setTextColor:textColor];
+        [self.label setTextColor:textColor];
+    }
+
     [self hideWindow];
+}
+
+- (BOOL)isDarkMode {
+    NSAppearance *appearance = NSAppearance.currentAppearance;
+    if (@available(*, macOS 10.14)) {
+        return appearance.name == NSAppearanceNameDarkAqua;
+    }
+
+    return NO;
 }
 
 - (void)showWindow:(NSPoint)origin {
@@ -32,7 +53,6 @@ static AnnotationWinController *sharedController;
     size.height = self.height;
     [[self panel] setMinSize:size];
     [[self panel] setContentSize:size];
-    [[self panel] setAlphaValue:0.95];
 
     [[self panel] setFrameTopLeftPoint:origin];
     [[self panel] orderFront:nil];
