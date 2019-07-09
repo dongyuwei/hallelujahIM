@@ -77,7 +77,7 @@ pinyin in, English out: <br/>
 ## 编译本输入法
 
 1. `open hallelujah.xcworkspace` 使用 Xcode 打开 `hallelujah.xcworkspace` 工程，注意不是打开 `hallelujah.xcodeproj`。
-2. `control + b` 构建.
+2. `command + b` 构建.
 3. 构建编译后的输入法可以拷贝到 `/Library/Input\ Methods/` 目录内测试。
 
 ## 如何调试输入法？
