@@ -115,7 +115,7 @@ make
 
 ## 问题反馈，意见和建议
 
-请提交问题单到 https://github.com/dongyuwei/hallelujahIM/issues。
+请提交问题单到 https://github.com/dongyuwei/hallelujahIM/issues
 
 ## 付费咨询服务
 
