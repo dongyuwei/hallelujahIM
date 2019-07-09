@@ -22,7 +22,7 @@ static AnnotationWinController *sharedController;
 
     [self.panel setStyleMask:NSWindowStyleMaskBorderless];
     [self.panel setOpaque:YES];
-    [self hideWindow];
+    [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];
 }
 
 - (void)showWindow:(NSPoint)origin {

@@ -16,7 +16,6 @@
 		3802CD8C22CF43BD00A7E2F9 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */; };
 		3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */ = {isa = PBXBuildFile; fileRef = 3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */; };
 		3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */; };
-		38133A1D22C9AF0D004960E3 /* AnnotationWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */; };
 		3817857B22D0E2240091268E /* phonex.js in Resources */ = {isa = PBXBuildFile; fileRef = 3817857A22D0E2240091268E /* phonex.js */; };
 		381CD8C622C60D610098764F /* WebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 381CD8C522C60D610098764F /* WebServer.m */; };
 		3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */ = {isa = PBXBuildFile; fileRef = 3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */; };
@@ -34,6 +33,7 @@
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
 		F174745F1FDC2C9400AD2B84 /* cedict.json in Resources */ = {isa = PBXBuildFile; fileRef = F174745E1FDC2C9400AD2B84 /* cedict.json */; };
+		F1BF613D22D4DF6F003B946F /* AnnotationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +70,6 @@
 		389468CA1F56A34A00EF1F5E /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputApplicationDelegate.h; path = src/InputApplicationDelegate.h; sourceTree = "<group>"; };
 		389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InputApplicationDelegate.m; path = src/InputApplicationDelegate.m; sourceTree = "<group>"; };
-		38A9EAC422CB4132003CCF52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/AnnotationWindow.nib; sourceTree = "<group>"; };
 		38A9EAC522CB4136003CCF52 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		38A9EAC622CB424F003CCF52 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		38DD40191F5800A400A276CB /* PreferencesMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesMenu.xib; sourceTree = "<group>"; };
@@ -86,6 +85,7 @@
 		F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnotationWinController.m; path = src/AnnotationWinController.m; sourceTree = "<group>"; };
 		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
 		F174745E1FDC2C9400AD2B84 /* cedict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = cedict.json; path = dictionary/cedict.json; sourceTree = "<group>"; };
+		F1BF613C22D4DF6F003B946F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AnnotationWindow.xib; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,9 +175,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */,
 				3817857A22D0E2240091268E /* phonex.js */,
 				3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */,
-				38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */,
 				3843EC6F2283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json */,
 				F174745E1FDC2C9400AD2B84 /* cedict.json */,
 				38DD40191F5800A400A276CB /* PreferencesMenu.xib */,
@@ -321,6 +321,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1BF613D22D4DF6F003B946F /* AnnotationWindow.xib in Resources */,
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
 				3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */,
 				3817857B22D0E2240091268E /* phonex.js in Resources */,
@@ -329,7 +330,6 @@
 				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
 				38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */,
-				38133A1D22C9AF0D004960E3 /* AnnotationWindow.nib in Resources */,
 				3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */,
 				0DE74C001978F18E00040F3C /* him.icns in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
@@ -420,12 +420,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		38133A1B22C9AF0D004960E3 /* AnnotationWindow.nib */ = {
+		F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				38A9EAC422CB4132003CCF52 /* Base */,
+				F1BF613C22D4DF6F003B946F /* Base */,
 			);
-			name = AnnotationWindow.nib;
+			name = AnnotationWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
