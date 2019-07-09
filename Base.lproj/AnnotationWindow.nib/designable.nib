@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1090" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,7 +11,6 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="259" customClass="AnnotationWinController">
             <connections>
-                <outlet property="label" destination="sw3-XW-oWj" id="wzQ-r4-bXi"/>
                 <outlet property="panel" destination="253" id="xIq-GU-eD5"/>
                 <outlet property="view" destination="m7e-gJ-8us" id="cKD-kf-bvq"/>
             </connections>

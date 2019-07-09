@@ -5,13 +5,11 @@ static AnnotationWinController *sharedController;
 @interface AnnotationWinController ()
 @property(retain, nonatomic) IBOutlet NSPanel *panel;
 @property(retain, nonatomic) IBOutlet NSTextField *view;
-@property(retain, nonatomic) IBOutlet NSTextFieldCell *label;
 @end
 
 @implementation AnnotationWinController
 @synthesize view;
 @synthesize panel;
-@synthesize label;
 
 + (id)sharedController {
     return sharedController;
