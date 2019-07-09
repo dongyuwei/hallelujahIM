@@ -106,7 +106,7 @@ make
 
 ## 感谢以下开源项目:
 
-1. [marisa-trie](https://github.com/s-yata/marisa-trie)，输入时前缀匹配的数据结构及算法实现，特定是高性能、节省空间，可以预先构建好 trie 树再反序列化到内存中。
+1. [marisa-trie](https://github.com/s-yata/marisa-trie)，输入时前缀匹配的数据结构及算法实现，特点是高性能、节省空间，可以预先构建好 trie 树再反序列化到内存中。
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)，拼音-英语词库。
 3. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA， 国际音标。
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)，用于用户使用偏好配置。
