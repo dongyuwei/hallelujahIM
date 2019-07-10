@@ -8,7 +8,7 @@ var app = new Vue({
     }
   },
   methods: {
-    getPreference: function(argument) {
+    getPreference() {
       fetch("http://localhost:62718/preference")
         .then(function(res) {
           return res.json();
@@ -18,7 +18,7 @@ var app = new Vue({
           this.preference = preference;
         });
     },
-    updatePreference: function() {
+    updatePreference() {
       this.loading = true;
       fetch("http://localhost:62718/preference", {
         method: "POST",
