@@ -75,9 +75,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *bufferedText = [self originalBuffer];
     bool hasBufferedText = bufferedText && [bufferedText length] > 0;
 
-    //    NSLog(@"text:%@, keycode:%ld,  %ld, bufferedText:%@", string, (long)keyCode,
-    //          [event modifierFlags] & NSShiftKeyMask, bufferedText);
-
     if (keyCode == KEY_DELETE) {
         if (hasBufferedText) {
             return [self deleteBackward:sender];
@@ -93,15 +90,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         return NO;
     }
-
-    //    if (keyCode == KEY_SPACE) {
-    //        if (hasBufferedText) {
-    //            [self appendToComposedBuffer:@" "];
-    //            [self commitComposition:sender];
-    //            return YES;
-    //        }
-    //        return NO;
-    //    }
 
     if (keyCode == KEY_ESC) {
         if (hasBufferedText) {
@@ -205,7 +193,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)commitComposition:(id)sender {
-    //    [self appendToComposedBuffer:@" "];
     NSString *text = [self composedBuffer];
 
     if (text == nil || [text length] == 0) {
