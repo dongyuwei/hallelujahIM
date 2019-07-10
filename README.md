@@ -85,7 +85,21 @@ pinyin in, English out: <br/>
 1. 使用 `NSLog()` 在关键或可疑处打 log 日志。
 2. 没有 log 输出时，可以查看崩溃日志，位置可通过 `ls -l ~/Library/Logs/DiagnosticReports/ | grep hallelujah` 命令来查找。
 3. 深思熟虑。
-4. 自动化测试（后续重构目标就是可测试性要加强）。
+4. 使用 debug 版 build，在 Xcode 中 `Debug` -> `Attach to Process By PID or Name...` 。这个流程可以 work，但 Xcode 反应会较慢，需要在合适的地方加断点。大杀器，不得已而用之。
+5. 自动化测试（后续重构目标就是可测试性要加强）。
+
+## 格式化代码
+
+- `brew install clang-format`
+- `sh format-code.sh`
+
+## CI build
+
+`sh build.sh`
+
+## local dev script
+
+`sh dev.sh`
 
 ## 开源协议
 
