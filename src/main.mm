@@ -43,6 +43,12 @@ NSDictionary *getUserDefinedSubstitutions() {
     return deserializeJSON(path);
 }
 
+void loadTrie() {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"bin"];
+    const char *path2 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    trie.load(path2);
+}
+
 int main(int argc, char *argv[]) {
     NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
     server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
@@ -54,9 +60,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"bin"];
-    const char *path2 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
-    trie.load(path2);
+    loadTrie();
 
     wordsWithFrequencyAndTranslation = getWordsWithFrequencyAndTranslation();
     substitutions = getUserDefinedSubstitutions();
