@@ -44,6 +44,7 @@ click `Preferences...` or visit web ui: http://localhost:62718/index.html
 
 setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
+![preference options](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/web-preference.png?raw=true)
 
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
