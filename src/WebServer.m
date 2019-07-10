@@ -10,12 +10,20 @@ void initPreference() {
     if ([preference objectForKey:@"showTranslation"] == nil) {
         [preference setBool:YES forKey:@"showTranslation"];
     }
+    if ([preference objectForKey:@"commitWordWithSpace"] == nil) {
+        [preference setBool:YES forKey:@"commitWordWithSpace"];
+    }
 }
 
 NSDictionary *getDictionaryRepresentationOfPreference() {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
     [dict setObject:[NSNumber numberWithBool:showTranslation] forKey:@"showTranslation"];
+
+    BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
+    [dict setObject:[NSNumber numberWithBool:commitWordWithSpace] forKey:@"commitWordWithSpace"];
+
     return dict;
 }
 
@@ -63,10 +71,16 @@ static int port = 62718;
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                           NSDictionary *data = [(GCDWebServerDataRequest *)request jsonObject];
+
                           bool showTranslation = [[data objectForKey:@"showTranslation"] boolValue];
                           [preference setBool:showTranslation forKey:@"showTranslation"];
+
+                          bool commitWordWithSpace = [[data objectForKey:@"commitWordWithSpace"] boolValue];
+                          [preference setBool:commitWordWithSpace forKey:@"commitWordWithSpace"];
+
                           return [GCDWebServerDataResponse responseWithJSONObject:data];
                       }];
+
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
     [options setObject:[NSNumber numberWithInt:port] forKey:GCDWebServerOption_Port];
     [options setObject:@YES forKey:GCDWebServerOption_BindToLocalhost];

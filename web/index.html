@@ -1,27 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Hallelujah input method preference</title>
-    <link rel="stylesheet" href="./index.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
     <div id="app">
-        <form action="/" method="POST" v-on:submit.prevent='updatePreference()'>
-            <label>
-                Show Translation:  
-                <input v-if='preference.showTranslation' type="checkbox" 
-                    v-model='preference.showTranslation' checked>
-                <input v-if='!preference.showTranslation' type="checkbox" 
-                    v-model='preference.showTranslation' >
-            </label>
-            
-            <div class="form-footer">
-                <input type="submit" value='submit'>
-            </div>
-        </form>
+      <form action="/" method="POST" v-on:submit.prevent="updatePreference()">
+        <label>
+          Show Translation:
+          <input
+            v-if="preference.showTranslation"
+            type="checkbox"
+            v-model="preference.showTranslation"
+            checked
+          />
+          <input
+            v-if="!preference.showTranslation"
+            type="checkbox"
+            v-model="preference.showTranslation"
+          />
+        </label>
+        <label>
+          Add spaces between words:
+          <input
+            v-if="preference.commitWordWithSpace"
+            type="checkbox"
+            v-model="preference.commitWordWithSpace"
+            checked
+          />
+          <input
+            v-if="!preference.commitWordWithSpace"
+            type="checkbox"
+            v-model="preference.commitWordWithSpace"
+          />
+        </label>
+
+        <div class="form-footer">
+          <button :disabled="loading">
+            {{ loading ? "loading..." : "submit" }}
+          </button>
+        </div>
+      </form>
     </div>
     <script src="./vue.js"></script>
     <script src="./index.js"></script>
-</body>
+  </body>
 </html>

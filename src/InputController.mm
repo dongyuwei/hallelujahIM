@@ -86,7 +86,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return NO;
     }
 
-    if (keyCode == KEY_RETURN) {
+    if (keyCode == KEY_RETURN || keyCode == KEY_SPACE) {
         if (hasBufferedText) {
             [self commitComposition:sender];
             return YES;
@@ -94,14 +94,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return NO;
     }
 
-    if (keyCode == KEY_SPACE) {
-        if (hasBufferedText) {
-            [self appendToComposedBuffer:@" "];
-            [self commitComposition:sender];
-            return YES;
-        }
-        return NO;
-    }
+    //    if (keyCode == KEY_SPACE) {
+    //        if (hasBufferedText) {
+    //            [self appendToComposedBuffer:@" "];
+    //            [self commitComposition:sender];
+    //            return YES;
+    //        }
+    //        return NO;
+    //    }
 
     if (keyCode == KEY_ESC) {
         if (hasBufferedText) {
@@ -205,10 +205,16 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)commitComposition:(id)sender {
+    //    [self appendToComposedBuffer:@" "];
     NSString *text = [self composedBuffer];
 
     if (text == nil || [text length] == 0) {
         text = [self originalBuffer];
+    }
+
+    BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
+    if (commitWordWithSpace) {
+        text = [NSString stringWithFormat:@"%@ ", text];
     }
 
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
