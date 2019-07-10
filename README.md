@@ -90,7 +90,6 @@ pinyin in, English out: <br/>
 
 ## 格式化代码
 
-- `brew install clang-format`
 - `sh format-code.sh`
 
 ## CI build
