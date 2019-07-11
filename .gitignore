@@ -39,3 +39,4 @@ util/releases.json
 .vscode/
 node_modules/
 *.dmg
+*.pkg

@@ -17,15 +17,13 @@
 
 # 下载与安装
 
-1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 dmg 文件或者 zip 压缩包）
+1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 zip 压缩包）
 
 - macOS 10.12 ~ 10.14 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
 
-2. 打开 dmg 文件，安装 hallelujah.app 到`/Library/Input Methods/` 目录内。
-3. 通过 `System Preferences` --> `Input Sources` --> 点击 `+` --> 选中 `English` --> 选中 `hallelujah`
-   ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
-4. 切换到 hallelujah 输入法即可使用，如果不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
+2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
+3. 如果输入法不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
 
 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 `/Library/Input Methods/hallelujah.app`，右键点击 `Open` 来打开输入法，即可正常使用。
 
@@ -102,9 +100,9 @@ pinyin in, English out: <br/>
 
 `sh dev.sh`
 
-## build dmg
+## 构建安装包 pkg
 
-`sh build-dmg.sh`
+`bash package/build-package.bash`
 
 ## 开源协议
 
@@ -131,6 +129,7 @@ make
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)，用于用户使用偏好配置。
 5. [talisman](https://github.com/Yomguithereal/talisman)，使用其中的 phonex 算法，实现模糊近似音输入。
 6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein)，配合 talisman 的 phonex 算法，在音似词中按 Damerau Levenshtein 编辑距离筛选最接近的候选词。
+7. [鼠鬚管 squirrel 输入法](https://github.com/rime/squirrel) 哈利路亚输入法安装包 pkg 的制作 copy/参考了 squirrel 的实现。
 
 ## 问题反馈，意见和建议
 
