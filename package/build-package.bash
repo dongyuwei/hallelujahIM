@@ -5,9 +5,9 @@ PROJECT_ROOT=$(cd ..; pwd)
 
 Version=`date "+%Y%m%d%H%M%S"`
 
-cd ${PROJECT_ROOT}
+pushd ${PROJECT_ROOT}
 sh build.sh
-cd -
+popd
 
 rm /tmp/hallelujah-*.pkg
 rm -rf /tmp/hallelujah/build/release/root/
