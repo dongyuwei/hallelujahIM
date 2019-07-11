@@ -25,7 +25,7 @@
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
 3. 如果输入法不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
 
-注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 `/Library/Input Methods/hallelujah.app`，右键点击 `Open` 来打开输入法，即可正常使用。
+注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah pkg 安装程序，右键点击 `Open` 来打开，即可开始安装输入法。
 
 ![unidentified](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/unidentified.png?raw=true)
 
