@@ -44,7 +44,6 @@
 
 点击输入法的 `Preferences` 或者直接访问本地 HTTP 服务: http://localhost:62718/index.html
 ![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
-![preference options](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/web-preference.png?raw=true)
 
 一些截图：<br/>
 auto suggestion from local dictionary:<br/>
