@@ -51,7 +51,7 @@
 
 - (void)testPerformanceExample {
     [self measureBlock:^{
-        [self testPhonexEncode];
+//        [self testPhonexEncode];
     }];
 }
 
