@@ -1,18 +1,13 @@
-#import "InputController.h"
-#import "InputApplicationDelegate.h"
-#import "NSScreen+PointConversion.h"
-#import "marisa.h"
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
-#import <MDCDamerauLevenshtein/MDCDamerauLevenshtein.h>
+
+#import "InputApplicationDelegate.h"
+#import "InputController.h"
+#import "NSScreen+PointConversion.h"
 
 extern IMKCandidates *sharedCandidates;
-extern marisa::Trie trie;
-extern NSMutableDictionary *wordsWithFrequencyAndTranslation;
-extern NSDictionary *substitutions;
-extern NSDictionary *pinyinDict;
-extern NSDictionary *phonexEncoded;
 extern NSUserDefaults *preference;
+extern ConversionEngine *engine;
 
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126;
@@ -198,7 +193,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (text == nil || [text length] == 0) {
         text = [self originalBuffer];
     }
-
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
     if (commitWordWithSpace) {
         text = [NSString stringWithFormat:@"%@ ", text];
@@ -277,118 +271,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (NSArray *)candidates:(id)sender {
     NSString *originalInput = [self originalBuffer];
-    NSString *buffer = [originalInput lowercaseString];
-    NSMutableArray *result = [[NSMutableArray alloc] init];
-
-    if (buffer && buffer.length > 0) {
-        if (substitutions && substitutions[buffer]) {
-            [result addObject:substitutions[buffer]];
-        }
-
-        NSMutableArray *filtered = [self queryTrie:buffer];
-        if (filtered && filtered.count > 0) {
-            NSArray *sorted = [self sortByFrequency:filtered];
-            [result addObjectsFromArray:sorted];
-        } else {
-            [result addObjectsFromArray:[self getSuggestionOfSpellChecker:buffer]];
-        }
-
-        if (pinyinDict && pinyinDict[buffer]) {
-            [result addObjectsFromArray:pinyinDict[buffer]];
-        }
-
-        if (result.count > 50) {
-            result = [NSMutableArray arrayWithArray:[result subarrayWithRange:NSMakeRange(0, 49)]];
-        }
-        [result removeObject:buffer];
-        [result insertObject:buffer atIndex:0];
-    }
-
-    NSMutableArray *result2 = [[NSMutableArray alloc] init];
-    for (NSString *word in result) {
-        // case sensitive input
-        if ([word hasPrefix:buffer]) {
-            [result2 addObject:[NSString stringWithFormat:@"%@%@", originalInput, [word substringFromIndex:originalInput.length]]];
-        } else {
-            [result2 addObject:word];
-        }
-    }
-    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:result2];
-    NSArray *arrayWithoutDuplicates = [orderedSet array];
-    _candidates = [NSMutableArray arrayWithArray:arrayWithoutDuplicates];
-    return [NSArray arrayWithArray:arrayWithoutDuplicates];
-}
-
-- (NSMutableArray *)queryTrie:(NSString *)buffer {
-    marisa::Agent agent;
-    const char *query = [buffer cStringUsingEncoding:[NSString defaultCStringEncoding]];
-    agent.set_query(query);
-
-    NSMutableArray *filtered = [[NSMutableArray alloc] init];
-    while (trie.predictive_search(agent)) {
-        const marisa::Key key = agent.key();
-        NSString *word = [[NSString alloc] initWithBytes:key.ptr() length:key.length() encoding:NSASCIIStringEncoding];
-        [filtered addObject:word];
-    }
-    return filtered;
-}
-
-- (NSArray *)getSuggestionOfSpellChecker:(NSString *)buffer {
-    NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
-    NSRange range = NSMakeRange(0, [buffer length]);
-    NSArray *result = [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
-
-    if (buffer.length > 3) {
-        NSArray *words = [phonexEncoded objectForKey:[self phonexEncode:buffer]];
-        NSArray *wordsWithSimilarPhone = [self sortByDamerauLevenshteinDistance:words inputText:buffer];
-        if (wordsWithSimilarPhone && wordsWithSimilarPhone.count > 0) {
-            NSUInteger range = 4; // 0~5
-            NSMutableArray *finalResult = [NSMutableArray arrayWithArray:[self subarrayWithRang:result range:range]];
-            [finalResult addObjectsFromArray:[self subarrayWithRang:wordsWithSimilarPhone range:range]];
-            return finalResult;
-        }
-    }
-    return result;
-}
-
-- (NSArray *)sortByDamerauLevenshteinDistance:(NSArray *)original inputText:(NSString *)text {
-    NSMutableArray *mutableArray = [NSMutableArray new];
-    for (NSString *word in original) {
-        NSUInteger distance = [text mdc_levenshteinDistanceTo:word];
-        if (distance <= 3) { // Max edit distance: 3
-            [mutableArray addObject:@{@"w" : word, @"d" : @(distance)}];
-        }
-    }
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"d" ascending:YES];
-    NSArray *sorted = [mutableArray sortedArrayUsingDescriptors:@[ descriptor ]];
-    NSMutableArray *result = [NSMutableArray new];
-    for (NSDictionary *obj in sorted) {
-        [result addObject:[obj objectForKey:@"w"]];
-    }
-    return [result copy];
-}
-
-- (NSArray *)subarrayWithRang:(NSArray *)array range:(NSUInteger)range {
-    NSUInteger count = [array count];
-    NSUInteger limit = count >= range ? range : count;
-    return [array subarrayWithRange:NSMakeRange(0, limit)];
-}
-
-- (NSArray *)sortByFrequency:(NSArray *)filtered {
-    NSArray *sorted = [filtered sortedArrayUsingComparator:^NSComparisonResult(id word1, id word2) {
-        NSDictionary *dict1 = [wordsWithFrequencyAndTranslation objectForKey:word1];
-        NSDictionary *dict2 = [wordsWithFrequencyAndTranslation objectForKey:word2];
-        int n = [[dict1 objectForKey:@"frequency"] intValue] - [[dict2 objectForKey:@"frequency"] intValue];
-        if (n > 0) {
-            return (NSComparisonResult)NSOrderedAscending;
-        }
-        if (n < 0) {
-            return (NSComparisonResult)NSOrderedDescending;
-        }
-        return (NSComparisonResult)NSOrderedSame;
-    }];
-
-    return sorted;
+    NSArray *candidateList = [engine getCandidates:originalInput];
+    _candidates = [NSMutableArray arrayWithArray:candidateList];
+    return candidateList;
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
@@ -414,28 +299,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setComposedBuffer:[candidateString string]];
 }
 
-- (NSString *)phonexEncode:(NSString *)word {
-    return [[_phonexFunc callWithArguments:@[ word ]] toString];
-}
-
 - (void)activateServer:(id)sender {
     if (_annotationWin == nil) {
         _annotationWin = [AnnotationWinController sharedController];
     }
-    if (_phonexFunc == nil) {
-        [self initPhonexEncoder];
-    }
+
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
-}
-
-- (void)initPhonexEncoder {
-    NSString *scriptPath = [[NSBundle mainBundle] pathForResource:@"phonex" ofType:@"js"];
-    NSString *scriptString = [NSString stringWithContentsOfFile:scriptPath encoding:NSUTF8StringEncoding error:nil];
-
-    JSContext *context = [[JSContext alloc] init];
-    [context evaluateScript:scriptString];
-    _phonexFunc = context[@"phonex"];
 }
 
 - (void)deactivateServer:(id)sender {
@@ -464,19 +334,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
-    NSArray *translation = [self getTranslations:candidateString];
-    if (translation && translation.count > 0) {
-        NSString *translationText;
-        NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:candidateString];
-        if ([phoneticSymbol length] > 0) {
-            NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
-            translationText = [[list arrayByAddingObjectsFromArray:translation] componentsJoinedByString:@"\n"];
-        } else {
-            translationText = [translation componentsJoinedByString:@"\n"];
-        }
-
-        [_annotationWin setAnnotation:translationText];
-
+    NSString *annotation = [engine getAnnotation:[candidateString string]];
+    if (annotation && annotation.length > 0) {
+        [_annotationWin setAnnotation:annotation];
         [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
     } else {
         [_annotationWin hideWindow];
@@ -518,19 +378,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     return positionPoint;
-}
-
-- (NSArray *)getTranslations:(NSAttributedString *)candidate {
-    NSString *word = [[candidate string] lowercaseString];
-    return [[wordsWithFrequencyAndTranslation objectForKey:word] objectForKey:@"translation"];
-}
-
-- (NSString *)getPhoneticSymbolOfWord:(NSAttributedString *)candidateString {
-    if (candidateString && candidateString.length > 3) {
-        NSString *word = [[candidateString string] lowercaseString];
-        return [[wordsWithFrequencyAndTranslation objectForKey:word] objectForKey:@"ipa"];
-    }
-    return nil;
 }
 
 @end
