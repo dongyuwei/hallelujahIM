@@ -77,12 +77,18 @@
     XCTAssertTrue([[list componentsJoinedByString:@"\n"] isEqualToString:annotation]);
 }
 
+- (void)testGetAnnotationOfUpperCaseWord {
+    NSString *annotation = [self.engine getAnnotation:@"Test"];
+    NSArray *list = @[ @"[tɛst]", @"n. 考验；试验；测试", @"vt. 试验；测试；接受测验" ];
+    XCTAssertTrue([[list componentsJoinedByString:@"\n"] isEqualToString:annotation]);
+}
+
 - (void)testGetSuggestionOfSpellChecker {
     NSArray *suggestions = [self.engine getSuggestionOfSpellChecker:@"aosome"];
     XCTAssertTrue([[suggestions componentsJoinedByString:@";"] isEqualToString:@"Amos;assume;awesome;assumes"]);
 
-    NSArray *suggestions2 = [self.engine getSuggestionOfSpellChecker:@"ausome"];
-    XCTAssertTrue([[suggestions2 componentsJoinedByString:@";"] isEqualToString:@"assume;Amos;assume;awesome;assumes;outcome"]);
+    NSArray *suggestions2 = [self.engine getSuggestionOfSpellChecker:@"Ausome"];
+    XCTAssertTrue([[suggestions2 componentsJoinedByString:@";"] isEqualToString:@"Assume;Amos;ASME;assume;awesome;outcome"]);
 
     NSArray *suggestions3 = [self.engine getSuggestionOfSpellChecker:@"kerrage"];
     XCTAssertTrue([[suggestions3 componentsJoinedByString:@";"] isEqualToString:@"Kerrie;kerne;courage;carriage"]);
@@ -90,8 +96,8 @@
     NSArray *suggestions4 = [self.engine getSuggestionOfSpellChecker:@"cerrage"];
     XCTAssertTrue([[suggestions4 componentsJoinedByString:@";"] isEqualToString:@"courage;courage;carriage"]);
 
-    NSArray *suggestions5 = [self.engine getSuggestionOfSpellChecker:@"awsome"];
-    XCTAssertTrue([[suggestions5 componentsJoinedByString:@";"] isEqualToString:@"awesome;awesome;assume;assumes"]);
+    NSArray *suggestions5 = [self.engine getSuggestionOfSpellChecker:@"Awsome"];
+    XCTAssertTrue([[suggestions5 componentsJoinedByString:@";"] isEqualToString:@"Awesome;awesome;assume"]);
 }
 
 - (void)testGetCandidates {
@@ -101,10 +107,33 @@
     XCTAssertTrue([[words5 componentsJoinedByString:@";"] isEqualToString:@"tes;test;testing;tests;tested"]);
 
     NSArray *candidates2 = [self.engine getCandidates:@"ceshi"];
-    XCTAssertTrue(candidates.count == 50);
+    XCTAssertTrue(candidates2.count == 21);
     NSArray *words10 = [candidates2 subarrayWithRange:NSMakeRange(0, 10)];
     XCTAssertTrue([[words10 componentsJoinedByString:@","]
         isEqualToString:@"ceshi,cash,cushy,case,cases,cisco,测试,to test (machinery etc),to test (students),test"]);
+
+    NSArray *candidates3 = [self.engine getCandidates:@"awsome"];
+    XCTAssertTrue(candidates3.count == 4);
+    NSArray *words4 = [candidates3 subarrayWithRange:NSMakeRange(0, 4)];
+    XCTAssertTrue([[words4 componentsJoinedByString:@","] isEqualToString:@"awsome,awesome,assume,assumes"]);
+}
+
+- (void)testGetCandidatesWithUpperCaseInput {
+    NSArray *candidates = [self.engine getCandidates:@"Tes"];
+    XCTAssertTrue(candidates.count == 50);
+    NSArray *words5 = [candidates subarrayWithRange:NSMakeRange(0, 5)];
+    XCTAssertTrue([[words5 componentsJoinedByString:@";"] isEqualToString:@"Tes;Test;Testing;Tests;Tested"]);
+
+    NSArray *candidates2 = [self.engine getCandidates:@"Ceshi"];
+    XCTAssertTrue(candidates2.count == 21);
+    NSArray *words10 = [candidates2 subarrayWithRange:NSMakeRange(0, 10)];
+    XCTAssertTrue([[words10 componentsJoinedByString:@","]
+        isEqualToString:@"Ceshi,cash,cushy,case,cases,cisco,测试,to test (machinery etc),to test (students),test"]);
+
+    NSArray *candidates3 = [self.engine getCandidates:@"Awsome"];
+    XCTAssertTrue(candidates3.count == 4);
+    NSArray *words4 = [candidates3 subarrayWithRange:NSMakeRange(0, 4)];
+    XCTAssertTrue([[words4 componentsJoinedByString:@","] isEqualToString:@"Awsome,awesome,assume,assumes"]);
 }
 
 @end

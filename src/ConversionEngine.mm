@@ -117,10 +117,11 @@ marisa::Trie trie;
 }
 
 - (NSString *)getAnnotation:(NSString *)word {
-    NSArray *translation = [self getTranslations:word];
+    NSString* input = [word lowercaseString];
+    NSArray *translation = [self getTranslations:input];
     if (translation && translation.count > 0) {
         NSString *translationText;
-        NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:word];
+        NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:input];
         if ([phoneticSymbol length] > 0) {
             NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
             translationText = [[list arrayByAddingObjectsFromArray:translation] componentsJoinedByString:@"\n"];
