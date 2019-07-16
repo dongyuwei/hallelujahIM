@@ -194,7 +194,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         text = [self originalBuffer];
     }
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
-    if (commitWordWithSpace) {
+    if (commitWordWithSpace && text.length > 1) {
         text = [NSString stringWithFormat:@"%@ ", text];
     }
 
