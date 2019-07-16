@@ -334,7 +334,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
-    NSString *annotation = [engine getAnnotation:[candidateString string]];
+    NSString *annotation = [engine getAnnotation:[[candidateString string] lowercaseString]];
+    ;
     if (annotation && annotation.length > 0) {
         [_annotationWin setAnnotation:annotation];
         [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
