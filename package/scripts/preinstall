@@ -1,0 +1,27 @@
+#!/bin/bash
+
+mkdir -p "$HOME/Library/Input Methods/"
+
+local_ime="/Library/Input Methods/hallelujah.app"
+user_ime="$HOME/Library/Input Methods/hallelujah.app"
+login_user=`/usr/bin/stat -f%Su /dev/console`
+
+echo "111 \n" >> /tmp/hallelujah-preinstall
+
+if [ -e "$local_ime" ]; then
+    echo "222 \n" >> /tmp/hallelujah-preinstall
+    /usr/bin/sudo -u "${login_user}" "$local_ime/Contents/MacOS/hallelujah" --uninstall
+    echo "333 \n" >> /tmp/hallelujah-preinstall
+    pkill -9 hallelujah
+    sudo rm -rf $local_ime
+fi
+
+if [ -e "$user_ime" ]; then
+    echo "444 \n" >> /tmp/hallelujah-preinstall
+    /usr/bin/sudo -u "${login_user}" "$user_ime/Contents/MacOS/hallelujah" --uninstall
+    echo "555 \n" >> /tmp/hallelujah-preinstall
+    pkill -9 hallelujah
+    rm -rf $user_ime
+fi
+
+echo "hallelujah input method preinstall script: previous hallelujah.app uninstalled" >> /tmp/hallelujah-preinstall

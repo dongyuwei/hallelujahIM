@@ -61,6 +61,10 @@ int main(int argc, char *argv[]) {
         activateInputSource();
         return 0;
     }
+    if (argc > 1 && !strcmp("--uninstall", argv[1])) {
+        deactivateInputSource();
+        return 0;
+    }
 
     NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
     IMKServer *server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
