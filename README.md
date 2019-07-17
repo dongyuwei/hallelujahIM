@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)](https://travis-ci.com/dongyuwei/hallelujahIM)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdongyuwei%2FhallelujahIM.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdongyuwei%2FhallelujahIM?ref=badge_shield)
 [English Readme](https://github.com/dongyuwei/hallelujahIM/blob/master/README-En.md)
 
 # 哈利路亚英文输入法
@@ -140,3 +141,7 @@ make
 
 - 微信: dongyuwei
 - gmail: newdongyuwei
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdongyuwei%2FhallelujahIM.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdongyuwei%2FhallelujahIM?ref=badge_large)
