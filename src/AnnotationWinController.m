@@ -36,6 +36,8 @@ static AnnotationWinController *sharedController;
     [[self panel] orderFront:nil];
     [[self panel] setLevel:CGShieldingWindowLevel() + 1];
     [[self panel] setAutodisplay:YES];
+    [[self panel] setIsVisible:YES];
+    [[self panel] display];
 }
 
 - (void)hideWindow {
@@ -43,6 +45,7 @@ static AnnotationWinController *sharedController;
     rect.size.width = 0;
     rect.size.height = 0;
     [[self panel] setFrame:rect display:NO];
+    [self.panel setIsVisible:NO];
 }
 
 - (void)setAnnotation:(NSString *)annotation {
