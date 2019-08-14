@@ -344,7 +344,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (NSPoint)calculatePositionOfTranslationWindow {
-    // Mac Cocoa ui default coordinate system: right-top (x-y), origin: (x:0, y:0)
+    // Mac Cocoa ui default coordinate system: left-bottom, origin: (x:0, y:0) ↑→
+    // see https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/CoordinateSystem.html
+    // see https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CocoaDrawingGuide/Transforms/Transforms.html
     // Notice: there is a System bug: candidateFrame.origin always be (0,0), so we can't depending on the origin point.
     NSRect candidateFrame = [sharedCandidates candidateFrame];
 

@@ -117,7 +117,7 @@ marisa::Trie trie;
 }
 
 - (NSString *)getAnnotation:(NSString *)word {
-    NSString* input = [word lowercaseString];
+    NSString *input = [word lowercaseString];
     NSArray *translation = [self getTranslations:input];
     if (translation && translation.count > 0) {
         NSString *translationText;
@@ -139,7 +139,7 @@ marisa::Trie trie;
     for (NSString *word in original) {
         NSUInteger distance = [text mdc_levenshteinDistanceTo:word];
         if (distance <= 3) { // Max edit distance: 3
-            [mutableArray addObject:@{@"w" : word, @"d" : @(distance)}];
+            [mutableArray addObject:@{ @"w" : word, @"d" : @(distance) }];
         }
     }
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"d" ascending:YES];
