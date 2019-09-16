@@ -5,12 +5,6 @@
 
 extern NSUserDefaults *preference;
 
-void initPreference() {
-    preference = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultPrefs = @{ @"commitWordWithSpace" : @YES, @"showTranslation" : @YES };
-    [preference registerDefaults:defaultPrefs];
-}
-
 NSDictionary *getDictionaryRepresentationOfPreference() {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
@@ -46,7 +40,6 @@ static int port = 62718;
     if (self.server) {
         return;
     }
-    initPreference();
 
     GCDWebServer *webServer = [[GCDWebServer alloc] init];
     [webServer addGETHandlerForBasePath:@"/"

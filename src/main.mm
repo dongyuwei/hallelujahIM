@@ -54,6 +54,13 @@ void deactivateInputSource() {
     CFRelease(sourceList);
 }
 
+void initPreference() {
+    preference = [NSUserDefaults standardUserDefaults];
+    NSDictionary *defaultPrefs = @{ @"commitWordWithSpace" : @YES, @"showTranslation" : @YES };
+    [preference registerDefaults:defaultPrefs];
+}
+
+
 int main(int argc, char *argv[]) {
     if (argc > 1 && !strcmp("--install", argv[1])) {
         registerInputSource();
@@ -77,6 +84,8 @@ int main(int argc, char *argv[]) {
     [[NSBundle mainBundle] loadNibNamed:@"AnnotationWindow" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
+    
+    initPreference();
 
     [[WebServer sharedServer] start];
 
