@@ -7,12 +7,8 @@ extern NSUserDefaults *preference;
 
 void initPreference() {
     preference = [NSUserDefaults standardUserDefaults];
-    if ([preference objectForKey:@"showTranslation"] == nil) {
-        [preference setBool:YES forKey:@"showTranslation"];
-    }
-    if ([preference objectForKey:@"commitWordWithSpace"] == nil) {
-        [preference setBool:YES forKey:@"commitWordWithSpace"];
-    }
+    NSDictionary *defaultPrefs = @{ @"commitWordWithSpace" : @YES, @"showTranslation" : @YES };
+    [preference registerDefaults:defaultPrefs];
 }
 
 NSDictionary *getDictionaryRepresentationOfPreference() {
