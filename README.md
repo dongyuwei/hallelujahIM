@@ -29,13 +29,6 @@
 
 ![unidentified](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/unidentified.png?raw=true)
 
-# 升级或重新安装
-
-1. 从 `Input Sources` 中删除 hallelujah 输入法。
-2. 杀死旧的 hallelujah 进程 (启动 `Terminal.app`，执行 `pkill -9 hallelujah` 命令，一次杀不死可以多杀几次，因为操作系统会试图重启输入法进程 )
-3. 替换 `/Library/Input Methods/` 目录中的 hallelujah.app
-4. 重新添加 hallelujah 到 `Input Sources` 中。
-
 # 为什么叫 hallelujah 这个名字?
 
 主要是受这篇文章启发： [hallelujah_autocompletion](https://daringfireball.net/2006/10/hallelujah_autocompletion).
