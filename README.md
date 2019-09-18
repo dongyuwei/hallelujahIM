@@ -38,34 +38,6 @@
 点击输入法的 `Preferences` 或者直接访问本地 HTTP 服务: http://localhost:62718/index.html
 ![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
-一些截图：<br/>
-auto suggestion from local dictionary:<br/>
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
-
-Text Expander: <br/>
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
-
-translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/WhatsUim)):<br/>
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
-
-spell check:<br/>
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
-
-pinyin in, English out: <br/>
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
-
 ## 编译本输入法
 
 1. `open hallelujah.xcworkspace` 使用 Xcode 打开 `hallelujah.xcworkspace` 工程，注意不是打开 `hallelujah.xcodeproj`。
@@ -133,3 +105,32 @@ make
 
 - 微信: dongyuwei
 - gmail: newdongyuwei
+
+<hr/>
+一些截图：<br/>
+auto suggestion from local dictionary:<br/>
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
+
+Text Expander: <br/>
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
+
+translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/WhatsUim)):<br/>
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
+
+spell check:<br/>
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
+
+pinyin in, English out: <br/>
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
