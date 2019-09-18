@@ -106,7 +106,6 @@ make
 - 微信: dongyuwei
 - gmail: newdongyuwei
 
-<hr/>
 一些截图：<br/>
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
