@@ -33,6 +33,9 @@
 
 主要是受这篇文章启发： [hallelujah_autocompletion](https://daringfireball.net/2006/10/hallelujah_autocompletion).
 
+# 少数派网友（@北堂岚舞）测评
+[英文拼写心里「没底」？这个输入法能把拼音补全为英文：哈利路亚输入法](https://sspai.com/post/56572)
+
 # 偏好设置
 
 点击输入法的 `Preferences` 或者直接访问本地 HTTP 服务: http://localhost:62718/index.html
