@@ -102,14 +102,14 @@ make
 
 请提交问题单到 https://github.com/dongyuwei/hallelujahIM/issues
 
-## 付费咨询服务
+## 咨询服务
 
 提供输入法功能定制开发。联系方式：
 
 - 微信: dongyuwei
 - gmail: newdongyuwei
 
-一些截图：<br/>
+### 一些截图
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
