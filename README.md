@@ -19,7 +19,7 @@
 
 1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 zip 压缩包）
 
-- macOS 10.12 ~ 10.14 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest
+- macOS 10.12 ~ 10.15 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
 
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
