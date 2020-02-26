@@ -87,13 +87,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if (keyCode == KEY_ESC) {
-        if (hasBufferedText) {
-            [self cancelComposition];
-            [self setComposedBuffer:@""];
-            [self setOriginalBuffer:@""];
-            [self commitComposition:sender];
-        }
-        return NO;
+        [self cancelComposition];
+        [self commitComposition:sender];
+        return YES;
     }
 
     char ch = [characters characterAtIndex:0];
