@@ -88,7 +88,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     if (keyCode == KEY_ESC) {
         [self cancelComposition];
-        [self commitComposition:sender];
+        [sender insertText:@""];
+        [self reset];
         return YES;
     }
 
