@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pkill -9 hallelujah
+pkill -9 hallelujah && rm -rf ~/Library/Input\ Methods/hallelujah.app/
 
 login_user=`/usr/bin/stat -f%Su /dev/console`
 
