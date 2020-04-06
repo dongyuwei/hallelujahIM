@@ -17,36 +17,23 @@ static AnnotationWinController *sharedController;
 
 - (void)awakeFromNib {
     sharedController = self;
-    self.width = 160;
-    self.height = 282;
-
+    
+    [[self panel] orderFront:nil];
+    [[self panel] setLevel:CGShieldingWindowLevel() + 1];
     [self.panel setStyleMask:NSWindowStyleMaskBorderless];
-    [self.panel setOpaque:YES];
+    
     [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];
-    //    [self showWindow:NSMakePoint(10, self.height + 10)]; //for dev debug
+    // [self showWindow:NSMakePoint(10, self.height + 10)]; //for dev debug
 }
 
 - (void)showWindow:(NSPoint)origin {
-    NSSize size;
-    size.width = self.width;
-    size.height = self.height;
-    [[self panel] setMinSize:size];
-    [[self panel] setContentSize:size];
-
     [[self panel] setFrameTopLeftPoint:origin];
-    [[self panel] orderFront:nil];
-    [[self panel] setLevel:CGShieldingWindowLevel() + 1];
-    [[self panel] setAutodisplay:YES];
-    [[self panel] setIsVisible:YES];
-    [[self panel] display];
+    
+    self.panel.alphaValue = 1;
 }
 
 - (void)hideWindow {
-    NSRect rect;
-    rect.size.width = 0;
-    rect.size.height = 0;
-    [[self panel] setFrame:rect display:NO];
-    [self.panel setIsVisible:NO];
+    self.panel.alphaValue = 0;
 }
 
 - (void)setAnnotation:(NSString *)annotation {
