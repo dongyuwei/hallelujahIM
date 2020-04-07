@@ -17,6 +17,8 @@ static AnnotationWinController *sharedController;
 
 - (void)awakeFromNib {
     sharedController = self;
+    self.width = 160;
+//    self.height = 282;
     
     [[self panel] orderFront:nil];
     [[self panel] setLevel:CGShieldingWindowLevel() + 1];
