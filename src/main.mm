@@ -73,6 +73,10 @@ int main(int argc, char *argv[]) {
     IMKServer *server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
 
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
+    NSDictionary* attributes = [sharedCandidates attributes];
+    NSMutableDictionary* newAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    [newAttributes setValue:@"YES" forKey:@"IMKCandidatesSendServerKeyEventFirst"];
+    [sharedCandidates setAttributes:newAttributes];
 
     if (!sharedCandidates) {
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);

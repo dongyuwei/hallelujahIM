@@ -281,8 +281,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _insertionIndex = [candidateString length];
 
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    if (showTranslation) {
+    if (showTranslation && [sharedCandidates isVisible]) {
+        NSRect candidateFrame = [sharedCandidates candidateFrame];
+        NSLog(@"hall, candidateFrame height %f", candidateFrame.size.height);
         [self showAnnotation:candidateString];
+    } else {
+        [_annotationWin hideWindow];
     }
 }
 
@@ -333,6 +337,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (void)showAnnotation:(NSAttributedString *)candidateString {
     NSString *annotation = [engine getAnnotation:[candidateString string]];
     if (annotation && annotation.length > 0) {
+        NSLog(@"hall, annotation: %@", annotation);
         [_annotationWin setAnnotation:annotation];
         [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
     } else {
