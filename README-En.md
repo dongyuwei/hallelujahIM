@@ -14,9 +14,6 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 7. You can swith to the default English input mode(the normal||quiet||silent mode) by pressing the shift key. Pressing shift again, it will switch to the auto-suggestion mode.
 
 
-[hallelujahIM] is being sponsored by GitAds
-<a href="https://tracking.gitads.io/?repo=hallelujahIM"> <img src="https://images.gitads.io/hallelujahIM" alt="GitAds"/> </a>
-
 # download and install
 
 1. download releases
