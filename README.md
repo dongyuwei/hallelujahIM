@@ -17,9 +17,6 @@
 7. 按 `shift` 键可以在智能英语输入模式与传统英语输入模式间切换。
 8. 选词方式：数字键 1~9 及 `Enter` 回车键和 `Space` 空格键均可选词提交。默认会自动附加一个空格在单词后面，可以在配置页面关闭自动附加空格功能。
 
-[hallelujahIM] is being sponsored by GitAds：
-<a href="https://tracking.gitads.io/?repo=hallelujahIM"> <img src="https://images.gitads.io/hallelujahIM" alt="GitAds"/> </a>
-
 # 下载与安装
 
 1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 zip 压缩包）
