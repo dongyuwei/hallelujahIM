@@ -1,3 +1,5 @@
+#!/bin/bash
+
 xcodebuild -version
 clang -v
 rm -rf /tmp/hallelujah

@@ -10,7 +10,7 @@ pushd ${PROJECT_ROOT}
 sh build.sh
 popd
 
-rm /tmp/hallelujah-*.pkg
+rm -f /tmp/hallelujah-*.pkg
 rm -rf /tmp/hallelujah/build/release/root/
 mkdir -p /tmp/hallelujah/build/release/root
 cp -R /tmp/hallelujah/build/release/hallelujah.app /tmp/hallelujah/build/release/root/
