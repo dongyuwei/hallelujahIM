@@ -157,7 +157,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (BOOL)isMojaveAndLaterSystem {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    return version.majorVersion == 10 && version.minorVersion > 13;
+    return (version.majorVersion == 10 && version.minorVersion > 13) || version.majorVersion > 10;
 }
 
 - (BOOL)deleteBackward:(id)sender {
