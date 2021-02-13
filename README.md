@@ -90,6 +90,7 @@ autoreconf -i
 ./configure --enable-static
 make
 ## ls -alh lib/marisa/.libs/libmarisa.a
+make install ## we can use marisa-build marisa-lookup marisa-reverse-lookup marisa-common-prefix-search marisa-predictive-search marisa-dump marisa-benchmark cli commands to do some tests and pre-build the trie data.
 ```
 
 ## 感谢以下开源项目:
