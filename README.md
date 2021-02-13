@@ -85,9 +85,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 ```bash
 git clone git://github.com/s-yata/marisa-trie.git
 cd marisa-trie
+brew install autoconf automake libtool -verbose ## proxychains4 -f /usr/local/etc/proxychains.conf brew install autoconf automake libtool -verbose
 autoreconf -i
 ./configure --enable-static
 make
+## ls -alh lib/marisa/.libs/libmarisa.a
 ```
 
 ## 感谢以下开源项目:
