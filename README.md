@@ -79,8 +79,8 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## 构建 libmarisa.a
 
-1. the static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f`
-2. to build the `libmarisa.a` lib, run:
+1. The static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f`(the latest `006020c1df76d0d7dc6118dacc22da64da2e35c4` should also work. Todo: check && upgrade).
+2. To build the `libmarisa.a` lib, run:
 
 ```bash
 git clone git://github.com/s-yata/marisa-trie.git
