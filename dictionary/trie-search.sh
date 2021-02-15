@@ -1,5 +1,4 @@
-# marisa-predictive-search dict-test
-marisa-predictive-search google-words-trie.bin 
+# marisa-predictive-search dict-to-test
+marisa-predictive-search google_227800_words.bin 
 
-# /usr/local/lib/libmarisa.a
-# ls -alh lib/marisa/.libs/libmarisa.a
+# input any chars, eg: tes
