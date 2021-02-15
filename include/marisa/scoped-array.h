@@ -16,7 +16,7 @@ class scoped_array {
   }
 
   void reset(T *array = NULL) {
-    MARISA_THROW_IF((array != NULL) && (array == array_), MARISA_RESET_ERROR);
+    MARISA_DEBUG_IF((array != NULL) && (array == array_), MARISA_RESET_ERROR);
     scoped_array(array).swap(*this);
   }
 

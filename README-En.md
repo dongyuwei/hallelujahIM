@@ -13,7 +13,6 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 6. Fuzzy phonetic match. For example, you can input `cerrage` or `kerrage` to get `courage`, and you can input `aosome` or `ausome` to get `awesome`.
 7. You can swith to the default English input mode(the normal||quiet||silent mode) by pressing the shift key. Pressing shift again, it will switch to the auto-suggestion mode.
 
-
 # download and install
 
 1. download releases
@@ -89,15 +88,18 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## About libmarisa / marisa-trie
 
-1. the static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f`
-2. to build the `libmarisa.a` lib, run:
+1. The static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`006020c1df76d0d7dc6118dacc22da64da2e35c4`.
+2. To build the `libmarisa.a` lib, run:
 
 ```bash
 git clone git://github.com/s-yata/marisa-trie.git
 cd marisa-trie
+brew install autoconf automake libtool -verbose
 autoreconf -i
 ./configure --enable-static
 make
+## ls -alh lib/marisa/.libs/libmarisa.a
+make install ## we can use marisa-build marisa-lookup marisa-reverse-lookup marisa-common-prefix-search marisa-predictive-search marisa-dump marisa-benchmark cli commands to do some tests and pre-build the trie data.
 ```
 
 ### Thanks to the following projects:

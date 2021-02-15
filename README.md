@@ -36,6 +36,7 @@
 主要是受这篇文章启发： [hallelujah_autocompletion](https://daringfireball.net/2006/10/hallelujah_autocompletion).
 
 # 少数派网友（@北堂岚舞）测评
+
 [英文拼写心里「没底」？这个输入法能把拼音补全为英文：哈利路亚输入法](https://sspai.com/post/56572)
 
 # 偏好设置
@@ -79,7 +80,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## 构建 libmarisa.a
 
-1. The static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`59e410597981475bae94d9d9eb252c1d9790dc2f`(the latest `006020c1df76d0d7dc6118dacc22da64da2e35c4` should also work. Todo: check && upgrade).
+1. The static `libmarisa.a` lib was built from [marisa-trie](https://github.com/s-yata/marisa-trie) @`006020c1df76d0d7dc6118dacc22da64da2e35c4`.
 2. To build the `libmarisa.a` lib, run:
 
 ```bash
@@ -115,6 +116,7 @@ make install ## we can use marisa-build marisa-lookup marisa-reverse-lookup mari
 - gmail: newdongyuwei
 
 ### 一些截图
+
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)

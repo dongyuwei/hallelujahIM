@@ -16,7 +16,7 @@ class scoped_ptr {
   }
 
   void reset(T *ptr = NULL) {
-    MARISA_THROW_IF((ptr != NULL) && (ptr == ptr_), MARISA_RESET_ERROR);
+    MARISA_DEBUG_IF((ptr != NULL) && (ptr == ptr_), MARISA_RESET_ERROR);
     scoped_ptr(ptr).swap(*this);
   }
 
