@@ -194,7 +194,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     if (commitWordWithSpace && text.length > 0) {
         char firstChar = [text characterAtIndex:0];
-        if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar]) {
+        char lastChar = [text characterAtIndex:text.length - 1];
+        if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
             text = [NSString stringWithFormat:@"%@ ", text];
         }
     }
