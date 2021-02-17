@@ -139,7 +139,7 @@ marisa::Trie trie;
     for (NSString *word in original) {
         NSUInteger distance = [text mdc_levenshteinDistanceTo:word];
         if (distance <= 3) { // Max edit distance: 3
-            [mutableArray addObject:@{ @"w" : word, @"d" : @(distance) }];
+            [mutableArray addObject:@{@"w" : word, @"d" : @(distance)}];
         }
     }
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"d" ascending:YES];

@@ -25,7 +25,7 @@ static AnnotationWinController *sharedController;
 
     // Make sure panel can float over full screen apps
     self.panel.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces;
-    
+
     [self.panel setStyleMask:NSWindowStyleMaskBorderless];
 
     [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];

@@ -191,8 +191,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         text = [self originalBuffer];
     }
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
+
     if (commitWordWithSpace && text.length > 0) {
-        text = [NSString stringWithFormat:@"%@ ", text];
+        char firstChar = [text characterAtIndex:0];
+        if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar]) {
+            text = [NSString stringWithFormat:@"%@ ", text];
+        }
     }
 
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];

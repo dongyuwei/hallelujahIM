@@ -141,12 +141,15 @@
     XCTAssertTrue(candidates.count == 4);
     NSArray *words3 = [candidates subarrayWithRange:NSMakeRange(0, 3)];
     XCTAssertTrue([[words3 componentsJoinedByString:@";"] isEqualToString:@"xihongshi;西红柿;tomato"]);
-    
+
     NSArray *candidates2 = [self.engine getCandidates:@"xhs"];
     XCTAssertTrue(candidates2.count == 26);
     NSArray *words = [candidates2 subarrayWithRange:NSMakeRange(0, 26)];
     XCTAssertTrue([[words componentsJoinedByString:@";"]
-                   isEqualToString:@"xhs;新华社;Xinhua News Agency;西红柿;tomato;CL:隻|只;循环赛;round-robin tournament;新化市;Xinhua city in Hunan;新会市;Xinhui city in Guangdong;消火栓;fire hydrant;猩红色;scarlet (color);兴化市;Xinghua county level city in Taizhou 泰州;蟹黄水;crab roe;crab spawn;(used for crab meat in general);血红素;hemoglobin;须后水;aftershave"]);
+        isEqualToString:
+            @"xhs;新华社;Xinhua News Agency;西红柿;tomato;CL:隻|只;循环赛;round-robin tournament;新化市;Xinhua city in Hunan;新会市;Xinhui "
+            @"city in Guangdong;消火栓;fire hydrant;猩红色;scarlet (color);兴化市;Xinghua county level city in Taizhou 泰州;蟹黄水;crab "
+            @"roe;crab spawn;(used for crab meat in general);血红素;hemoglobin;须后水;aftershave"]);
 }
 
 @end
