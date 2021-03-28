@@ -10,7 +10,7 @@ extern NSUserDefaults *preference;
 extern ConversionEngine *engine;
 
 typedef NSInteger KeyCode;
-static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126;
+static const KeyCode Key_P = 35, KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126;
 
 @implementation InputController
 
@@ -23,6 +23,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     bool handled = NO;
     switch ([event type]) {
     case NSEventTypeFlagsChanged:
+        if (modifiers & NSEventModifierFlagFunction) {
+            NSLog(@"halle fn key pressed");
+            //todo: switch to pinyin mode.
+        }
         if (_lastEventTypes[1] == NSEventTypeFlagsChanged && _lastModifiers[1] == modifiers) {
             return YES;
         }
