@@ -302,6 +302,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)activateServer:(id)sender {
+    [sender overrideKeyboardWithKeyboardNamed:@"com.apple.keylayout.US"];
+    
     if (_annotationWin == nil) {
         _annotationWin = [AnnotationWinController sharedController];
     }
