@@ -41,9 +41,13 @@
 	<string>AnnotationWindow</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>TICapsLockLanguageSwitchCapable</key>
+	<true/>
+	<key>TISIntendedLanguage</key>
+    <string>zh-Hans</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
-		<string>Latn</string>
+		<string>zh-Hans</string>
 	</array>
 	<key>tsInputMethodIconFileKey</key>
 	<string>him.png</string>
