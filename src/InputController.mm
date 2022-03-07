@@ -214,6 +214,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates hide];
     _candidates = [[NSMutableArray alloc] init];
     [sharedCandidates setCandidateData:@[]];
+    [_annotationWin setAnnotation:@""];
     [_annotationWin hideWindow];
 }
 
