@@ -81,9 +81,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return NO;
     }
 
-    if (keyCode == KEY_RETURN || keyCode == KEY_SPACE) {
+    if (keyCode == KEY_SPACE) {
         if (hasBufferedText) {
             [self commitComposition:sender];
+            return YES;
+        }
+        return NO;
+    }
+
+    if (keyCode == KEY_RETURN) {
+        if (hasBufferedText) {
+            [self commitCompositionWithEnter:sender];
             return YES;
         }
         return NO;
@@ -201,6 +209,18 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
             text = [NSString stringWithFormat:@"%@ ", text];
         }
+    }
+
+    [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+
+    [self reset];
+}
+
+- (void)commitCompositionWithEnter:(id)sender {
+    NSString *text = [self composedBuffer];
+
+    if (text == nil || [text length] == 0) {
+        text = [self originalBuffer];
     }
 
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
