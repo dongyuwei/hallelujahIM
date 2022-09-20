@@ -1,4 +1,6 @@
+![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
 [![Build Status](https://travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)](https://travis-ci.com/dongyuwei/hallelujahIM)
+![github actions](https://github.com/dongyuwei/hallelujahIM/actions/workflows/github-actions-ci.yml/badge.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 # hallelujahIM
