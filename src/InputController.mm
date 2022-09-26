@@ -52,6 +52,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (modifiers & NSEventModifierFlagCommand)
             break;
 
+        if (modifiers & NSEventModifierFlagOption) {
+            return false;
+        }
+
+        if (modifiers & NSEventModifierFlagControl) {
+            return false;
+        }
+
         handled = [self onKeyEvent:event client:sender];
         break;
     default:
