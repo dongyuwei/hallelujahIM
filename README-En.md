@@ -48,37 +48,6 @@ setup:<br/>
 ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 ![preference options](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/web-preference.png?raw=true)
 
-auto suggestion from local dictionary:<br/>
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
-
-Text Expander: <br/>
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
-
-translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/WhatsUim)):<br/>
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
-
-spell check:<br/>
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
-
-pinyin in, English out: <br/>
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
-
-## Paid Support
-
-If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
-
 ## Build project
 
 1. `open hallelujah.xcworkspace`
@@ -110,6 +79,44 @@ make install ## we can use marisa-build marisa-lookup marisa-reverse-lookup mari
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)
 3. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
+5. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
+6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
+7. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
+
+### snapshots
+
+auto suggestion from local dictionary:<br/>
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
+![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
+
+Text Expander: <br/>
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
+![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
+
+translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/What%27s-uim%3F)):<br/>
+![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
+
+spell check:<br/>
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
+![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
+
+pinyin in, English out: <br/>
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
+![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
+
+## Paid Support
+
+If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
+
+
 
 ### Contact me
 
