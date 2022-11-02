@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSString *identifier = [NSBundle mainBundle].bundleIdentifier;
     IMKServer *server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
 
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];

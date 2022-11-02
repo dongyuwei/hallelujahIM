@@ -5,6 +5,6 @@
     IBOutlet NSMenu *_menu;
     IBOutlet NSMenuItem *_aboutMenuItem;
 }
-- (NSMenu *)menu;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSMenu *menu;
 
 @end

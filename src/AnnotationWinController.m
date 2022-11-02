@@ -11,7 +11,7 @@ static AnnotationWinController *sharedController;
 @synthesize view;
 @synthesize panel;
 
-+ (id)sharedController {
++ (AnnotationWinController*)sharedController {
     return sharedController;
 }
 
@@ -21,10 +21,10 @@ static AnnotationWinController *sharedController;
     // self.height = 282;
 
     [self.panel orderFront:nil];
-    [self.panel setLevel:CGShieldingWindowLevel() + 1];
+    (self.panel).level = CGShieldingWindowLevel() + 1;
     // Make sure panel can float over full screen apps
     //  self.panel.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces;
-    [self.panel setStyleMask:NSWindowStyleMaskBorderless];
+    (self.panel).styleMask = NSWindowStyleMaskBorderless;
     [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];
     // [self showWindow:NSMakePoint(10, self.height + 10)]; //for dev debug
 }
@@ -41,7 +41,7 @@ static AnnotationWinController *sharedController;
 }
 
 - (void)setAnnotation:(NSString *)annotation {
-    [self.view setStringValue:annotation];
+    (self.view).stringValue = annotation;
 }
 
 @end

@@ -85,9 +85,9 @@ marisa::Trie trie;
 - (NSArray *)sortWordsByFrequency:(NSArray *)filtered {
     NSDictionary *words = self.wordsWithFrequencyAndTranslation;
     NSArray *sorted = [filtered sortedArrayUsingComparator:^NSComparisonResult(id word1, id word2) {
-        NSDictionary *dict1 = [words objectForKey:word1];
-        NSDictionary *dict2 = [words objectForKey:word2];
-        int n = [[dict1 objectForKey:@"frequency"] intValue] - [[dict2 objectForKey:@"frequency"] intValue];
+        NSDictionary *dict1 = words[word1];
+        NSDictionary *dict2 = words[word2];
+        int n = [dict1[@"frequency"] intValue] - [dict2[@"frequency"] intValue];
         if (n > 0) {
             return (NSComparisonResult)NSOrderedAscending;
         }
@@ -105,24 +105,24 @@ marisa::Trie trie;
 }
 
 - (NSArray *)getTranslations:(NSString *)word {
-    return [[self.wordsWithFrequencyAndTranslation objectForKey:word] objectForKey:@"translation"];
+    return (self.wordsWithFrequencyAndTranslation)[word][@"translation"];
 }
 
 - (NSString *)getPhoneticSymbolOfWord:(NSString *)candidateString {
     if (candidateString && candidateString.length > 3) {
-        NSString *word = [candidateString lowercaseString];
-        return [[self.wordsWithFrequencyAndTranslation objectForKey:word] objectForKey:@"ipa"];
+        NSString *word = candidateString.lowercaseString;
+        return (self.wordsWithFrequencyAndTranslation)[word][@"ipa"];
     }
     return nil;
 }
 
 - (NSString *)getAnnotation:(NSString *)word {
-    NSString *input = [word lowercaseString];
+    NSString *input = word.lowercaseString;
     NSArray *translation = [self getTranslations:input];
     if (translation && translation.count > 0) {
         NSString *translationText;
         NSString *phoneticSymbol = [self getPhoneticSymbolOfWord:input];
-        if ([phoneticSymbol length] > 0) {
+        if (phoneticSymbol.length > 0) {
             NSArray *list = @[ [NSString stringWithFormat:@"[%@]", phoneticSymbol] ];
             translationText = [[list arrayByAddingObjectsFromArray:translation] componentsJoinedByString:@"\n"];
         } else {
@@ -146,18 +146,18 @@ marisa::Trie trie;
     NSArray *sorted = [mutableArray sortedArrayUsingDescriptors:@[ descriptor ]];
     NSMutableArray *result = [NSMutableArray new];
     for (NSDictionary *obj in sorted) {
-        [result addObject:[obj objectForKey:@"w"]];
+        [result addObject:obj[@"w"]];
     }
     return [result copy];
 }
 
 - (NSArray *)getSuggestionOfSpellChecker:(NSString *)buffer {
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
-    NSRange range = NSMakeRange(0, [buffer length]);
+    NSRange range = NSMakeRange(0, buffer.length);
     NSArray *result = [checker guessesForWordRange:range inString:buffer language:@"en" inSpellDocumentWithTag:0];
 
     if (buffer.length > 3) {
-        NSArray *words = [self.phonexEncoded objectForKey:[self phonexEncode:buffer]];
+        NSArray *words = (self.phonexEncoded)[[self phonexEncode:buffer]];
         NSArray *wordsWithSimilarPhone = [self sortByDamerauLevenshteinDistance:words inputText:buffer];
         if (wordsWithSimilarPhone && wordsWithSimilarPhone.count > 0) {
             NSUInteger range = 4; // 0~5
@@ -170,13 +170,13 @@ marisa::Trie trie;
 }
 
 - (NSArray *)subarrayWithRang:(NSArray *)array range:(NSUInteger)range {
-    NSUInteger count = [array count];
+    NSUInteger count = array.count;
     NSUInteger limit = count >= range ? range : count;
     return [array subarrayWithRange:NSMakeRange(0, limit)];
 }
 
 - (NSArray *)getCandidates:(NSString *)originalInput {
-    NSString *buffer = [originalInput lowercaseString];
+    NSString *buffer = originalInput.lowercaseString;
     NSMutableArray *result = [[NSMutableArray alloc] init];
 
     if (buffer && buffer.length > 0) {
@@ -213,7 +213,7 @@ marisa::Trie trie;
         }
     }
     NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:result2];
-    NSArray *arrayWithoutDuplicates = [orderedSet array];
+    NSArray *arrayWithoutDuplicates = orderedSet.array;
     return [NSArray arrayWithArray:arrayWithoutDuplicates];
 }
 
