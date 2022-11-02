@@ -11,11 +11,17 @@
     NSMenuItem *aboutMenuItem = [_menu itemWithTitle:@"About"];
 
     if (preferenceMenuItem) {
-        [preferenceMenuItem setAction:@selector(showIMEPreferences:)];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        preferenceMenuItem.action = @selector(showIMEPreferences:);
+#pragma clang diagnostic pop
     }
 
     if (aboutMenuItem) {
-        [aboutMenuItem setAction:@selector(clickAbout:)];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        aboutMenuItem.action = @selector(clickAbout:);
+#pragma clang diagnostic pop
     }
 }
 

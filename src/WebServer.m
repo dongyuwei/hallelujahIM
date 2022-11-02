@@ -1,21 +1,13 @@
 #import "WebServer.h"
-#import <GCDWebServer.h>
-#import <GCDWebServerDataResponse.h>
-#import <GCDWebServerURLEncodedFormRequest.h>
+#import "GCDWebServer.h"
+#import "GCDWebServerDataResponse.h"
+#import "GCDWebServerURLEncodedFormRequest.h"
 
 extern NSUserDefaults *preference;
 
-NSDictionary *getDictionaryRepresentationOfPreference() {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+NSString *TRANSLATION_KEY = @"showTranslation";
+NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
 
-    BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    [dict setObject:[NSNumber numberWithBool:showTranslation] forKey:@"showTranslation"];
-
-    BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
-    [dict setObject:[NSNumber numberWithBool:commitWordWithSpace] forKey:@"commitWordWithSpace"];
-
-    return dict;
-}
 
 @interface WebServer ()
 
@@ -43,7 +35,7 @@ static int port = 62718;
 
     GCDWebServer *webServer = [[GCDWebServer alloc] init];
     [webServer addGETHandlerForBasePath:@"/"
-                          directoryPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"web"]
+                          directoryPath:[NSString stringWithFormat:@"%@/%@", [NSBundle mainBundle].resourcePath, @"web"]
                           indexFilename:nil
                                cacheAge:3600
                      allowRangeRequests:YES];
@@ -52,27 +44,32 @@ static int port = 62718;
                               path:@"/preference"
                       requestClass:[GCDWebServerRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                          return [GCDWebServerDataResponse responseWithJSONObject:getDictionaryRepresentationOfPreference()];
+                          return [GCDWebServerDataResponse responseWithJSONObject:
+                                  @{
+                                    TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
+                                    COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY])
+                                   }
+                                 ];
                       }];
 
     [webServer addHandlerForMethod:@"POST"
                               path:@"/preference"
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
-                          NSDictionary *data = [(GCDWebServerDataRequest *)request jsonObject];
+                          NSDictionary *data = ((GCDWebServerDataRequest *)request).jsonObject;
 
-                          bool showTranslation = [[data objectForKey:@"showTranslation"] boolValue];
-                          [preference setBool:showTranslation forKey:@"showTranslation"];
+                          bool showTranslation = [data[TRANSLATION_KEY] boolValue];
+                          [preference setBool:showTranslation forKey:TRANSLATION_KEY];
 
-                          bool commitWordWithSpace = [[data objectForKey:@"commitWordWithSpace"] boolValue];
-                          [preference setBool:commitWordWithSpace forKey:@"commitWordWithSpace"];
+                          bool commitWordWithSpace = [data[COMMIT_WORD_WITH_SPACE_KEY] boolValue];
+                          [preference setBool:commitWordWithSpace forKey:COMMIT_WORD_WITH_SPACE_KEY];
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];
                       }];
 
     NSMutableDictionary *options = [NSMutableDictionary dictionary];
-    [options setObject:[NSNumber numberWithInt:port] forKey:GCDWebServerOption_Port];
-    [options setObject:@YES forKey:GCDWebServerOption_BindToLocalhost];
+    options[GCDWebServerOption_Port] = @(port);
+    options[GCDWebServerOption_BindToLocalhost] = @YES;
 
     [webServer startWithOptions:options error:nil];
 }
