@@ -7,13 +7,13 @@
 
 hallelujahIM is an english input method with auto-suggestions and spell check features, Mac only(supports 10.9+ OSX).
 
-1. The auto-suggestion words come from google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have purged them to 140402 words (almost all misspelled words removed). Candidate words are sorted by frequency.
-2. hallelujahIM is also a **Spell-Checker**: when you input wrong word, it will give you the right candidates.
-3. hallelujahIM is also a **Text-Expander**: it will load the file `~/.you_expand_me.json` in your Home directory. You can define your favorite substitutions, such as `{"te":"text expander", "yem":"you expand me"}`.
-4. Instant translation when you type words(currently it supports English-to-Chinese only, but the translation dictionary can be configured later on).
-5. Pinyin in, English out: you can input Hanyu Pinyin and get the matching English word.
-6. Fuzzy phonetic match. For example, you can input `cerrage` or `kerrage` to get `courage`, and you can input `aosome` or `ausome` to get `awesome`.
-7. You can swith to the default English input mode(the normal||quiet||silent mode) by pressing the shift key. Pressing shift again, it will switch to the auto-suggestion mode.
+1. The auto-suggestion words are derived from Google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have refined this list to 140,402 words, removing nearly all misspelled ones. Candidate words are sorted by frequency.
+2. HallelujahIM also functions as a Spell-Checker: when you input an incorrect word, it will suggest the right alternatives.
+3. HallelujahIM also serves as a Text Expander: it loads the file `~/.you_expand_me.json` from your Home directory. Here, you can define your favorite substitutions, such as `{"te":"text expander", "yem":"you expand me"}`.
+4. Instant translation is available as you type words (currently, it only supports English-to-Chinese, but the translation dictionary can be configured later on).
+5. Pinyin to English: you can input Hanyu Pinyin and receive the matching English word.
+6. Fuzzy phonetic match is another feature. For example, you can input cerrage or kerrage to get courage, and aosome or ausome to get awesome.
+7. You can switch to the default English input mode (the normal, quiet, or silent mode) by pressing the shift key. Pressing shift again will switch back to the auto-suggestion mode.
 
 # download and install
 
