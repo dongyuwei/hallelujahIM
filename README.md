@@ -148,3 +148,7 @@ pinyin in, English out: <br/>
 ![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
 ![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
 ![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.com/#dongyuwei/hallelujahIM&Date)
