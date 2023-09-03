@@ -87,7 +87,7 @@ marisa::Trie trie;
     NSArray *sorted = [filtered sortedArrayUsingComparator:^NSComparisonResult(id word1, id word2) {
         NSDictionary *dict1 = words[word1];
         NSDictionary *dict2 = words[word2];
-        int n = [dict1[@"frequency"] intValue] - [dict2[@"frequency"] intValue];
+        int64_t n = [dict1[@"frequency"] longLongValue] - [dict2[@"frequency"] longLongValue];
         if (n > 0) {
             return (NSComparisonResult)NSOrderedAscending;
         }
