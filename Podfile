@@ -10,3 +10,13 @@ end
 target 'Tests' do
   pod 'MDCDamerauLevenshtein', :git => 'https://github.com/modocache/MDCDamerauLevenshtein.git', :branch => 'master'
 end
+
+post_install do |installer|
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = 'RECOMMENDED_MACOSX_DEPLOYMENT_TARGET'
+         end
+    end
+  end
+end

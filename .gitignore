@@ -40,3 +40,8 @@ util/releases.json
 node_modules/
 *.dmg
 *.pkg
+
+Pods/Target Support Files/GCDWebServer/GCDWebServer.debug.xcconfig
+Pods/Target Support Files/GCDWebServer/GCDWebServer.release.xcconfig
+Pods/Target Support Files/MDCDamerauLevenshtein/MDCDamerauLevenshtein.debug.xcconfig
+Pods/Target Support Files/MDCDamerauLevenshtein/MDCDamerauLevenshtein.release.xcconfig
