@@ -40,6 +40,12 @@
         isEqualToString:@"test;testing;tests;tested;testimonials;testimony;testament;tester;testified;testers"]);
 }
 
+- (void)testSortWordsByFrequencyFromLargeNumberOfCandidates {
+    NSArray *words = [self.engine wordsStartsWith:@"in"];
+    NSArray *sorted = [self.engine sortWordsByFrequency:words];
+    XCTAssertTrue([[sorted objectAtIndex:0] isEqualToString:@"in"]);
+}
+
 - (void)testPhonexEncode {
     JSValue *phonexFunc = self.engine.phonexEncoder;
     XCTAssertTrue([[[phonexFunc callWithArguments:@[ @"test" ]] toString] isEqualToString:@"T23"]);
