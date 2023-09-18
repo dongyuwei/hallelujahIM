@@ -2,7 +2,7 @@ name: GitHub Actions CI
 on: [push]
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
