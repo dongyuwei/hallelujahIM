@@ -2,5 +2,8 @@ rm Podfile.lock
 rm -rf Pods
 pod install
 
-sh build.sh
+echo "===================tests===================="
 sh unit-tests.sh
+
+echo "=================build App=================="
+sh build.sh
