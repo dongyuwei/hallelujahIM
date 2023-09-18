@@ -1,5 +1,4 @@
 ![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Travis CI](https://app.travis-ci.com/dongyuwei/hallelujahIM.svg?branch=master)
 ![github actions](https://github.com/dongyuwei/hallelujahIM/actions/workflows/github-actions-ci.yml/badge.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
@@ -115,8 +114,6 @@ pinyin in, English out: <br/>
 ## Paid Support
 
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
-
-
 
 ### Contact me
 

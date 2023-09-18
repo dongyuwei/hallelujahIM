@@ -1,7 +1,0 @@
-language: objective-c
-osx_image: xcode10.2
-xcode_workspace: hallelujah.xcworkspace
-xcode_scheme:
-  - hallelujah
-  - Tests
-script: ./ci-build-and-tests.sh
