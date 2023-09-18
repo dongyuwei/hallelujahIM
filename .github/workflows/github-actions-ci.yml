@@ -5,7 +5,5 @@ jobs:
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v2
-      - name: Run tests
-        run: sh unit-tests.sh
-      - name: Build
-        run: sh build.sh
+      - name: Run tests and build App
+        run: sh ci-build-and-tests.sh
