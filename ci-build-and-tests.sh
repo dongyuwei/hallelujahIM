@@ -1,7 +1,3 @@
-rm Podfile.lock
-rm -rf Pods
-pod install
-
 echo "===================tests===================="
 sh unit-tests.sh
 
