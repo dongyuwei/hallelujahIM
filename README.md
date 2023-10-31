@@ -6,7 +6,7 @@
 
 # 哈利路亚英文输入法
 
-哈利路亚英文输入法 是 Mac(10.9+ OSX)平台上一款智能英语输入法。其特性如下：
+哈利路亚英文输入法 是 Mac(10.9+ OSX)及Windows平台上一款智能英语输入法。其特性如下：
 
 1. 离线词库较大较全，词频精准。参见 Google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt).
 2. 内置拼写校正功能。不用担心拼写错误，能记住大概字形、发音，本输入法就会自动显示最可能的候选词。
@@ -21,8 +21,9 @@
 
 1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 zip 压缩包）
 
-- macOS 10.12 ~ 10.15 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest
+- macOS 10.12及以上版本： 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
+- **Windows 版本**: https://github.com/dongyuwei/PIME/releases
 
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
 3. 如果输入法不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
