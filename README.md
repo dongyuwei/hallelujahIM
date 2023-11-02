@@ -23,7 +23,7 @@
 
 - macOS 10.12及以上版本： 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest 下载pkg安装文件
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
-- **Windows 版本**: 基于PIME移植到Windows平台，请下载exe科执行安装文件。
+- **Windows 版本**: 基于PIME移植到Windows平台，请下载EXE可执行安装文件：
   - 稳定版：https://github.com/dongyuwei/PIME/releases 
   - CI自动构建版：https://ci.appveyor.com/project/dongyuwei/pime/build/artifacts
 
