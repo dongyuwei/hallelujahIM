@@ -25,7 +25,6 @@
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
 - **Windows 版本**: 基于PIME移植到Windows平台，请下载EXE可执行安装文件：
   - 稳定版：https://github.com/dongyuwei/PIME/releases 
-  - CI自动构建版：https://ci.appveyor.com/project/dongyuwei/pime/build/artifacts
 
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
 3. 如果输入法不能正常使用，建议退出当前用户重新登录或者重启系统，毕竟输入法是比较特殊的程序。
