@@ -6,4 +6,7 @@ login_user=`/usr/bin/stat -f%Su /dev/console`
 
 /usr/bin/sudo -u "${login_user}" "/Library/Input Methods/hallelujah.app/Contents/MacOS/hallelujah" --install
 
+# refresh the preferences cache
+killall -u $USER cfprefsd
+
 echo "hallelujah input method registered and activated successfully" > /tmp/hallelujah-postinstall
