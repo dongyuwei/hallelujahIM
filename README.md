@@ -6,7 +6,7 @@
 
 # 哈利路亚英文输入法
 
-哈利路亚英文输入法 是 Mac(10.9+ OSX)及Windows平台上一款智能英语输入法。其特性如下：
+哈利路亚英文输入法 是 Mac(10.9+ OSX)及 Windows 平台上一款智能英语输入法。其特性如下：
 
 1. 离线词库较大较全，词频精准。参见 Google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt).
 2. 内置拼写校正功能。不用担心拼写错误，能记住大概字形、发音，本输入法就会自动显示最可能的候选词。
@@ -19,16 +19,15 @@
 
 # 下载与安装
 
-1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 exe文件）
+1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 exe 文件）
 
-- macOS 10.12及以上版本： 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest 下载pkg安装文件
+- macOS 10.12 及以上版本： 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest 下载 pkg 安装文件
 - macOS 10.9 ~ 10.11 老版本: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
-- **Windows 版本**: 基于PIME移植到Windows平台，https://github.com/dongyuwei/PIME/releases 下载exe安装文件 
+- **Windows 版本**: 基于 PIME 移植到 Windows 平台，https://github.com/dongyuwei/PIME/releases 下载 exe 安装文件
 
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
-3. 如果输入法不能正常使用，请退出当前用户重新登录，在Input source中手动添加Hallelujah输入法。
+3. 如果输入法不能正常使用，请退出当前用户重新登录，在 Input source 中手动添加 Hallelujah 输入法。
    <img width="641" alt="image" src="https://github.com/dongyuwei/hallelujahIM/assets/112451/be3a44be-07df-4d86-8320-c7edecdad262">
-
 
 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah pkg 安装程序，右键点击 `Open` 来打开，即可开始安装输入法。
 
@@ -154,3 +153,8 @@ pinyin in, English out: <br/>
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.com/#dongyuwei/hallelujahIM&Date)
+
+## 打赏
+
+![支付宝](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/alipay.jpg)
+![微信支付](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/wxpay.jpg)
