@@ -4,7 +4,7 @@
 
 # hallelujahIM
 
-hallelujahIM is an english input method with auto-suggestions and spell check features, Mac only(supports 10.9+ OSX).
+hallelujahIM is an english input method with auto-suggestions and spell check features.
 
 1. The auto-suggestion words are derived from Google's [1/3 million most frequent English words](http://norvig.com/ngrams/count_1w.txt). I have refined this list to 140,402 words, removing nearly all misspelled ones. Candidate words are sorted by frequency.
 2. HallelujahIM also functions as a Spell-Checker: when you input an incorrect word, it will suggest the right alternatives.
@@ -18,8 +18,10 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 
 1. download releases
 
-- for macOS 10.9 ~ 10.11: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1
-- for macOS 10.12 ~ 10.14: https://github.com/dongyuwei/hallelujahIM/releases/latest
+- for **macOS 10.12 ~ 14.2**: https://github.com/dongyuwei/hallelujahIM/releases/latest, download the .pkg installer.
+- for macOS 10.9 ~ 10.11: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1, deprecated version, need to install the .app manually.
+- **Windows **: ported to Windows based on PIME，https://github.com/dongyuwei/PIME/releases, download the .exe installer.
+- Linux：https://github.com/fcitx-contrib/fcitx5-hallelujah, thanks [Qijia Liu](https://github.com/eagleoflqj)！
 
 2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
 3. go to `System Preferences` --> `Input Sources` --> click the + --> select English --> select hallelujah
