@@ -20,7 +20,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 
 - for **macOS 10.12 ~ 14.2**: https://github.com/dongyuwei/hallelujahIM/releases/latest, download the .pkg installer.
 - for macOS 10.9 ~ 10.11: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1, deprecated version, need to install the .app manually.
-- **Windows **: ported to Windows based on PIME，https://github.com/dongyuwei/PIME/releases, download the .exe installer.
+- **Windows**: ported to Windows based on PIME，https://github.com/dongyuwei/PIME/releases, download the .exe installer.
 - Linux：https://github.com/fcitx-contrib/fcitx5-hallelujah, thanks [Qijia Liu](https://github.com/eagleoflqj)！
 
 2. unzip the app, copy it to `/Library/Input\ Methods/` or `~/Library/Input\ Methods/`
