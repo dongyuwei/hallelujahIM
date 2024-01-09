@@ -156,8 +156,3 @@ pinyin in, English out: <br/>
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.com/#dongyuwei/hallelujahIM&Date)
-
-## 打赏（觉得好用就赞赏一下吧！）
-
-![支付宝](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/alipay.jpg)
-![微信支付](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/wxpay.jpg)
