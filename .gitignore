@@ -45,3 +45,5 @@ Pods/Target Support Files/GCDWebServer/GCDWebServer.debug.xcconfig
 Pods/Target Support Files/GCDWebServer/GCDWebServer.release.xcconfig
 Pods/Target Support Files/MDCDamerauLevenshtein/MDCDamerauLevenshtein.debug.xcconfig
 Pods/Target Support Files/MDCDamerauLevenshtein/MDCDamerauLevenshtein.release.xcconfig
+Pods/Pods.xcodeproj/xcuserdata/yuweidong.xcuserdatad/
+*.xcuserdatad

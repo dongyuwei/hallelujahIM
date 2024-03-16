@@ -25,13 +25,17 @@ marisa::Trie trie;
 }
 
 - (void)loadPreparedData {
-    [self loadTrie];
-    self.wordsWithFrequencyAndTranslation = [self getWordsWithFrequencyAndTranslation];
-    self.substitutions = [self getUserDefinedSubstitutions];
-    self.pinyinDict = [self getPinyinData];
-    self.phonexEncoded = [self getPhonexEncodedWords];
-    self.phonexEncoder = [self getPhonexEncoder];
+    // Dispatch the loading process to a background queue.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self loadTrie];
+        self.wordsWithFrequencyAndTranslation = [self getWordsWithFrequencyAndTranslation];
+        self.substitutions = [self getUserDefinedSubstitutions];
+        self.pinyinDict = [self getPinyinData];
+        self.phonexEncoded = [self getPhonexEncodedWords];
+        self.phonexEncoder = [self getPhonexEncoder];
+    });
 }
+
 
 - (void)loadTrie {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"google_227800_words" ofType:@"bin"];
