@@ -17,6 +17,9 @@ CREATE TABLE IF NOT EXISTS words (
 )
 ''')
 
+c.execute('CREATE INDEX IF NOT EXISTS idx_word ON words(word);')
+c.execute("PRAGMA journal_mode=WAL")
+
 # Insert data
 for word, details in data.items():
     c.execute('''
