@@ -24,7 +24,7 @@ c.execute("PRAGMA journal_mode=WAL")
 for word, details in data.items():
     c.execute('''
     INSERT INTO words (word, frequency, translation, ipa) VALUES (?, ?, ?, ?)
-    ''', (word, details['frequency'], json.dumps(details['translation']), details['ipa']))
+    ''', (word, details['frequency'], '|'.join(details['translation']), details['ipa']))
 
 # Commit the changes and close the connection
 conn.commit()

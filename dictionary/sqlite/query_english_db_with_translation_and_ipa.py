@@ -14,7 +14,7 @@ def query_words_by_prefix(prefix):
         for result in results:
             words_details.append({
                 "word": result[0],
-                "translation": '|'.join(json.loads(result[2])),
+                "translation": result[2],
                 "ipa": result[3]
             })
         return words_details
