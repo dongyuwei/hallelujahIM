@@ -5,6 +5,7 @@
 #import "ConversionEngine.h"
 
 @interface InputController : IMKInputController {
+    NSMutableString *_sentenceBuffer;
     NSMutableString *_composedBuffer;
     NSMutableString *_originalBuffer;
     NSInteger _insertionIndex;
@@ -16,6 +17,9 @@
     NSEventType _lastEventTypes[2];
     AnnotationWinController *_annotationWin;
 }
+
+- (NSMutableString *)sentenceBuffer;
+- (void)setSentenceBuffer:(NSString *)string;
 
 - (NSMutableString *)composedBuffer;
 - (void)setComposedBuffer:(NSString *)string;
