@@ -85,7 +85,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *characters = event.characters;
 
     NSString *bufferedText = [self originalBuffer];
+    NSString *bufferedSentence = [self sentenceBuffer];
     bool hasBufferedText = bufferedText && bufferedText.length > 0;
+    bool hasSentence = bufferedSentence && bufferedSentence.length > 0;
+    BOOL isCandidatesVisible = [sharedCandidates isVisible];
 
     if (keyCode == KEY_DELETE) {
         if (hasBufferedText) {
@@ -100,11 +103,21 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             [self commitComposition:sender];
             return YES;
         }
+        
+        if (hasSentence && isCandidatesVisible) {
+            [self commitComposition:sender];
+            return YES;
+        }
+        
         return NO;
     }
 
     if (keyCode == KEY_RETURN) {
         if (hasBufferedText) {
+            [self commitCompositionWithoutSpace:sender];
+            return YES;
+        }
+        if (hasSentence && isCandidatesVisible) {
             [self commitCompositionWithoutSpace:sender];
             return YES;
         }
@@ -114,6 +127,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (keyCode == KEY_ESC) {
         [self cancelComposition];
         [sender insertText:@""];
+        [self setSentenceBuffer:@""];
         [self reset];
         return YES;
     }
@@ -128,7 +142,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([self isMojaveAndLaterSystem]) {
-        BOOL isCandidatesVisible = [sharedCandidates isVisible];
         if (isCandidatesVisible) {
             if (keyCode == KEY_ARROW_DOWN) {
                 [sharedCandidates moveDown:self];
@@ -144,9 +157,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
 
         if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
-            if (!hasBufferedText) {
+            if (!hasBufferedText || !hasSentence) {
                 [self appendToComposedBuffer:characters];
                 [self commitCompositionWithoutSpace:sender];
+                [self setSentenceBuffer:@""];
                 return YES;
             }
 
@@ -170,9 +184,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([[NSCharacterSet punctuationCharacterSet] characterIsMember:ch] || [[NSCharacterSet symbolCharacterSet] characterIsMember:ch]) {
-        if (hasBufferedText) {
+        if (hasBufferedText || hasSentence) {
             [self appendToComposedBuffer:characters];
             [self commitCompositionWithoutSpace:sender];
+            [self setSentenceBuffer: @""];
             return YES;
         }
     }
@@ -192,7 +207,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         --_insertionIndex;
 
         NSString *convertedString = [originalText substringToIndex:originalText.length - 1];
-
         [self setComposedBuffer:convertedString];
         [self setOriginalBuffer:convertedString];
 
@@ -209,12 +223,32 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return NO;
 }
 
+- (BOOL)lastCharIsSymbol:(NSString *)text {
+    if (text.length > 0) {
+        unichar lastChar = [text characterAtIndex:text.length - 1];
+        return [[NSCharacterSet decimalDigitCharacterSet] characterIsMember:lastChar] ||
+               [[NSCharacterSet symbolCharacterSet] characterIsMember:lastChar] ||
+               [[NSCharacterSet punctuationCharacterSet] characterIsMember:lastChar];
+    }
+    return NO;
+}
+
 - (void)commitComposition:(id)sender {
     NSString *text = [self composedBuffer];
 
     if (text == nil || text.length == 0) {
         text = [self originalBuffer];
     }
+    BOOL isCandidatesVisible = [sharedCandidates isVisible];
+    if ((text == nil || text.length == 0) && isCandidatesVisible && _candidates.count > 0) {
+        NSInteger selectedCandidateIndex = [sharedCandidates selectedCandidate];
+        if (selectedCandidateIndex != NSNotFound) {
+            text = [_candidates objectAtIndex: selectedCandidateIndex];
+        }
+    }
+    
+    [self appendSentenceBuffer: text];
+    
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
 
     if (commitWordWithSpace && text.length > 0) {
@@ -228,6 +262,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 
     [self reset];
+    
+    [self getPredictions];
+    
 }
 
 - (void)commitCompositionWithoutSpace:(id)sender {
@@ -237,9 +274,99 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         text = [self originalBuffer];
     }
 
+    BOOL isCandidatesVisible = [sharedCandidates isVisible];
+    if ((text == nil || text.length == 0) && isCandidatesVisible && _candidates.count > 0) {
+        NSInteger selectedCandidateIndex = [sharedCandidates selectedCandidate];
+        if (selectedCandidateIndex != NSNotFound) {
+            text = [_candidates objectAtIndex: selectedCandidateIndex];
+        }
+    }
+    
+    [self appendSentenceBuffer: text];
+    
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 
     [self reset];
+        
+    [self getPredictions];
+}
+
+- (void) getPredictions {
+    NSLog(@"Current Sentence Buffer: %@", self.sentenceBuffer);
+    if (self.sentenceBuffer  && self.sentenceBuffer.length > 0 && ![self lastCharIsSymbol: self.sentenceBuffer]) {
+        [self fetchPredictionsForText:self.sentenceBuffer completion:^(NSDictionary *responseDict, NSArray *bertArray, NSError *error) {
+            if (error) {
+                NSLog(@"Error: %@", error.localizedDescription);
+            } else {
+                NSLog(@"BERT: %@", bertArray);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [sharedCandidates setCandidateData:bertArray];
+                    [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+                });
+            }
+        }];
+    }
+
+}
+
+- (NSString *) fetchAPIURL {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *apiURL = [defaults stringForKey:@"NEXT_WORD_PREDICTION_SERVICE_URL"];
+    if (apiURL) {
+        return apiURL;
+    } else {
+        return @"http://127.0.0.1:8080/get_end_predictions";
+    }
+}
+
+- (void)fetchPredictionsForText:(NSString *)text completion:(void(^)(NSDictionary *responseDict, NSArray *bertArray, NSError *error))completionHandler {
+    NSString *urlString = [self fetchAPIURL];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+
+    NSDictionary *jsonBody = @{@"input_text": text, @"top_k": @"9"};
+    NSError *jsonError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonBody options:0 error:&jsonError];
+
+    if (jsonError) {
+        completionHandler(nil, nil, jsonError);
+        return;
+    }
+
+    request.HTTPBody = jsonData;
+
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            completionHandler(nil, nil, error);
+            return;
+        }
+
+        NSError *jsonParsingError;
+        NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+
+        if (jsonParsingError) {
+            completionHandler(nil, nil, jsonParsingError);
+        } else {
+            NSArray *bertArray = nil;
+            NSArray *bertCNArray = nil;
+
+            // Parsing the bert string
+            NSString *bertString = [responseDict objectForKey:@"bert"];
+            if (bertString) {
+                bertArray = [bertString componentsSeparatedByString:@"\n"];
+                bertArray = [bertArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    return [evaluatedObject length] > 0 && ![evaluatedObject isEqualToString:@"[UNK]"];
+                }]];
+            }
+
+            completionHandler(responseDict, bertArray, nil);
+        }
+    }];
+
+    [task resume];
 }
 
 - (void)reset {
@@ -264,6 +391,25 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)setComposedBuffer:(NSString *)string {
     NSMutableString *buffer = [self composedBuffer];
+    [buffer setString:string];
+}
+
+- (NSMutableString *)sentenceBuffer {
+    if (_sentenceBuffer == nil) {
+        _sentenceBuffer = [[NSMutableString alloc] init];
+    }
+    return _sentenceBuffer;
+}
+
+- (void)appendSentenceBuffer:(NSString *)input {
+    NSMutableString *buffer = [self sentenceBuffer];
+    [buffer appendString: @" "];
+    [buffer appendString:input];
+    [buffer appendString: @" "];
+}
+
+- (void)setSentenceBuffer:(NSString *)string {
+    NSMutableString *buffer = [self sentenceBuffer];
     [buffer setString:string];
 }
 
@@ -351,6 +497,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)deactivateServer:(id)sender {
+    [self setSentenceBuffer:@""];
     [self reset];
 }
 
