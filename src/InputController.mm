@@ -85,7 +85,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *characters = event.characters;
 
     NSString *bufferedText = [self originalBuffer];
+    NSString *bufferedSentence = [self sentenceBuffer];
     bool hasBufferedText = bufferedText && bufferedText.length > 0;
+    bool hasSentence = bufferedSentence && bufferedSentence.length > 0;
+
 
     if (keyCode == KEY_DELETE) {
         if (hasBufferedText) {
@@ -96,7 +99,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if (keyCode == KEY_SPACE) {
-        if (hasBufferedText) {
+        if (hasBufferedText || hasSentence) {
             [self commitComposition:sender];
             return YES;
         }
@@ -104,7 +107,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if (keyCode == KEY_RETURN) {
-        if (hasBufferedText) {
+        if (hasBufferedText || hasSentence) {
             [self commitCompositionWithoutSpace:sender];
             return YES;
         }
@@ -144,7 +147,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
 
         if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
-            if (!hasBufferedText) {
+            if (!(hasBufferedText || hasSentence)) {
                 [self appendToComposedBuffer:characters];
                 [self commitCompositionWithoutSpace:sender];
                 return YES;
@@ -170,7 +173,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([[NSCharacterSet punctuationCharacterSet] characterIsMember:ch] || [[NSCharacterSet symbolCharacterSet] characterIsMember:ch]) {
-        if (hasBufferedText) {
+        if (hasBufferedText || hasSentence) {
             [self appendToComposedBuffer:characters];
             [self commitCompositionWithoutSpace:sender];
             [self setSentenceBuffer: @""];
@@ -188,11 +191,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (BOOL)deleteBackward:(id)sender {
     NSMutableString *originalText = [self originalBuffer];
+    NSMutableString *sensence = [self sentenceBuffer];
 
     if (_insertionIndex > 0) {
         --_insertionIndex;
 
         NSString *convertedString = [originalText substringToIndex:originalText.length - 1];
+        NSString *convertedSentence = [sensence substringToIndex:sensence.length - 1];
+        [self setSentenceBuffer: convertedSentence];
 
         [self setComposedBuffer:convertedString];
         [self setOriginalBuffer:convertedString];
@@ -449,6 +455,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)deactivateServer:(id)sender {
+    [self setSentenceBuffer:@""];
     [self reset];
 }
 
