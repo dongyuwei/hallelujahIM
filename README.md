@@ -1,6 +1,6 @@
-![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Platform:windows](https://img.shields.io/badge/platform-windows-lightgrey)
-![Platform:linux](https://img.shields.io/badge/platform-linux-lightgrey)
+![Platform:macOS](https://img.shields.io/badge/platform-macOS-blue)
+![Platform:windows](https://img.shields.io/badge/platform-windows-blue)
+![Platform:linux](https://img.shields.io/badge/platform-linux-blue)
 ![github actions](https://github.com/dongyuwei/hallelujahIM/actions/workflows/github-actions-ci.yml/badge.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
