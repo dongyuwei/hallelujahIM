@@ -30,7 +30,7 @@
 - Android: https://github.com/dongyuwei/Hallelujah-Android
 
 2. 打开下载后的 hallelujah .pkg 文件，会自动安装、注册、激活哈利路亚输入法。
-3. 如果输入法不能正常使用，请退出当前用户重新登录，在 Input source 中手动添加 Hallelujah 输入法。
+3. **Mac系统如果本输入法不能正常使用，请退出当前用户重新登录，在 Input source 中手动添加 Hallelujah 输入法**。
    <img width="641" alt="image" src="https://github.com/dongyuwei/hallelujahIM/assets/112451/be3a44be-07df-4d86-8320-c7edecdad262">
 
 注意：因为本程序不是通过 App store 发布的，Macos 会有下面的安全警告。选中 hallelujah pkg 安装程序，右键点击 `Open` 来打开，即可开始安装输入法。
