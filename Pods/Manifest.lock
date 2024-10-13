@@ -1,15 +1,22 @@
 PODS:
+  - FMDB (2.7.12):
+    - FMDB/standard (= 2.7.12)
+  - FMDB/Core (2.7.12)
+  - FMDB/standard (2.7.12):
+    - FMDB/Core
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
   - MDCDamerauLevenshtein (0.1.0)
 
 DEPENDENCIES:
+  - FMDB
   - GCDWebServer (~> 3.0)
   - MDCDamerauLevenshtein (from `https://github.com/modocache/MDCDamerauLevenshtein.git`, branch `master`)
 
 SPEC REPOS:
   trunk:
+    - FMDB
     - GCDWebServer
 
 EXTERNAL SOURCES:
@@ -23,9 +30,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/modocache/MDCDamerauLevenshtein.git
 
 SPEC CHECKSUMS:
+  FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   MDCDamerauLevenshtein: 5b84ae3325d6678d44850915e882ce22d4d5537d
 
-PODFILE CHECKSUM: 97aa7f494743e0815318a886fcba109e8ae99240
+PODFILE CHECKSUM: 80832d72de810a4f8b94bf564ff950f93493b862
 
 COCOAPODS: 1.15.2

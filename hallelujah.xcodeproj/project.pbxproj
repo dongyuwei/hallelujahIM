@@ -28,6 +28,12 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		8E90E6AE1DD558B60385D996 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4893615A9331202D81738ED2 /* Pods_Tests.framework */; };
+		ABE045E82C87079600B1842D /* Word.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE045E72C87079600B1842D /* Word.m */; };
+		ABE045EC2C8707FD00B1842D /* Pinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE045EB2C8707FD00B1842D /* Pinyin.m */; };
+		ABE045F02C87087F00B1842D /* ImeService.m in Sources */ = {isa = PBXBuildFile; fileRef = ABE045EF2C87087F00B1842D /* ImeService.m */; };
+		ABE045FA2C870C4300B1842D /* pinyin_data.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = ABE045F72C870C4300B1842D /* pinyin_data.sqlite3 */; };
+		ABE045FB2C870C4300B1842D /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = ABE045F82C870C4300B1842D /* words_with_frequency_and_translation_and_ipa.sqlite3 */; };
+		ABE045FC2C870C4300B1842D /* english.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = ABE045F92C870C4300B1842D /* english.sqlite3 */; };
 		DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
 		F102C5A41F487D5A0005B03F /* libmarisa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F102C5A31F487D5A0005B03F /* libmarisa.a */; };
@@ -82,6 +88,15 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* hallelujah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hallelujah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D7E75BEAC2280E777E4B6F /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		ABE045E72C87079600B1842D /* Word.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Word.m; path = src/Word.m; sourceTree = "<group>"; };
+		ABE045EB2C8707FD00B1842D /* Pinyin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Pinyin.m; path = src/Pinyin.m; sourceTree = "<group>"; };
+		ABE045EF2C87087F00B1842D /* ImeService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ImeService.m; path = src/ImeService.m; sourceTree = "<group>"; };
+		ABE045F42C87096C00B1842D /* ImeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImeService.h; path = src/ImeService.h; sourceTree = "<group>"; };
+		ABE045F52C87096C00B1842D /* Word.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Word.h; path = src/Word.h; sourceTree = "<group>"; };
+		ABE045F62C87096C00B1842D /* Pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pinyin.h; path = src/Pinyin.h; sourceTree = "<group>"; };
+		ABE045F72C870C4300B1842D /* pinyin_data.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = pinyin_data.sqlite3; path = dictionary/sqlite/pinyin_data.sqlite3; sourceTree = "<group>"; };
+		ABE045F82C870C4300B1842D /* words_with_frequency_and_translation_and_ipa.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = words_with_frequency_and_translation_and_ipa.sqlite3; path = dictionary/sqlite/words_with_frequency_and_translation_and_ipa.sqlite3; sourceTree = "<group>"; };
+		ABE045F92C870C4300B1842D /* english.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = english.sqlite3; path = dictionary/sqlite/english.sqlite3; sourceTree = "<group>"; };
 		C821F631E5B6762735CA76CB /* Pods-hallelujah.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hallelujah.release.xcconfig"; path = "Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah.release.xcconfig"; sourceTree = "<group>"; };
 		C82BE1A7E1A45D2695354D87 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E93074B60A5C264700470842 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = /System/Library/Frameworks/InputMethodKit.framework; sourceTree = "<absolute>"; };
@@ -125,6 +140,12 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				ABE045F62C87096C00B1842D /* Pinyin.h */,
+				ABE045EB2C8707FD00B1842D /* Pinyin.m */,
+				ABE045F52C87096C00B1842D /* Word.h */,
+				ABE045E72C87079600B1842D /* Word.m */,
+				ABE045F42C87096C00B1842D /* ImeService.h */,
+				ABE045EF2C87087F00B1842D /* ImeService.m */,
 				386E1BFC22DC5A54000C6DCF /* ConversionEngine.h */,
 				386E1BFF22DC5E9B000C6DCF /* ConversionEngine.mm */,
 				381CD8C422C60D610098764F /* WebServer.h */,
@@ -185,6 +206,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ABE045F92C870C4300B1842D /* english.sqlite3 */,
+				ABE045F72C870C4300B1842D /* pinyin_data.sqlite3 */,
+				ABE045F82C870C4300B1842D /* words_with_frequency_and_translation_and_ipa.sqlite3 */,
 				38788DC8231EA73B0005685A /* cedict.json */,
 				F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */,
 				3817857A22D0E2240091268E /* phonex.js */,
@@ -342,8 +366,11 @@
 				389468CB1F56A34A00EF1F5E /* web in Resources */,
 				F102C5A61F487DE80005B03F /* google_227800_words.bin in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
+				ABE045FA2C870C4300B1842D /* pinyin_data.sqlite3 in Resources */,
 				38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */,
 				3843EC702283BE8E00F52003 /* words_with_frequency_and_translation_and_ipa.json in Resources */,
+				ABE045FB2C870C4300B1842D /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */,
+				ABE045FC2C870C4300B1842D /* english.sqlite3 in Resources */,
 				0DE74C001978F18E00040F3C /* him.icns in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 			);
@@ -377,11 +404,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-hallelujah/Pods-hallelujah-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 				"${BUILT_PRODUCTS_DIR}/MDCDamerauLevenshtein/MDCDamerauLevenshtein.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDCDamerauLevenshtein.framework",
 			);
@@ -452,6 +481,9 @@
 				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
 				381CD8C622C60D610098764F /* WebServer.m in Sources */,
 				386E1C0022DC5E9C000C6DCF /* ConversionEngine.mm in Sources */,
+				ABE045E82C87079600B1842D /* Word.m in Sources */,
+				ABE045EC2C8707FD00B1842D /* Pinyin.m in Sources */,
+				ABE045F02C87087F00B1842D /* ImeService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
