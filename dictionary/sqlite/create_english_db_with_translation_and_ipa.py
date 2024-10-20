@@ -18,12 +18,13 @@ CREATE TABLE IF NOT EXISTS words (
 ''')
 
 c.execute('CREATE INDEX IF NOT EXISTS idx_word ON words(word);')
+c.execute('delete from words;')
 c.execute("PRAGMA journal_mode=WAL")
 
 # Insert data
 for word, details in data.items():
     c.execute('''
-    INSERT INTO words (word, frequency, translation, ipa) VALUES (?, ?, ?, ?)
+    INSERT INTO words (word, frequency, translation, ipa) VALUES (?,?,?,?)
     ''', (word, details['frequency'], '|'.join(details['translation']), details['ipa']))
 
 # Commit the changes and close the connection

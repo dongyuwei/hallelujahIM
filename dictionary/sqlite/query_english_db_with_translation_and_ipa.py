@@ -6,7 +6,7 @@ def query_words_by_prefix(prefix):
     with sqlite3.connect('words_with_frequency_and_translation_and_ipa.sqlite3') as conn:
         c = conn.cursor()
         # The LIKE operator is case-insensitive in SQLite by default
-        c.execute('SELECT * FROM words WHERE word LIKE ? ORDER BY frequency DESC limit 30', (prefix + '%',))
+        c.execute('SELECT * FROM words WHERE word LIKE ? ORDER BY frequency DESC limit 10', (prefix + '%',))
         results = c.fetchall()
         # conn.close()
         
