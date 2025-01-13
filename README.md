@@ -25,7 +25,7 @@
 
 - macOS 10.12 及以上版本： 下载 **最新版** : https://github.com/dongyuwei/hallelujahIM/releases/latest 下载 pkg 自动安装文件
 - macOS 10.9 ~ 10.11 老版本（Deprecated version）: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1 需要手动安装 app 文件
-- **Windows 版本**: 基于 PIME 移植到 Windows 平台，https://github.com/dongyuwei/Hallelujah-Windows/releases 下载 exe 安装文件
+- **Windows 版本**: 基于 PIME 移植到 Windows 平台，https://github.com/dongyuwei/Hallelujah-Windows 下载 exe 安装文件
 - Linux：https://github.com/fcitx-contrib/fcitx5-hallelujah 感谢[Qijia Liu](https://github.com/eagleoflqj)！
 - Android: https://github.com/dongyuwei/Hallelujah-Android
 
