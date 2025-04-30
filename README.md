@@ -83,6 +83,9 @@
 
 `bash package/build-package.bash`
 
+## DeepWiki
+https://www.deepwiki.com/dongyuwei/hallelujahIM
+
 ## 开源协议
 
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
