@@ -17,6 +17,10 @@
     NSEventType _lastEventTypes[2];
     AnnotationWinController *_annotationWin;
     NSMutableArray<NSString *> *_recentWords;
+    uint64_t _cloudFetchToken;
+    NSString *_cloudResultInput;
+    NSString *_cloudHanzi;
+    NSString *_cloudEnglish;
 }
 
 - (NSMutableString *)composedBuffer;

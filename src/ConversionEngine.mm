@@ -1,5 +1,7 @@
 #import "ConversionEngine.h"
 
+extern NSUserDefaults *preference;
+
 NSDictionary *deserializeJSON(NSString *path) {
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
     [inputStream open];
@@ -399,6 +401,52 @@ NSDictionary *deserializeJSON(NSString *path) {
     }];
 
     return [results copy];
+}
+- (BOOL)englishWordExistsWithPrefix:(NSString *)prefix {
+    if (!prefix || prefix.length == 0)
+        return NO;
+    return [self wordsStartsWith:[prefix lowercaseString]].count > 0;
+}
+
+- (void)fetchCloudPinyinAsync:(NSString *)pinyin serviceUrl:(NSString *)serviceUrl completion:(void (^)(NSString *, NSString *))completion {
+    if (!serviceUrl || serviceUrl.length == 0 || !pinyin || pinyin.length == 0) {
+        if (completion)
+            completion(nil, nil);
+        return;
+    }
+
+    NSString *base = [serviceUrl stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    NSString *encoded = [pinyin stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?pinyin=%@&toEnglish=1", base, encoded];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if (!url) {
+        if (completion)
+            completion(nil, nil);
+        return;
+    }
+
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:2.0];
+
+    NSURLSessionDataTask *task =
+        [[NSURLSession sharedSession] dataTaskWithRequest:request
+                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                            if (error || !data) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    if (completion)
+                                                        completion(nil, nil);
+                                                });
+                                                return;
+                                            }
+                                            NSError *jsonError;
+                                            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                                            NSString *hanzi = json[@"text"];
+                                            NSString *english = json[@"english"];
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                if (completion)
+                                                    completion(hanzi, english);
+                                            });
+                                        }];
+    [task resume];
 }
 
 - (NSArray *)getCandidates:(NSString *)originalInput {

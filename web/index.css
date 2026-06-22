@@ -27,6 +27,17 @@ label {
     border: 1px solid #eee;
 }
 
+label.block-label input[type="text"] {
+    width: 100%;
+    margin: 4px 0 0;
+    box-sizing: border-box;
+}
+
+label.block-label small.hint {
+    display: block;
+    margin: 4px 0 0;
+}
+
 button {
     padding: 6px 14px;
     border: 1px solid #999;

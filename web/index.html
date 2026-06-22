@@ -21,6 +21,11 @@
           Next-Word Prediction (ngram):
           <input type="checkbox" v-model="preference.enableNextWordPrediction" />
         </label>
+        <label class="block-label">
+          Cloud Pinyin Service URL:
+          <input type="text" v-model="preference.cloud_pinyin_service_url" placeholder="http://localhost:8888/translate" />
+          <small class="hint">Leave empty to disable. When no English word matches, queries this URL for 汉字 + English candidates.</small>
+        </label>
         <button :disabled="loading">
           {{ loading ? "loading..." : "Save" }}
         </button>

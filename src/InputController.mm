@@ -19,6 +19,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)showIMEPreferences:(id)sender;
 - (void)clickAbout:(NSMenuItem *)sender;
+- (void)scheduleCloudPinyinFetchFor:(NSString *)input;
+- (void)onCloudPinyinResult:(NSString *)hanzi english:(NSString *)english forInput:(NSString *)input;
 
 @end
 
@@ -361,6 +363,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates setCandidateData:@[]];
     [_annotationWin setAnnotation:@""];
     [_annotationWin hideWindow];
+    _cloudFetchToken++;
+    _cloudResultInput = nil;
+    _cloudHanzi = nil;
+    _cloudEnglish = nil;
 }
 
 - (void)resetContext {
@@ -480,8 +486,60 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
     }
 
+    // Cloud pinyin: when no English word matches, fetch 汉字 + English async (debounced).
+    // Results are stored and appended on the next refresh once available.
+    if (![engine englishWordExistsWithPrefix:originalInput]) {
+        if (_cloudHanzi && [_cloudResultInput isEqualToString:originalInput]) {
+            NSMutableArray *m = [NSMutableArray arrayWithArray:candidateList];
+            NSUInteger idx = MIN(1, m.count);
+            [m insertObject:_cloudHanzi atIndex:idx];
+            if (_cloudEnglish.length > 0 && ![_cloudEnglish isEqualToString:_cloudHanzi]) {
+                [m insertObject:_cloudEnglish atIndex:MIN(idx + 1, m.count)];
+            }
+            candidateList = [m copy];
+        } else {
+            [self scheduleCloudPinyinFetchFor:originalInput];
+        }
+    }
+
     _candidates = [NSMutableArray arrayWithArray:candidateList];
     return candidateList;
+}
+
+- (void)scheduleCloudPinyinFetchFor:(NSString *)input {
+    NSString *cloudUrl = [preference stringForKey:@"cloud_pinyin_service_url"];
+    if (!cloudUrl || cloudUrl.length == 0)
+        return;
+    if (!input || input.length < 2)
+        return;
+
+    _cloudFetchToken++;
+    uint64_t token = _cloudFetchToken;
+    NSString *capturedInput = [input copy];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (token != self->_cloudFetchToken)
+            return;
+        [engine fetchCloudPinyinAsync:capturedInput
+                           serviceUrl:cloudUrl
+                           completion:^(NSString *hanzi, NSString *english) {
+                               if (token != self->_cloudFetchToken)
+                                   return;
+                               [self onCloudPinyinResult:hanzi english:english forInput:capturedInput];
+                           }];
+    });
+}
+
+- (void)onCloudPinyinResult:(NSString *)hanzi english:(NSString *)english forInput:(NSString *)input {
+    _cloudResultInput = [input copy];
+    _cloudHanzi = [hanzi copy];
+    _cloudEnglish = [english copy];
+
+    NSString *current = [self originalBuffer];
+    if ([current isEqualToString:input] && hanzi && hanzi.length > 0) {
+        [sharedCandidates updateCandidates];
+        [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+    }
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {

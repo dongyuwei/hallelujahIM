@@ -18,6 +18,10 @@
 - (NSArray *)predictNextWordsForContext:(NSString *)context maxResults:(NSInteger)max;
 - (NSArray *)predictNextWordsForContext:(NSString *)context prefixFilter:(NSString *)prefix maxResults:(NSInteger)max;
 - (NSArray *)fetchHanZiByPinyinWithPrefix:(NSString *)prefix;
+- (BOOL)englishWordExistsWithPrefix:(NSString *)prefix;
+- (void)fetchCloudPinyinAsync:(NSString *)pinyin
+                   serviceUrl:(NSString *)serviceUrl
+                   completion:(void (^)(NSString *hanzi, NSString *english))completion;
 
 - (NSDictionary *)allSubstitutions;
 - (void)addSubstitution:(NSString *)key value:(NSString *)value;

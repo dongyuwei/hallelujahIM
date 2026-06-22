@@ -10,6 +10,7 @@ extern ConversionEngine *engine;
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
 NSString *ENABLE_NEXT_WORD_PREDICTION_KEY = @"enableNextWordPrediction";
+NSString *CLOUD_PINYIN_SERVICE_URL_KEY = @"cloud_pinyin_service_url";
 
 @interface WebServer ()
 
@@ -49,7 +50,8 @@ static int port = 62718;
                           return [GCDWebServerDataResponse responseWithJSONObject:@{
                               TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                               COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
-                              ENABLE_NEXT_WORD_PREDICTION_KEY : @([preference boolForKey:ENABLE_NEXT_WORD_PREDICTION_KEY])
+                              ENABLE_NEXT_WORD_PREDICTION_KEY : @([preference boolForKey:ENABLE_NEXT_WORD_PREDICTION_KEY]),
+                              CLOUD_PINYIN_SERVICE_URL_KEY : [preference stringForKey:CLOUD_PINYIN_SERVICE_URL_KEY] ?: @""
                           }];
                       }];
 
@@ -68,7 +70,18 @@ static int port = 62718;
                           bool enableNextWordPrediction = [data[ENABLE_NEXT_WORD_PREDICTION_KEY] boolValue];
                           [preference setBool:enableNextWordPrediction forKey:ENABLE_NEXT_WORD_PREDICTION_KEY];
 
-                          return [GCDWebServerDataResponse responseWithJSONObject:data];
+                          NSString *cloudUrl = data[CLOUD_PINYIN_SERVICE_URL_KEY];
+                          if (cloudUrl == nil) {
+                              cloudUrl = @"";
+                          }
+                          [preference setObject:cloudUrl forKey:CLOUD_PINYIN_SERVICE_URL_KEY];
+
+                          return [GCDWebServerDataResponse responseWithJSONObject:@{
+                              TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
+                              COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
+                              ENABLE_NEXT_WORD_PREDICTION_KEY : @([preference boolForKey:ENABLE_NEXT_WORD_PREDICTION_KEY]),
+                              CLOUD_PINYIN_SERVICE_URL_KEY : [preference stringForKey:CLOUD_PINYIN_SERVICE_URL_KEY] ?: @""
+                          }];
                       }];
 
     [webServer addHandlerForMethod:@"GET"

@@ -8,7 +8,8 @@ var app = new Vue({
     preference: {
       showTranslation: true,
       commitWordWithSpace: true,
-      enableNextWordPrediction: false
+      enableNextWordPrediction: false,
+      cloud_pinyin_service_url: ""
     },
     substitutions: {}
   },
