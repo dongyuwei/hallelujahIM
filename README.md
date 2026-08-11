@@ -232,4 +232,4 @@ pinyin in, English out: <br/>
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.com/#dongyuwei/hallelujahIM&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.dera.page/#dongyuwei/hallelujahIM&Date)
