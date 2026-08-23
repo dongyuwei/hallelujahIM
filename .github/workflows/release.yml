@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CocoaPods dependencies
+        run: |
+          rm -f Podfile.lock
+          rm -rf Pods
+          pod install
+
+      - name: Run unit tests
+        run: sh unit-tests.sh
+
+      - name: Build installer package
+        run: PKG_POSTINSTALL_ACTION=logout bash package/build-package.bash
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          PKG="$(ls -t /tmp/hallelujah-*.pkg | head -n 1)"
+          SHA="$(git rev-parse --short HEAD)"
+          TAG="build-${SHA}"
+          TITLE="Automated build $(date '+%Y-%m-%d %H:%M') (${SHA})"
+          NOTES="Automated release built from commit ${GITHUB_SHA}."
+
+          # Replace any existing release for this commit (e.g. on workflow re-run)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release delete "$TAG" --yes --cleanup-tag
+          fi
+
+          gh release create "$TAG" "$PKG" \
+            --title "$TITLE" \
+            --notes "$NOTES" \
+            --prerelease
