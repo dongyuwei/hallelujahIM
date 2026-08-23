@@ -33,6 +33,11 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
    ![setup](https://github.com/dongyuwei/NumberInput_IMKit_Sample/blob/master/object-c/hallelujahIM/snapshots/setup.png?raw=true)
 4. switch to hallelujah input method
 
+> **⚠️ Note:** Because this app is not distributed through the App Store and is not signed/notarized with a Developer ID, macOS will show a security warning when you open the .pkg installer. How to get past it depends on your macOS version:
+> - macOS 14 and earlier: right-click the hallelujah .pkg installer and choose `Open` to start the installation.
+> - macOS 15 (Sequoia) and later: the right-click `Open` trick no longer works. Open `System Settings` → `Privacy & Security`, scroll down to the notice about the blocked installer, and click `Open Anyway`.
+> - Alternatively, remove the quarantine attribute in Terminal, then double-click the pkg: `xattr -d com.apple.quarantine ~/Downloads/hallelujah-*.pkg`
+
 # update/reinstall
 
 1. delete the hallelujah from `Input Sources`
