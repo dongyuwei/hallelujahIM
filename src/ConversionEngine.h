@@ -18,6 +18,8 @@
 - (NSArray *)predictNextWordsForContext:(NSString *)context maxResults:(NSInteger)max;
 - (NSArray *)predictNextWordsForContext:(NSString *)context prefixFilter:(NSString *)prefix maxResults:(NSInteger)max;
 - (NSArray *)fetchHanZiByPinyinWithPrefix:(NSString *)prefix;
+- (NSDictionary *)getPinyinData;
+- (NSDictionary *)getPhonexEncodedWords;
 
 - (NSDictionary *)allSubstitutions;
 - (void)addSubstitution:(NSString *)key value:(NSString *)value;

@@ -324,4 +324,16 @@
     XCTAssertTrue([results containsObject:@"伟"]);
 }
 
+- (void)testGetPinyinDataLoadsCedictJSON {
+    NSDictionary *pinyinData = [self.engine getPinyinData];
+    XCTAssertNotNil(pinyinData);
+    XCTAssertGreaterThan(pinyinData.count, 0U);
+}
+
+- (void)testGetPhonexEncodedWordsLoadsJSON {
+    NSDictionary *encodedWords = [self.engine getPhonexEncodedWords];
+    XCTAssertNotNil(encodedWords);
+    XCTAssertGreaterThan(encodedWords.count, 0U);
+}
+
 @end

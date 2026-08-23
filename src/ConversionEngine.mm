@@ -3,7 +3,7 @@
 NSDictionary *deserializeJSON(NSString *path) {
     NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:path];
     [inputStream open];
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithStream:inputStream options:nil error:nil];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithStream:inputStream options:0 error:nil];
     [inputStream close];
     return dict;
 }
