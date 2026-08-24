@@ -26,8 +26,8 @@
 
 1. 下载编译好的输入法应用（注意：不要点击 "Clone or download"，要从下面的链接下载 pkg 文件或者 exe 文件）
 
-- macOS 26 (Tahoe) 及以上版本：下载 https://github.com/dongyuwei/hallelujahIM/releases/tag/build-a7c9a55 下载 pkg 自动安装文件
-- macOS 10.12 ~ 15.x 老版本：下载 https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.7.2 下载 pkg 自动安装文件
+- macOS 26 (Tahoe) 及以上版本：https://github.com/dongyuwei/hallelujahIM/releases/tag/build-a7c9a55 下载 pkg 自动安装文件
+- macOS 10.12 ~ 15.x 老版本：https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.7.2 下载 pkg 自动安装文件
 - macOS 10.9 ~ 10.11 老版本（Deprecated version）: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1 需要手动安装 app 文件
 - **Windows 版本**: 基于 PIME 移植到 Windows 平台，https://github.com/dongyuwei/Hallelujah-Windows 下载 exe 安装文件
 - Linux：https://github.com/fcitx-contrib/fcitx5-hallelujah 感谢[Qijia Liu](https://github.com/eagleoflqj)！
