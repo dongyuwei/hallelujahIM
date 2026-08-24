@@ -22,7 +22,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 
 1. download releases
 
-- for **macOS 26 (Tahoe) and later**: https://github.com/dongyuwei/hallelujahIM/releases/tag/build-a7c9a55, download the .pkg installer.
+- for **macOS 26.6.2 (Tahoe) and later**: https://github.com/dongyuwei/hallelujahIM/releases/tag/build-a7c9a55, download the .pkg installer.
 - for **older macOS (10.12 ~ 15.x)**: https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.7.2, download the .pkg installer.
 - for macOS 10.9 ~ 10.11(Deprecated version): https://github.com/dongyuwei/hallelujahIM/releases/tag/v1.1.1, deprecated version, need to install the .app manually.
 - **Windows**: ported to Windows based on PIME，https://github.com/dongyuwei/Hallelujah-Windows, download the .exe installer.
