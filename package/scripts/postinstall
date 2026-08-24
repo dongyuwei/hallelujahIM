@@ -44,4 +44,10 @@ launchctl asuser "${login_uid}" sudo -u "${login_user}" \
 # refresh again so System Settings reflects the new enabled/selected state
 launchctl asuser "${login_uid}" sudo -u "${login_user}" killall -HUP cfprefsd 2>/dev/null || true
 
+# macOS 26: imklaunchagent validates/caches InputMethodConnectionName per bundle
+# and TextInputSwitcher caches input-source state; restart them so the upgraded
+# bundle takes effect without logout.
+launchctl asuser "${login_uid}" sudo -u "${login_user}" \
+    killall imklaunchagent TextInputSwitcher TextInputMenuAgent 2>/dev/null || true
+
 echo "hallelujah input method registered and activated successfully" > /tmp/hallelujah-postinstall

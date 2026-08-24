@@ -7,7 +7,6 @@
 NSUserDefaults *preference;
 ConversionEngine *engine;
 
-const NSString *kConnectionName = @"Hallelujah_1_Connection";
 IMKCandidates *sharedCandidates;
 
 static const unsigned char kInstallLocation[] = "/Library/Input Methods/hallelujah.app";
@@ -79,12 +78,13 @@ int main(int argc, char *argv[]) {
     }
 
     NSString *identifier = [NSBundle mainBundle].bundleIdentifier;
-    IMKServer *server = [[IMKServer alloc] initWithName:(NSString *)kConnectionName bundleIdentifier:identifier];
+    NSString *connectionName = [identifier stringByAppendingString:@"_Connection"];
+    IMKServer *server = [[IMKServer alloc] initWithName:connectionName bundleIdentifier:identifier];
 
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
 
     if (!sharedCandidates) {
-        NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", kConnectionName);
+        NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", connectionName);
         return -1;
     }
 
