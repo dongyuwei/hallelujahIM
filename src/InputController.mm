@@ -17,10 +17,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 @interface InputController ()
 
-- (void)showIMEPreferences:(id)sender;
-- (void)clickAbout:(NSMenuItem *)sender;
-- (void)clickUpgrade:(NSMenuItem *)sender;
-
 @end
 
 @implementation InputController
@@ -526,10 +522,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (NSMenu *)menu {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    return [NSApp.delegate performSelector:NSSelectorFromString(@"menu")];
-#pragma clang diagnostic pop
+    return [(InputApplicationDelegate *)NSApp.delegate menu];
 }
 
 - (void)showIMEPreferences:(id)sender {

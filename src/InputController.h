@@ -27,5 +27,8 @@
 - (NSString *)recentContext;
 - (void)recordCommittedWord:(NSString *)word;
 - (void)resetContext;
+- (void)showIMEPreferences:(id)sender;
+- (void)clickAbout:(id)sender;
+- (void)clickUpgrade:(id)sender;
 
 @end
