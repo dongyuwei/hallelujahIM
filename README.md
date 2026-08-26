@@ -42,6 +42,8 @@
 <img width="651" alt="image" src="https://github.com/user-attachments/assets/f68fbe99-f62b-496d-9233-3de6f1ad2f87" />
 <img width="550" height="373" alt="image" src="https://github.com/user-attachments/assets/0f5bb3d1-82f5-4759-a8e7-b91e5f3865d7" />
 
+> **⚠️ Attention:** 重启之后如果输入法没有自动添加，请前往 设置 → 键盘 → 文字输入 手动添加。
+
 
 
 

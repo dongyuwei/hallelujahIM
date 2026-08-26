@@ -39,6 +39,8 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 > - macOS 15 (Sequoia) and later: the right-click `Open` trick no longer works. Open `System Settings` → `Privacy & Security`, scroll down to the notice about the blocked installer, and click `Open Anyway`.
 > - Alternatively, remove the quarantine attribute in Terminal, then double-click the pkg: `xattr -d com.apple.quarantine ~/Downloads/hallelujah-*.pkg`
 
+> **⚠️ Note:** If the input method isn't added automatically after restarting, go to `System Settings` → `Keyboard` → `Text Input` and add it manually.
+
 # update/reinstall
 
 1. delete the hallelujah from `Input Sources`
