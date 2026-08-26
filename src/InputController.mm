@@ -19,6 +19,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)showIMEPreferences:(id)sender;
 - (void)clickAbout:(NSMenuItem *)sender;
+- (void)clickUpgrade:(NSMenuItem *)sender;
 
 @end
 
@@ -537,6 +538,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)clickAbout:(NSMenuItem *)sender {
     [self openUrl:@"https://github.com/dongyuwei/hallelujahIM"];
+}
+
+- (void)clickUpgrade:(NSMenuItem *)sender {
+    [self openUrl:@"https://github.com/dongyuwei/hallelujahIM/releases/latest"];
 }
 
 - (void)openUrl:(NSString *)url {
