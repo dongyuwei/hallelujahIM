@@ -17,6 +17,8 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install CocoaPods dependencies
         run: |
@@ -39,7 +41,19 @@ jobs:
           SHA="$(git rev-parse --short HEAD)"
           TAG="build-${SHA}"
           TITLE="Automated build $(date '+%Y-%m-%d %H:%M') (${SHA})"
-          NOTES="Automated release built from commit ${GITHUB_SHA}."
+
+          # Commit subjects since the previous release tag (excluding this
+          # commit's own tag, so workflow re-runs don't produce an empty range)
+          RANGE="HEAD"
+          for t in $(git tag --sort=-creatordate); do
+            if [ "$t" != "$TAG" ]; then RANGE="${t}..HEAD"; break; fi
+          done
+          CHANGELOG="$(git log --pretty=format:'%s' "$RANGE" | head -n 30)"
+
+          NOTES="Automated release built from commit ${SHA}."
+          if [ -n "$CHANGELOG" ]; then
+            NOTES="$(printf '%s\n\n%s' "$NOTES" "$CHANGELOG")"
+          fi
 
           # Replace any existing release for this commit (e.g. on workflow re-run)
           if gh release view "$TAG" >/dev/null 2>&1; then
