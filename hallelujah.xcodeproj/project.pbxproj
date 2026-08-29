@@ -29,7 +29,18 @@
 		8E90E6AE1DD558B60385D996 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4893615A9331202D81738ED2 /* Pods_Tests.framework */; };
 		DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */; };
 		E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93074B60A5C264700470842 /* InputMethodKit.framework */; };
-		54F223488F57480B9C7F6FA2 /* pinyin_data.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 04176E6F301C43B4BEFC0BD0 /* pinyin_data.sqlite3 */; };
+		7A1E00000000000000000001 /* RimeEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000012 /* RimeEngine.mm */; };
+		7A1E00000000000000000002 /* RimeKeymap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000014 /* RimeKeymap.mm */; };
+		7A1E00000000000000000003 /* TestRimeEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000015 /* TestRimeEngine.mm */; };
+		7A1E00000000000000000004 /* RimeEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000012 /* RimeEngine.mm */; };
+		7A1E00000000000000000005 /* RimeKeymap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000014 /* RimeKeymap.mm */; };
+		7A1E00000000000000000006 /* librime.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000016 /* librime.1.dylib */; };
+		7A1E00000000000000000008 /* librime.1.dylib in Embed Frameworks */ = {
+			isa = PBXBuildFile;
+			fileRef = 7A1E00000000000000000016 /* librime.1.dylib */;
+			settings = {attributes = (CodeSignOnCopy, ); };
+		};
+		7A1E00000000000000000007 /* rime-data in Copy rime data */ = {isa = PBXBuildFile; fileRef = 7A1E00000000000000000017 /* rime-data */; };
 		F102C5A61F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */; };
 		F102C5AA1F4882C80005B03F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5A91F4882C80005B03F /* main.mm */; };
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
@@ -83,7 +94,13 @@
 		C821F631E5B6762735CA76CB /* Pods-hallelujah.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hallelujah.release.xcconfig"; path = "Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah.release.xcconfig"; sourceTree = "<group>"; };
 		C82BE1A7E1A45D2695354D87 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E93074B60A5C264700470842 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = /System/Library/Frameworks/InputMethodKit.framework; sourceTree = "<absolute>"; };
-		04176E6F301C43B4BEFC0BD0 /* pinyin_data.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = pinyin_data.sqlite3; path = dictionary/pinyin_data.sqlite3; sourceTree = "<group>"; };
+		7A1E00000000000000000011 /* RimeEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RimeEngine.h; path = src/RimeEngine.h; sourceTree = "<group>"; };
+		7A1E00000000000000000012 /* RimeEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RimeEngine.mm; path = src/RimeEngine.mm; sourceTree = "<group>"; };
+		7A1E00000000000000000013 /* RimeKeymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RimeKeymap.h; path = src/RimeKeymap.h; sourceTree = "<group>"; };
+		7A1E00000000000000000014 /* RimeKeymap.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RimeKeymap.mm; path = src/RimeKeymap.mm; sourceTree = "<group>"; };
+		7A1E00000000000000000015 /* TestRimeEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestRimeEngine.mm; sourceTree = "<group>"; };
+		7A1E00000000000000000016 /* librime.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = compiled.mach-o.dylib; name = librime.1.dylib; path = librime/dist/lib/librime.1.dylib; sourceTree = "<group>"; };
+		7A1E00000000000000000017 /* rime-data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = rime-data; path = rime-data; sourceTree = "<group>"; };
 		F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = words_with_frequency_and_translation_and_ipa.sqlite3; path = dictionary/words_with_frequency_and_translation_and_ipa.sqlite3; sourceTree = "<group>"; };
 		F102C5A91F4882C80005B03F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = "<group>"; };
 		F102C5AB1F4882D30005B03F /* InputController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InputController.mm; path = src/InputController.mm; sourceTree = "<group>"; };
@@ -113,7 +130,30 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				E93074B70A5C264700470842 /* InputMethodKit.framework in Frameworks */,
 				DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */,
+				7A1E00000000000000000006 /* librime.1.dylib in Frameworks */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A1E00000000000000000021 /* Copy rime data */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 12;
+			files = (
+				7A1E00000000000000000007 /* rime-data in Copy rime data */,
+			);
+			name = "Copy rime data";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A1E00000000000000000022 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7A1E00000000000000000008 /* librime.1.dylib in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -124,6 +164,10 @@
 			children = (
 				386E1BFC22DC5A54000C6DCF /* ConversionEngine.h */,
 				386E1BFF22DC5E9B000C6DCF /* ConversionEngine.mm */,
+				7A1E00000000000000000011 /* RimeEngine.h */,
+				7A1E00000000000000000012 /* RimeEngine.mm */,
+				7A1E00000000000000000013 /* RimeKeymap.h */,
+				7A1E00000000000000000014 /* RimeKeymap.mm */,
 				381CD8C422C60D610098764F /* WebServer.h */,
 				381CD8C522C60D610098764F /* WebServer.m */,
 				389468D41F57C8CE00EF1F5E /* InputApplicationDelegate.h */,
@@ -186,7 +230,6 @@
 				F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */,
 				3817857A22D0E2240091268E /* phonex.js */,
 				3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */,
-				04176E6F301C43B4BEFC0BD0 /* pinyin_data.sqlite3 */,
 				F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */,
 				38DD40191F5800A400A276CB /* PreferencesMenu.xib */,
 				389468CA1F56A34A00EF1F5E /* web */,
@@ -204,6 +247,8 @@
 				3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */,
 				38A9EAC622CB424F003CCF52 /* Carbon.framework */,
 				0D29160719519CE500C4CE58 /* AppKit.framework */,
+				7A1E00000000000000000016 /* librime.1.dylib */,
+				7A1E00000000000000000017 /* rime-data */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 				5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */,
@@ -216,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				3833665822DD6F45004BA2D1 /* TestConversionEngine.mm */,
+				7A1E00000000000000000015 /* TestRimeEngine.mm */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -272,6 +318,8 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				7A1E00000000000000000021 /* Copy rime data */,
+				7A1E00000000000000000022 /* Embed Frameworks */,
 				8564A7C414FB3688218ABA3D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -336,7 +384,6 @@
 				38788DC9231EA73C0005685A /* cedict.json in Resources */,
 				3817857B22D0E2240091268E /* phonex.js in Resources */,
 				389468CB1F56A34A00EF1F5E /* web in Resources */,
-				54F223488F57480B9C7F6FA2 /* pinyin_data.sqlite3 in Resources */,
 				F102C5A61F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */,
 				0D2BFD8F194588F400DE18D9 /* Images.xcassets in Resources */,
 				38DD401A1F5800A400A276CB /* PreferencesMenu.xib in Resources */,
@@ -438,6 +485,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3833665922DD6F45004BA2D1 /* TestConversionEngine.mm in Sources */,
+				7A1E00000000000000000003 /* TestRimeEngine.mm in Sources */,
+				7A1E00000000000000000004 /* RimeEngine.mm in Sources */,
+				7A1E00000000000000000005 /* RimeKeymap.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +502,8 @@
 				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
 				381CD8C622C60D610098764F /* WebServer.m in Sources */,
 				386E1C0022DC5E9C000C6DCF /* ConversionEngine.mm in Sources */,
+				7A1E00000000000000000001 /* RimeEngine.mm in Sources */,
+				7A1E00000000000000000002 /* RimeKeymap.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,11 +573,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/MDCDamerauLevenshtein/MDCDamerauLevenshtein.framework/Headers\"",
+					"$(SRCROOT)/librime/dist/include",
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/librime/dist/lib";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				OTHER_LDFLAGS = ("$(inherited)", "-lrime.1");
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = us.erlang.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -565,11 +620,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/MDCDamerauLevenshtein/MDCDamerauLevenshtein.framework/Headers\"",
+					"$(SRCROOT)/librime/dist/include",
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/librime/dist/lib";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = ("$(inherited)", "-lrime.1");
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = us.erlang.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -589,8 +647,11 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/librime/dist/include";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/librime/dist/lib";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;
 				PRODUCT_NAME = hallelujah;
@@ -609,8 +670,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/librime/dist/include";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "\"$(LOCAL_LIBRARY_DIR)/Input Methods/\"";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/librime/dist/lib";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = github.dongyuwei.inputmethod.hallelujahInputMethod;

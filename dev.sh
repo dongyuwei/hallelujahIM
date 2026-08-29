@@ -1,6 +1,8 @@
 echo "Usage: sudo sh dev.sh"
 echo "You may need to clean the dir: `rm -rf ~/.hallelujah`"
 
+sh scripts/get-librime.sh
+
 mkdir -p ${HOME}/.hallelujah/debug
 xcodebuild -workspace hallelujah.xcworkspace/ -scheme hallelujah -configuration Release CONFIGURATION_BUILD_DIR=${HOME}/.hallelujah/debug
 pkill -9 hallelujah

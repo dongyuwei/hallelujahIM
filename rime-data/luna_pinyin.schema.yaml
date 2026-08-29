@@ -1,0 +1,140 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: luna_pinyin
+  name: 朙月拼音
+  version: '0.31'
+  author:
+    - 佛振 <chen.sst@gmail.com>
+  description: |
+    Rime 預設的拼音輸入方案。
+    參考以下作品而創作：
+      * CC-CEDICT
+      * Android open source project
+      * Chewing - 新酷音
+      * opencc - 開放中文轉換
+  dependencies:
+    - stroke
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+    abbrev: [ 中, Ａ ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - options:
+      - zh_hant
+      - zh_hans
+      - zh_hant_hk
+      - zh_hant_tw
+    states:
+      - 傳統漢字
+      - 简化字
+      - 香港字形
+      - 臺灣字形
+    abbrev: [ 漢, 简, 港, 臺 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator@custom_phrase
+    - reverse_lookup_translator
+    - script_translator
+  filters:
+    - simplifier@zh_hans
+    - simplifier@zh_hant_hk
+    - simplifier@zh_hant_tw
+    - uniquifier
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    __patch:
+      - pinyin:/abbreviation
+      - pinyin:/spelling_correction
+      - pinyin:/key_correction
+
+translator:
+  dictionary: luna_pinyin
+  preedit_format:
+    - xform/([nl])v/$1ü/
+    - xform/([nl])ue/$1üe/
+    - xform/([jqxy])v/$1u/
+
+custom_phrase:
+  dictionary: ""
+  user_dict: custom_phrase
+  db_class: stabledb
+  enable_completion: false
+  enable_sentence: false
+  initial_quality: 1
+
+reverse_lookup:
+  dictionary: stroke
+  enable_completion: true
+  prefix: "`"
+  suffix: "'"
+  tips: 〔筆畫〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+  comment_format:
+    - xform/([nl])v/$1ü/
+
+punctuator:
+  import_preset: symbols
+
+key_binder:
+  import_preset: default
+  bindings:
+    - { when: always, accept: Control+Shift+4, toggle: zh_hans }
+    - { when: always, accept: Control+Shift+dollar, toggle: zh_hans }
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: '^/([0-9]0?|[A-Za-z]+)$'
+    reverse_lookup: "`[a-z]*'?$"
+
+zh_hans:
+  option_name: zh_hans
+  opencc_config: t2s.json
+  tips: none
+  excluded_types: [ reverse_lookup ]
+
+zh_hant_hk:
+  option_name: zh_hant_hk
+  opencc_config: t2hk.json
+  tips: none
+  excluded_types: [ reverse_lookup ]
+
+zh_hant_tw:
+  option_name: zh_hant_tw
+  opencc_config: t2tw.json
+  tips: none
+  excluded_types: [ reverse_lookup ]
+
+__patch:
+  # 使用八股文語言模型
+  - grammar:/hant?
+  # 用家自選配置
+  - luna_pinyin.custom:/patch?

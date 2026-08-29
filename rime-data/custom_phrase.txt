@@ -1,0 +1,7 @@
+# Rime table
+# encoding: utf-8
+#@/db_name	custom_phrase.txt
+#@/db_type	stable
+#@/table_name	custom_phrase
+#@/sort_order	1
+#@/version	1

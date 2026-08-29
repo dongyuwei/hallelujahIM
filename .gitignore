@@ -49,3 +49,7 @@ Pods/Pods.xcodeproj/xcuserdata/yuweidong.xcuserdatad/
 *.xcuserdatad
 *.sqlite3-shm
 *.sqlite3-wal
+
+# prebuilt librime (fetched by scripts/get-librime.sh)
+librime/
+.zcode

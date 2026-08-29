@@ -12,11 +12,12 @@ pkill -9 hallelujah 2>/dev/null || true
 # remove stale per-user copy
 rm -rf "${USER_HOME}/Library/Input Methods/hallelujah.app/" 2>/dev/null || true
 
-# copy sqlite databases to writable user directory
+# copy the english dictionary to writable user directory
 DB_DIR="${USER_HOME}/Library/Application Support/hallelujah"
 mkdir -p "${DB_DIR}"
 cp "/Library/Input Methods/hallelujah.app/Contents/Resources/words_with_frequency_and_translation_and_ipa.sqlite3" "${DB_DIR}/"
-cp "/Library/Input Methods/hallelujah.app/Contents/Resources/pinyin_data.sqlite3" "${DB_DIR}/"
+# pinyin input is now backed by librime; the old pinyin db is obsolete
+rm -f "${DB_DIR}/pinyin_data.sqlite3"
 chown -R "${login_user}" "${DB_DIR}"
 
 # refresh the user's prefs cache BEFORE touching TIS so HIToolbox sees a

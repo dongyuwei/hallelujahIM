@@ -1,0 +1,12 @@
+# hallelujahIM luna_pinyin settings
+# encoding: utf-8
+
+patch:
+  # default to Simplified Chinese (index 1 of the options switch:
+  # zh_hant / zh_hans / zh_hant_hk / zh_hant_tw)
+  switches/@2/reset: 1
+
+  # drop the HK/TW variant filters so only the t2s OpenCC data is needed
+  engine/filters:
+    - simplifier@zh_hans
+    - uniquifier

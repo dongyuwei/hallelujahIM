@@ -11,7 +11,6 @@ NSDictionary *deserializeJSON(NSString *path) {
 @implementation ConversionEngine {
     FMDatabaseQueue *_dbQueue;
     FMDatabaseQueue *_subDbQueue;
-    FMDatabaseQueue *_pyDbQueue;
 }
 
 + (instancetype)sharedEngine {
@@ -27,7 +26,6 @@ NSDictionary *deserializeJSON(NSString *path) {
 
 - (void)loadPreparedData {
     [self initDatabase];
-    [self initPinyinDatabase];
     [self initSubstitutionDatabase];
     self.substitutions = [self loadSubstitutionsFromDB];
     self.pinyinDict = [self getPinyinData];
@@ -82,35 +80,6 @@ NSDictionary *deserializeJSON(NSString *path) {
     JSContext *context = [[JSContext alloc] init];
     [context evaluateScript:scriptString];
     return context[@"phonex"];
-}
-
-- (void)initPinyinDatabase {
-    NSString *supportDir = [NSString stringWithFormat:@"%@/Library/Application Support/hallelujah", NSHomeDirectory()];
-    NSString *dbPath = [supportDir stringByAppendingPathComponent:@"pinyin_data.sqlite3"];
-
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dbPath]) {
-        NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"pinyin_data" ofType:@"sqlite3"];
-        if (!sourcePath) {
-            sourcePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"pinyin_data" ofType:@"sqlite3"];
-        }
-        if (!sourcePath) {
-            NSLog(@"[Hallelujah] ERROR: pinyin_data.sqlite3 not found");
-            return;
-        }
-        [[NSFileManager defaultManager] createDirectoryAtPath:supportDir withIntermediateDirectories:YES attributes:nil error:nil];
-        NSError *error = nil;
-        [[NSFileManager defaultManager] copyItemAtPath:sourcePath toPath:dbPath error:&error];
-        if (error) {
-            NSLog(@"[Hallelujah] ERROR: Failed to copy pinyin database: %@", error.localizedDescription);
-            return;
-        }
-        NSLog(@"[Hallelujah] Copied pinyin database to user directory: %@", dbPath);
-    }
-
-    _pyDbQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
-    if (!_pyDbQueue) {
-        NSLog(@"[Hallelujah] ERROR: Failed to open pinyin database at %@", dbPath);
-    }
 }
 
 - (void)initSubstitutionDatabase {
@@ -372,30 +341,6 @@ NSDictionary *deserializeJSON(NSString *path) {
             }
             [rs close];
         }
-    }];
-
-    return [results copy];
-}
-
-- (NSArray *)fetchHanZiByPinyinWithPrefix:(NSString *)prefix {
-    if (!_pyDbQueue || !prefix || prefix.length == 0)
-        return @[];
-
-    NSString *lowerPrefix = prefix.lowercaseString;
-    __block NSMutableArray *results = [NSMutableArray array];
-
-    [_pyDbQueue inDatabase:^(FMDatabase *db) {
-        NSString *sql = @"SELECT hz FROM pinyin_data WHERE py LIKE ? OR abbr LIKE ? "
-                        @"ORDER BY CASE WHEN py = ? OR abbr = ? THEN 0 ELSE 1 END, freq DESC LIMIT 20";
-        NSString *pattern = [NSString stringWithFormat:@"%@%%", lowerPrefix];
-        FMResultSet *rs = [db executeQuery:sql, pattern, pattern, lowerPrefix, lowerPrefix];
-        while ([rs next]) {
-            NSString *hz = [rs stringForColumn:@"hz"];
-            if (hz && hz.length > 0 && ![results containsObject:hz]) {
-                [results addObject:hz];
-            }
-        }
-        [rs close];
     }];
 
     return [results copy];

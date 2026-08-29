@@ -12,6 +12,8 @@
     NSMutableArray *_candidates;
     BOOL _defaultEnglishMode;
     BOOL _pinyinMode;
+    NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet
+    NSInteger _panelHighlight; // candidate row mirrored from Rime's highlight
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];

@@ -4,10 +4,13 @@
 #import "InputApplicationDelegate.h"
 #import "InputController.h"
 #import "NSScreen+PointConversion.h"
+#import "RimeEngine.h"
+#import "RimeKeymap.h"
 
 extern IMKCandidates *sharedCandidates;
 extern NSUserDefaults *preference;
 extern ConversionEngine *engine;
+extern RimeEngine *rimeEngine;
 
 #define MAX_RECENT_WORDS 4
 
@@ -39,18 +42,23 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         // Right Command key: toggle pinyin mode
         if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && event.keyCode == KEY_RIGHT_COMMAND) {
             _pinyinMode = !_pinyinMode;
-            NSString *bufferedText = [self originalBuffer];
-            if (bufferedText && bufferedText.length > 0) {
-                [self cancelComposition];
-                if (_pinyinMode) {
-                    // committing what was typed so far without space before entering pinyin mode
-                    [self commitCompositionWithoutSpace:sender];
-                } else {
-                    // committing hanzi without space before going back to english mode
+            if (_pinyinMode) {
+                // commit what was typed in english mode so far before entering pinyin mode
+                NSString *bufferedText = [self originalBuffer];
+                if (bufferedText && bufferedText.length > 0) {
+                    [self cancelComposition];
                     [self commitCompositionWithoutSpace:sender];
                 }
+                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+            } else {
+                // flush rime's unconverted input as plain text before going back to english mode
+                NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+                if (rawInput.length > 0) {
+                    [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+                }
             }
-            [self resetContext];
+            [self reset];
         }
 
         if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && _lastModifiers[1] == NSEventModifierFlagShift &&
@@ -72,14 +80,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             break;
         }
 
-        if (_pinyinMode && [self isPinyinChar:event]) {
-            handled = [self onPinyinKeyEvent:event client:sender];
-            break;
-        }
-
         // ignore Command+X hotkeys.
         if (modifiers & NSEventModifierFlagCommand)
             break;
+
+        if (_pinyinMode) {
+            handled = [self onRimeKeyEvent:event client:sender];
+            break;
+        }
 
         if (modifiers & NSEventModifierFlagOption) {
             return false;
@@ -102,80 +110,75 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return handled;
 }
 
-- (BOOL)isPinyinChar:(NSEvent *)event {
-    NSString *characters = event.characters;
-    if (!characters || characters.length == 0)
+- (BOOL)onRimeKeyEvent:(NSEvent *)event client:(id)sender {
+    _currentClient = sender;
+
+    if (_rimeSession == 0 || ![rimeEngine sessionAlive:(RimeSessionId)_rimeSession]) {
+        _rimeSession = [rimeEngine createSession];
+    }
+    if (_rimeSession == 0) {
         return NO;
-    char ch = [characters characterAtIndex:0];
-    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+    }
+
+    int keycode = [RimeKeymap rimeKeycodeForKeyCode:event.keyCode
+                                          character:event.charactersIgnoringModifiers
+                                      modifierFlags:event.modifierFlags];
+    if (keycode == RimeXK_VoidSymbol) {
+        return NO;
+    }
+    int mask = [RimeKeymap rimeMaskForModifiers:event.modifierFlags];
+    BOOL handled = [rimeEngine processKey:(RimeSessionId)_rimeSession keycode:keycode mask:mask];
+    [self rimeUpdate:sender];
+    return handled;
 }
 
-- (BOOL)onPinyinKeyEvent:(NSEvent *)event client:(id)sender {
-    _currentClient = sender;
-    NSInteger keyCode = event.keyCode;
-    NSString *characters = event.characters;
-
-    NSString *bufferedText = [self originalBuffer];
-    bool hasBufferedText = bufferedText && bufferedText.length > 0;
-
-    if (keyCode == KEY_DELETE) {
-        if (hasBufferedText) {
-            return [self deleteBackward:sender];
-        }
-        return NO;
+// Single refresh point after every processed key: deliver pending commit,
+// mirror Rime's preedit into inline marked text, and feed the candidate panel
+// with the current page of candidates.
+- (void)rimeUpdate:(id)sender {
+    NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
+    if (commitText.length > 0) {
+        [sender insertText:commitText replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
     }
 
-    if (keyCode == KEY_SPACE) {
-        if (hasBufferedText) {
-            [self commitCompositionWithoutSpace:sender];
-            return YES;
-        }
-        return NO;
+    NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
+    _candidates = [NSMutableArray array];
+    for (RimeCandidateItem *candidate in rimeCandidates) {
+        [_candidates addObject:candidate.text];
     }
 
-    if (keyCode == KEY_RETURN) {
-        if (hasBufferedText) {
-            [self commitCompositionWithoutSpace:sender];
-            return YES;
-        }
-        return NO;
+    NSInteger selStart = 0, selLength = 0, caretPos = 0;
+    NSString *preedit = [rimeEngine preedit:(RimeSessionId)_rimeSession selStart:&selStart selLength:&selLength caretPos:&caretPos];
+    if (preedit.length == 0) {
+        [sharedCandidates hide];
+        _panelHighlight = 0;
+        return;
     }
 
-    if (keyCode == KEY_ESC) {
-        [self cancelComposition];
-        [self reset];
-        [self resetContext];
-        return YES;
+    [sharedCandidates clearSelection];
+    [sharedCandidates updateCandidates];
+    [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+    // mirror Rime's highlighted candidate in the panel
+    NSInteger highlighted = [rimeEngine highlightedIndex:(RimeSessionId)_rimeSession];
+    if (highlighted < 0) {
+        highlighted = 0;
+    }
+    while (_panelHighlight < highlighted) {
+        [sharedCandidates moveDown:self];
+        _panelHighlight++;
+    }
+    while (_panelHighlight > highlighted) {
+        [sharedCandidates moveUp:self];
+        _panelHighlight--;
     }
 
-    char ch = [characters characterAtIndex:0];
-    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-        [self originalBufferAppend:characters client:sender];
-        [sharedCandidates updateCandidates];
-        [sharedCandidates show:kIMKLocateCandidatesBelowHint];
-        return YES;
+    NSDictionary *rawAttrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, preedit.length)];
+    NSDictionary *convertedAttrs = [self markForStyle:kTSMHiliteConvertedText atRange:NSMakeRange(0, preedit.length)];
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:preedit attributes:rawAttrs];
+    if (selLength > 0) {
+        [attrString setAttributes:convertedAttrs range:NSMakeRange(selStart, selLength)];
     }
-
-    if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
-        if (hasBufferedText && [sharedCandidates isVisible]) {
-            int pressedNumber = characters.intValue;
-            NSString *candidate;
-            int pageSize = 9;
-            if (_currentCandidateIndex <= pageSize) {
-                candidate = _candidates[pressedNumber - 1];
-            } else {
-                candidate = _candidates[pageSize * (_currentCandidateIndex / pageSize - 1) + (_currentCandidateIndex % pageSize) +
-                                        pressedNumber - 1];
-            }
-            [self cancelComposition];
-            [self setComposedBuffer:candidate];
-            [self setOriginalBuffer:candidate];
-            [self commitCompositionWithoutSpace:sender];
-            return YES;
-        }
-    }
-
-    return NO;
+    [_currentClient setMarkedText:attrString selectionRange:NSMakeRange(caretPos, 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
 - (BOOL)onKeyEvent:(NSEvent *)event client:(id)sender {
@@ -310,6 +313,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)commitComposition:(id)sender {
+    if (_pinyinMode) {
+        // server-driven commit (e.g. focus loss): flush the unconverted input
+        NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+        [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+        if (rawInput.length > 0) {
+            [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+        }
+        [self reset];
+        return;
+    }
+
     NSString *text = [self composedBuffer];
 
     if (text == nil || text.length == 0) {
@@ -450,13 +464,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *originalInput = [self originalBuffer];
 
     if (_pinyinMode) {
-        NSArray *hanziList = [engine fetchHanZiByPinyinWithPrefix:originalInput];
-        if (hanziList.count == 0) {
-            _candidates = [NSMutableArray arrayWithArray:@[ originalInput ]];
-            return @[ originalInput ];
-        }
-        _candidates = [NSMutableArray arrayWithArray:hanziList];
-        return hanziList;
+        // candidates are refreshed by rimeUpdate after each processed key
+        return _candidates;
     }
 
     NSArray *candidateList = [engine getCandidates:originalInput];
@@ -482,6 +491,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
+    if (_pinyinMode) {
+        // the panel highlight mirrors Rime's own highlight; nothing to sync here
+        return;
+    }
+
     [self _updateComposedBuffer:candidateString];
 
     [self showPreeditString:candidateString.string];
@@ -495,6 +509,15 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)candidateSelected:(NSAttributedString *)candidateString {
+    if (_pinyinMode) {
+        NSUInteger index = [_candidates indexOfObject:candidateString.string];
+        if (index != NSNotFound) {
+            [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:index];
+            [self rimeUpdate:_currentClient];
+        }
+        return;
+    }
+
     [self _updateComposedBuffer:candidateString];
 
     [self commitComposition:_currentClient];
@@ -517,6 +540,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)deactivateServer:(id)sender {
+    [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
     [self reset];
     [self resetContext];
 }

@@ -108,26 +108,12 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
    CREATE INDEX idx_ngrams_context ON ngrams(n, context);
    ```
 
-2. **Pinyin database**: `~/Library/Application Support/hallelujah/pinyin_data.sqlite3`
-   - Contains ~55,320 pinyin→hanzi mappings based on the Google Pinyin dictionary
+2. **Pinyin engine (librime)**: the pinyin input mode is powered by [librime](https://github.com/rime/librime)
+   - Uses the luna_pinyin (朙月拼音) schema, Simplified Chinese output by default (OpenCC t2s)
    - Switch to pinyin mode via right Command key
-   - Supports both full pinyin and initial-letter abbreviations
-   - Results ranked by frequency
-   - Auto-copied from the app bundle during install
-
-   Schema:
-
-   ```sql
-   CREATE TABLE pinyin_data (
-       id INTEGER PRIMARY KEY AUTOINCREMENT,
-       hz TEXT NOT NULL,      -- Chinese hanzi
-       py TEXT NOT NULL,      -- Full pinyin
-       abbr TEXT NOT NULL,    -- Pinyin initial abbreviation
-       freq REAL NOT NULL     -- Frequency score
-   );
-   CREATE INDEX idx_pinyin ON pinyin_data(py);
-   CREATE INDEX idx_abbr ON pinyin_data(abbr);
-   ```
+   - Schema and dictionary data live in the app bundle at `Contents/SharedSupport/rime-data/`
+   - Deployment runs automatically on first launch (artifacts go to `~/Library/Application Support/hallelujah/rime/`)
+   - librime is a prebuilt universal library, downloaded and embedded via `scripts/get-librime.sh`
 
 3. **Substitutions database**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
    - Stores user-defined Text-Expander substitution rules
@@ -147,7 +133,7 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 1. [FMDB](https://github.com/ccgus/fmdb), SQLite wrapper for efficient prefix matching queries.
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)
-3. dictionary/pinyin_data.sqlite3 derived from Google Pinyin raw dict (65,105 entries), pinyin→hanzi mappings.
+3. [librime](https://github.com/rime/librime) / [rime-prelude](https://github.com/rime/rime-prelude) / [rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin) / [rime-stroke](https://github.com/rime/rime-stroke) / [rime-essay](https://github.com/rime/rime-essay) / [OpenCC](https://github.com/BYVoid/OpenCC), powering the pinyin input mode via the Rime engine.
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
 5. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.

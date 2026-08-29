@@ -146,26 +146,12 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
    CREATE INDEX idx_ngrams_context ON ngrams(n, context);
    ```
 
-2. **拼音数据库**: `~/Library/Application Support/hallelujah/pinyin_data.sqlite3`
-   - 包含约 55,320 条拼音→汉字映射，基于 Google 拼音词库
+2. **拼音引擎（librime）**: 拼音输入模式由 [librime](https://github.com/rime/librime) 驱动
+   - 使用「朙月拼音」(luna_pinyin) 方案，默认输出简体中文（OpenCC t2s 转换）
    - 通过右 Command 键切换到拼音输入模式
-   - 支持完整拼音和首字母缩写两种输入方式
-   - 候选项按词频排序
-   - 安装时从 app bundle 自动复制到用户目录
-
-   表结构：
-
-   ```sql
-   CREATE TABLE pinyin_data (
-       id INTEGER PRIMARY KEY AUTOINCREMENT,
-       hz TEXT NOT NULL,      -- 汉字
-       py TEXT NOT NULL,      -- 完整拼音
-       abbr TEXT NOT NULL,    -- 拼音首字母缩写
-       freq REAL NOT NULL     -- 词频
-   );
-   CREATE INDEX idx_pinyin ON pinyin_data(py);
-   CREATE INDEX idx_abbr ON pinyin_data(abbr);
-   ```
+   - 方案与词典数据位于 app bundle 内 `Contents/SharedSupport/rime-data/`
+   - 首次启动时自动部署（编译产物写入 `~/Library/Application Support/hallelujah/rime/`）
+   - librime 为预编译 universal 库，通过 `scripts/get-librime.sh` 下载并嵌入 app bundle
 
 3. **自定义替换数据库**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
    - 存储用户自定义的 Text-Expander 替换规则
@@ -185,7 +171,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 1. [FMDB](https://github.com/ccgus/fmdb)，SQLite 数据库封装库，用于高效的前缀匹配查询。
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)，拼音-英语词库。
-3. dictionary/pinyin_data.sqlite3 基于 Google 拼音词库 (65,105 条原始数据)，拼音-汉字映射。
+3. [librime](https://github.com/rime/librime) / [rime-prelude](https://github.com/rime/rime-prelude) / [rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin) / [rime-stroke](https://github.com/rime/rime-stroke) / [rime-essay](https://github.com/rime/rime-essay) / [OpenCC](https://github.com/BYVoid/OpenCC)，拼音输入模式由 Rime 引擎驱动。
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA， 国际音标。
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)，用于用户使用偏好配置。
 5. [talisman](https://github.com/Yomguithereal/talisman)，使用其中的 phonex 算法，实现模糊近似音输入。

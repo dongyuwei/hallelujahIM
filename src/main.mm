@@ -1,4 +1,5 @@
 #import "ConversionEngine.h"
+#import "RimeEngine.h"
 #import "WebServer.h"
 #import <Carbon/Carbon.h>
 #import <Cocoa/Cocoa.h>
@@ -6,6 +7,7 @@
 
 NSUserDefaults *preference;
 ConversionEngine *engine;
+RimeEngine *rimeEngine;
 
 IMKCandidates *sharedCandidates;
 
@@ -82,6 +84,11 @@ int main(int argc, char *argv[]) {
     IMKServer *server = [[IMKServer alloc] initWithName:connectionName bundleIdentifier:identifier];
 
     sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
+    // pinyin mode routes every key through librime first; the panel must not
+    // intercept digits/arrows before the input controller sees them
+    [sharedCandidates setAttributes:@{
+        IMKCandidatesSendServerKeyEventFirst : @YES,
+    }];
 
     if (!sharedCandidates) {
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", connectionName);
@@ -89,6 +96,11 @@ int main(int argc, char *argv[]) {
     }
 
     engine = [ConversionEngine sharedEngine];
+
+    rimeEngine = [RimeEngine sharedEngine];
+    NSString *sharedDataDir = [[[NSBundle mainBundle] sharedSupportPath] stringByAppendingPathComponent:@"rime-data"];
+    NSString *userDataDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/hallelujah/rime"];
+    [rimeEngine startWithSharedDataDir:sharedDataDir userDataDir:userDataDir];
 
     [[NSBundle mainBundle] loadNibNamed:@"AnnotationWindow" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
@@ -99,5 +111,6 @@ int main(int argc, char *argv[]) {
     [[WebServer sharedServer] start];
 
     [[NSApplication sharedApplication] run];
+    [rimeEngine shutdown];
     return 0;
 }

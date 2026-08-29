@@ -1,0 +1,10 @@
+# hallelujahIM Rime settings
+# encoding: utf-8
+
+patch:
+  # pinyin mode only ships luna_pinyin; keep the switcher from listing other schemas
+  schema_list:
+    - schema: luna_pinyin
+
+  # IMKCandidates shows 9 candidates per page
+  menu/page_size: 9

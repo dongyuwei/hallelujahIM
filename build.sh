@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# pinyin mode needs librime; fetch the pinned prebuild if it is not there yet
+sh scripts/get-librime.sh
+
 xcodebuild -version
 clang -v
 rm -rf /tmp/hallelujah

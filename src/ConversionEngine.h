@@ -17,7 +17,6 @@
 - (NSArray *)getCandidates:(NSString *)originalInput;
 - (NSArray *)predictNextWordsForContext:(NSString *)context maxResults:(NSInteger)max;
 - (NSArray *)predictNextWordsForContext:(NSString *)context prefixFilter:(NSString *)prefix maxResults:(NSInteger)max;
-- (NSArray *)fetchHanZiByPinyinWithPrefix:(NSString *)prefix;
 - (NSDictionary *)getPinyinData;
 - (NSDictionary *)getPhonexEncodedWords;
 
