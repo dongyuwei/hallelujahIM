@@ -145,6 +145,24 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     // arrows move the highlight. Rime only builds the composition; the
     // Chinese rows commit through selectCandidateOnCurrentPage.
     NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+
+    // Mixed mode: punctuation follows the last committed language. After
+    // English (or before anything was committed), punctuation is passed
+    // through as-is — any pending input is flushed raw first. After Chinese,
+    // Rime converts it to full-width punctuation.
+    if ([self mixedInput] && !_lastCommittedWasChinese && event.characters.length == 1) {
+        unichar ch = [event.characters characterAtIndex:0];
+        if (([[NSCharacterSet punctuationCharacterSet] characterIsMember:ch] ||
+             [[NSCharacterSet symbolCharacterSet] characterIsMember:ch])) {
+            if (rawInput.length > 0) {
+                [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+                [self rimeUpdate:sender];
+            }
+            return NO; // let the app type the punctuation itself
+        }
+    }
+
     if (rawInput.length > 0) {
         NSString *chars = event.characters;
         if (chars.length == 1) {
