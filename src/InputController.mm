@@ -16,10 +16,15 @@ typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
 
-static BOOL ContainsHanCharacter(NSString *text) {
+// English and Chinese (half-width and full-width) punctuation each count as
+// their language for mixed mode's dynamic candidate ordering.
+static BOOL ContainsChineseCharacter(NSString *text) {
     for (NSUInteger i = 0; i < text.length; i++) {
         unichar ch = [text characterAtIndex:i];
-        if ((ch >= 0x3400 && ch <= 0x4DBF) || (ch >= 0x4E00 && ch <= 0x9FFF) || (ch >= 0xF900 && ch <= 0xFAFF)) {
+        BOOL han = (ch >= 0x3400 && ch <= 0x4DBF) || (ch >= 0x4E00 && ch <= 0x9FFF) || (ch >= 0xF900 && ch <= 0xFAFF);
+        // CJK Symbols and Punctuation (。、《》【】…) and Fullwidth Forms (，：？！…)
+        BOOL chinesePunctuation = (ch >= 0x3000 && ch <= 0x303F) || (ch >= 0xFF00 && ch <= 0xFFEF);
+        if (han || chinesePunctuation) {
             return YES;
         }
     }
@@ -273,7 +278,7 @@ static BOOL ContainsHanCharacter(NSString *text) {
     if (commitText.length > 0) {
         [sender insertText:commitText replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
         // remember the language for mixed mode's dynamic candidate ordering
-        _lastCommittedWasChinese = ContainsHanCharacter(commitText);
+        _lastCommittedWasChinese = ContainsChineseCharacter(commitText);
     }
 
     NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
