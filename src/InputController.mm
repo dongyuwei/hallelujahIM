@@ -16,7 +16,7 @@ extern RimeEngine *rimeEngine;
 
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
-                     KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
+                     KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
 
 @interface InputController ()
 
@@ -149,6 +149,16 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         if (event.keyCode == KEY_ARROW_UP && [self moveCandidateSelection:NO sender:sender]) {
             return YES;
+        }
+        // the horizontal panel lays candidates out in a row: left/right move
+        // the selection there (vertical mode keeps them for Rime's caret)
+        if ([preference boolForKey:@"candidateHorizontal"]) {
+            if (event.keyCode == KEY_ARROW_RIGHT && [self moveCandidateSelection:YES sender:sender]) {
+                return YES;
+            }
+            if (event.keyCode == KEY_ARROW_LEFT && [self moveCandidateSelection:NO sender:sender]) {
+                return YES;
+            }
         }
     }
 

@@ -71,8 +71,16 @@ void initPreference() {
 }
 
 static void applyCandidatePanelType(void) {
-    [sharedCandidates setPanelType:([preference boolForKey:@"candidateHorizontal"] ? kIMKSingleRowSteppingCandidatePanel
-                                                                                   : kIMKSingleColumnScrollingCandidatePanel)];
+    BOOL horizontal = [preference boolForKey:@"candidateHorizontal"];
+    [sharedCandidates setPanelType:(horizontal ? kIMKSingleRowSteppingCandidatePanel : kIMKSingleColumnScrollingCandidatePanel)];
+    // the single-row panel only fits all 9 columns with a compact font
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[sharedCandidates attributes]];
+    if (horizontal) {
+        attributes[NSFontAttributeName] = [NSFont systemFontOfSize:13];
+    } else {
+        [attributes removeObjectForKey:NSFontAttributeName];
+    }
+    [sharedCandidates setAttributes:attributes];
 }
 
 int main(int argc, char *argv[]) {
