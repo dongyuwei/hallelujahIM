@@ -120,9 +120,25 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return NO;
     }
 
-    int keycode = [RimeKeymap rimeKeycodeForKeyCode:event.keyCode
-                                          character:event.charactersIgnoringModifiers
-                                      modifierFlags:event.modifierFlags];
+    // Pick the character to translate: with only shift/caps held, punctuation
+    // keys must use the shifted character (shift+; -> ':'), because librime's
+    // punctuator matches on the raw keysym and ignores the shift mask. With
+    // other modifiers, non-ASCII characters (e.g. option combos) keep their
+    // composed character. Mirrors Squirrel's SquirrelInputController logic.
+    NSString *keyChars = event.charactersIgnoringModifiers;
+    NSEventModifierFlags relevantModifiers =
+        event.modifierFlags & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock | NSEventModifierFlagControl |
+                               NSEventModifierFlagOption | NSEventModifierFlagCommand);
+    BOOL capitalModifiersOnly = (relevantModifiers & ~(NSEventModifierFlagShift | NSEventModifierFlagCapsLock)) == 0;
+    if (keyChars.length > 0) {
+        unichar first = [keyChars characterAtIndex:0];
+        BOOL isLetter = [[NSCharacterSet letterCharacterSet] characterIsMember:first];
+        if ((capitalModifiersOnly && !isLetter) || (!capitalModifiersOnly && first > 0x7f)) {
+            keyChars = event.characters;
+        }
+    }
+
+    int keycode = [RimeKeymap rimeKeycodeForKeyCode:event.keyCode character:keyChars modifierFlags:event.modifierFlags];
     if (keycode == RimeXK_VoidSymbol) {
         return NO;
     }

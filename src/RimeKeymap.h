@@ -20,6 +20,7 @@ static const int RimeXK_minus = 0x002d;
 static const int RimeXK_period = 0x002e;
 static const int RimeXK_slash = 0x002f;
 static const int RimeXK_semicolon = 0x03b;
+static const int RimeXK_colon = 0x03a;
 static const int RimeXK_equal = 0x03d;
 static const int RimeXK_a = 0x061;
 static const int RimeXK_z = 0x07a;

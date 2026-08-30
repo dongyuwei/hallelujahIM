@@ -66,6 +66,20 @@ static int KeySymForChar(char c) {
     XCTAssertEqual([RimeKeymap rimeKeycodeForKeyCode:kVK_Escape character:@"" modifierFlags:0], RimeXK_Escape);
 }
 
+- (void)testShiftedPunctuationUsesShiftedCharacter {
+    // shift+; must arrive as the colon keysym, the way X11 reports it;
+    // librime's punctuator matches on the raw keysym and ignores the mask
+    int colon = [RimeKeymap rimeKeycodeForKeyCode:kVK_ANSI_Semicolon character:@":" modifierFlags:NSEventModifierFlagShift];
+    XCTAssertEqual(colon, RimeXK_colon);
+    int plain = [RimeKeymap rimeKeycodeForKeyCode:kVK_ANSI_Semicolon character:@";" modifierFlags:0];
+    XCTAssertEqual(plain, RimeXK_semicolon);
+}
+
+- (void)testColonCommitsChineseColon {
+    XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_colon mask:RimeShiftMask]);
+    XCTAssertEqualObjects([self.engine commitText:self.session], @"：");
+}
+
 - (void)testPinyinCandidates {
     [self type:@"nihao"];
     NSArray<RimeCandidateItem *> *candidates = [self.engine candidates:self.session];
