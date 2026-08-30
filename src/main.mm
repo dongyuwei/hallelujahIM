@@ -60,27 +60,8 @@ void deactivateInputSource() {
 
 void initPreference() {
     preference = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultPrefs = @{
-        @"commitWordWithSpace" : @YES,
-        @"showTranslation" : @YES,
-        @"enableNextWordPrediction" : @NO,
-        @"mixedInput" : @NO,
-        @"candidateHorizontal" : @NO
-    };
+    NSDictionary *defaultPrefs = @{@"commitWordWithSpace" : @YES, @"showTranslation" : @YES, @"mixedInput" : @NO};
     [preference registerDefaults:defaultPrefs];
-}
-
-static void applyCandidatePanelType(void) {
-    BOOL horizontal = [preference boolForKey:@"candidateHorizontal"];
-    [sharedCandidates setPanelType:(horizontal ? kIMKSingleRowSteppingCandidatePanel : kIMKSingleColumnScrollingCandidatePanel)];
-    // the single-row panel only fits all 9 columns with a compact font
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[sharedCandidates attributes]];
-    if (horizontal) {
-        attributes[NSFontAttributeName] = [NSFont systemFontOfSize:13];
-    } else {
-        [attributes removeObjectForKey:NSFontAttributeName];
-    }
-    [sharedCandidates setAttributes:attributes];
 }
 
 int main(int argc, char *argv[]) {
@@ -126,15 +107,6 @@ int main(int argc, char *argv[]) {
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
     initPreference();
-
-    // follow the candidate-panel orientation preference live
-    applyCandidatePanelType();
-    [[NSNotificationCenter defaultCenter] addObserverForName:NSUserDefaultsDidChangeNotification
-                                                      object:nil
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      applyCandidatePanelType();
-                                                  }];
 
     [[WebServer sharedServer] start];
 

@@ -15,8 +15,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 5. Pinyin to English: you can input Hanyu Pinyin and receive the matching English word.
 6. Fuzzy phonetic match is another feature. For example, you can input `cerrage` or `kerrage` to get `courage`, and `aosome` or `ausome` to get `awesome`.
 7. You can switch to the default English input mode (the normal, quiet, or silent mode) by pressing the **right shift** key. Pressing shift again will switch back to the auto-suggestion mode.
-8. **Next-Word Prediction**: Based on Google Books Ngram Corpus (2010-2019) English n-gram frequency data, the input method predicts the next word as you type. For example, after typing "i do not", it prioritizes suggestions like "know", "think", and "want". This feature is default off, need to turn on it in IME preference config.
-9. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin (or initial letters) and get Chinese hanzi candidates. For example, typing `niha` or the abbreviation `nh` will show "你好" and "你还". Press right `Command` again to switch back to intelligent English input mode.
+8. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin (or initial letters) and get Chinese hanzi candidates. For example, typing `niha` or the abbreviation `nh` will show "你好" and "你还". Press right `Command` again to switch back to intelligent English input mode.
 
 # download and install
 
@@ -62,7 +61,6 @@ preferences config:<br/>
 <img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/74e9f7a3-3287-43e5-92f2-08105dc1b461" />
 
 - **Mixed Chinese/English input**: off by default. When enabled, the right-Command mode toggle is disabled; typing queries both English and Chinese candidates, each page shows up to 5 English candidates with the remaining rows filled by Chinese candidates, selectable by row number (space commits the highlighted Chinese candidate).
-- **Horizontal candidate panel**: off by default (vertical single column). When enabled, candidates display in a horizontal scrolling row.
 
 
 ## Build project
@@ -80,7 +78,6 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 1. **English word database**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
    - Contains ~140,402 English words with frequency, Chinese translation, and IPA
-   - Contains ~9,955 English n-gram (2-5 word phrase) frequency entries for next-word prediction
    - Auto-copied from the app bundle during installation
    - Used for prefix matching candidate queries
 
@@ -95,20 +92,6 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
        ipa TEXT
    );
    CREATE INDEX idx_word ON words(word);
-
-   -- N-grams table: stores 2-5 word phrase frequencies for next-word prediction
-   -- n: phrase length (2-5)
-   -- context: all words except the last (e.g., "i do not")
-   -- next_word: the last word, i.e., the predicted word (e.g., "know")
-   -- frequency: occurrence count in the Google Books corpus
-   CREATE TABLE ngrams (
-       n INTEGER NOT NULL,
-       context TEXT NOT NULL,
-       next_word TEXT NOT NULL,
-       frequency INTEGER NOT NULL,
-       PRIMARY KEY (n, context, next_word)
-   );
-   CREATE INDEX idx_ngrams_context ON ngrams(n, context);
    ```
 
 2. **Pinyin engine (librime)**: the pinyin input mode is powered by [librime](https://github.com/rime/librime)
@@ -141,7 +124,6 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
 5. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
 6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
-7. [Google Books Ngram Corpus](https://github.com/nicolas-ivanov/google-books-ngram-frequency), providing English n-gram (2-5 word phrase) frequency data for next-word prediction.
 8. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
 
 ### snapshots

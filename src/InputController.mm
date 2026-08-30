@@ -12,8 +12,6 @@ extern NSUserDefaults *preference;
 extern ConversionEngine *engine;
 extern RimeEngine *rimeEngine;
 
-#define MAX_RECENT_WORDS 4
-
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
@@ -71,7 +69,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                     [self cancelComposition];
                     [self commitComposition:sender];
                 }
-                [self resetContext];
             }
         }
         break;
@@ -149,16 +146,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         if (event.keyCode == KEY_ARROW_UP && [self moveCandidateSelection:NO sender:sender]) {
             return YES;
-        }
-        // the horizontal panel lays candidates out in a row: left/right move
-        // the selection there (vertical mode keeps them for Rime's caret)
-        if ([preference boolForKey:@"candidateHorizontal"]) {
-            if (event.keyCode == KEY_ARROW_RIGHT && [self moveCandidateSelection:YES sender:sender]) {
-                return YES;
-            }
-            if (event.keyCode == KEY_ARROW_LEFT && [self moveCandidateSelection:NO sender:sender]) {
-                return YES;
-            }
         }
     }
 
@@ -340,7 +327,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [self cancelComposition];
         [sender insertText:@""];
         [self reset];
-        [self resetContext];
         return YES;
     }
 
@@ -458,8 +444,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         text = [self originalBuffer];
     }
 
-    [self recordCommittedWord:text];
-
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
 
     if (!_pinyinMode && commitWordWithSpace && text.length > 0) {
@@ -482,8 +466,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         text = [self originalBuffer];
     }
 
-    [self recordCommittedWord:text];
-
     [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 
     [self reset];
@@ -503,38 +485,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates setCandidateData:@[]];
     [_annotationWin setAnnotation:@""];
     [_annotationWin hideWindow];
-}
-
-- (void)resetContext {
-    [_recentWords removeAllObjects];
-}
-
-- (NSString *)recentContext {
-    if (_recentWords.count == 0)
-        return nil;
-    return [_recentWords componentsJoinedByString:@" "];
-}
-
-- (void)recordCommittedWord:(NSString *)word {
-    if (!word || word.length == 0)
-        return;
-    // Only record alphabetic words
-    NSString *trimmed = [word stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    trimmed = [trimmed stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
-    if (trimmed.length == 0)
-        return;
-
-    // Check if word is purely alphabetic
-    NSCharacterSet *letters = [NSCharacterSet letterCharacterSet];
-    for (NSInteger i = 0; i < (NSInteger)trimmed.length; i++) {
-        if (![letters characterIsMember:[trimmed characterAtIndex:i]])
-            return;
-    }
-
-    [_recentWords addObject:trimmed.lowercaseString];
-    while (_recentWords.count > MAX_RECENT_WORDS) {
-        [_recentWords removeObjectAtIndex:0];
-    }
 }
 
 - (NSMutableString *)composedBuffer {
@@ -638,22 +588,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     NSArray *candidateList = [engine getCandidates:originalInput];
 
-    // Blend n-gram predictions based on recent context
-    BOOL enableNextWordPrediction = [preference boolForKey:@"enableNextWordPrediction"];
-    NSString *ctx = [self recentContext];
-    if (enableNextWordPrediction && ctx && originalInput.length > 0) {
-        NSArray *predictions = [engine predictNextWordsForContext:ctx prefixFilter:originalInput maxResults:5];
-        if (predictions.count > 0) {
-            // Always put current user input as the first candidate
-            NSMutableOrderedSet *blended = [NSMutableOrderedSet orderedSetWithObject:originalInput];
-            [blended addObjectsFromArray:predictions];
-            [blended addObjectsFromArray:candidateList];
-            NSArray *result = [blended array];
-            _candidates = [NSMutableArray arrayWithArray:result];
-            return result;
-        }
-    }
-
     _candidates = [NSMutableArray arrayWithArray:candidateList];
     return candidateList;
 }
@@ -671,12 +605,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _insertionIndex = candidateString.length;
 
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    // the annotation window is positioned against the vertical candidate
-    // frame; skip it when the horizontal panel is active
-    if (showTranslation && ![preference boolForKey:@"candidateHorizontal"]) {
+    if (showTranslation) {
         [self showAnnotation:candidateString];
-    } else {
-        [_annotationWin hideWindow];
     }
 }
 
@@ -700,13 +630,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
-    _recentWords = [[NSMutableArray alloc] init];
 }
 
 - (void)deactivateServer:(id)sender {
     [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
     [self reset];
-    [self resetContext];
 }
 
 - (NSMenu *)menu {
