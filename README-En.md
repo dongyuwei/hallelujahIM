@@ -119,11 +119,11 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 1. [FMDB](https://github.com/ccgus/fmdb), SQLite wrapper for efficient prefix matching queries.
 2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)
-3. [librime](https://github.com/rime/librime) / [rime-prelude](https://github.com/rime/rime-prelude) / [rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin) / [rime-stroke](https://github.com/rime/rime-stroke) / [rime-essay](https://github.com/rime/rime-essay) / [OpenCC](https://github.com/BYVoid/OpenCC), powering the pinyin input mode via the Rime engine.
+3. [librime](https://github.com/rime/librime), the Rime input method engine powering the pinyin mode, together with [rime-prelude](https://github.com/rime/rime-prelude), [rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin) (schema and dictionary), [rime-stroke](https://github.com/rime/rime-stroke) (stroke reverse lookup), [rime-essay](https://github.com/rime/rime-essay) (word frequencies) and [OpenCC](https://github.com/BYVoid/OpenCC) (Chinese conversion).
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA
-4. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
-5. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
-6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
+5. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
+6. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
+7. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
 8. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
 
 ### snapshots
