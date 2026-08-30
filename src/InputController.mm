@@ -671,8 +671,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _insertionIndex = candidateString.length;
 
     BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    if (showTranslation) {
+    // the annotation window is positioned against the vertical candidate
+    // frame; skip it when the horizontal panel is active
+    if (showTranslation && ![preference boolForKey:@"candidateHorizontal"]) {
         [self showAnnotation:candidateString];
+    } else {
+        [_annotationWin hideWindow];
     }
 }
 
