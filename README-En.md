@@ -15,7 +15,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 5. Pinyin to English: you can input Hanyu Pinyin and receive the matching English word.
 6. Fuzzy phonetic match is another feature. For example, you can input `cerrage` or `kerrage` to get `courage`, and `aosome` or `ausome` to get `awesome`.
 7. You can switch to the default English input mode (the normal, quiet, or silent mode) by pressing the **right shift** key. Pressing shift again will switch back to the auto-suggestion mode.
-8. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin (or initial letters) and get Chinese hanzi candidates. For example, typing `niha` or the abbreviation `nh` will show "你好" and "你还". Press right `Command` again to switch back to intelligent English input mode.
+8. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin and get Chinese hanzi candidates; `space` or a digit key commits the highlighted candidate, `Enter` commits it without a trailing space. Press right `Command` again to switch back to intelligent English input mode. With "Mixed Chinese/English input" enabled, no mode switching is needed: both English and Chinese candidates are shown per page (up to 5 rows per language block, the rest of the page filled by the other), and the blocks are ordered dynamically by the last committed language (Chinese last time puts Chinese on top, otherwise English on top).
 
 # download and install
 

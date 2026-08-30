@@ -16,6 +16,16 @@ typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
 
+static BOOL ContainsHanCharacter(NSString *text) {
+    for (NSUInteger i = 0; i < text.length; i++) {
+        unichar ch = [text characterAtIndex:i];
+        if ((ch >= 0x3400 && ch <= 0x4DBF) || (ch >= 0x4E00 && ch <= 0x9FFF) || (ch >= 0xF900 && ch <= 0xFAFF)) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @interface InputController ()
 
 @end
@@ -137,9 +147,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch] && [self onCandidateDigitKey:chars sender:sender]) {
                 return YES;
             }
-            if (ch == ' ' && [self onCandidateSpaceKey:sender]) {
+            if (ch == ' ' && [self commitHighlightedCandidateWithSpace:YES sender:sender]) {
                 return YES;
             }
+        }
+        if (event.keyCode == KEY_RETURN && [self commitHighlightedCandidateWithSpace:NO sender:sender]) {
+            return YES;
         }
         if (event.keyCode == KEY_ARROW_DOWN && [self moveCandidateSelection:YES sender:sender]) {
             return YES;
@@ -183,13 +196,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (digit < 1 || digit > 9 || digit > (int)_candidates.count) {
         return NO; // not a selectable row; let Rime/app handle the digit
     }
-    [self commitSelectedRow:digit - 1 sender:sender];
+    [self commitSelectedRow:digit - 1 withSpace:YES sender:sender];
     return YES;
 }
 
-// Space commits the highlighted row; with no candidates left, hand the key
-// back to Rime (e.g. to commit the raw input).
-- (BOOL)onCandidateSpaceKey:(id)sender {
+// Space commits the highlighted row (with the trailing-space preference);
+// Enter commits it without a trailing space. With no candidates left, hand
+// the key back to Rime (e.g. to commit the raw input).
+- (BOOL)commitHighlightedCandidateWithSpace:(BOOL)withSpace sender:(id)sender {
     if (_candidates.count == 0) {
         return NO;
     }
@@ -197,7 +211,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         row = 0;
     }
-    [self commitSelectedRow:row sender:sender];
+    [self commitSelectedRow:row withSpace:withSpace sender:sender];
     return YES;
 }
 
@@ -221,28 +235,33 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 // Commits the candidate shown on the given panel row. English rows (mixed
 // mode) go through the English commit path; Chinese rows map back to their
 // Rime page index and commit through Rime.
-- (void)commitSelectedRow:(NSInteger)row sender:(id)sender {
+- (void)commitSelectedRow:(NSInteger)row withSpace:(BOOL)withSpace sender:(id)sender {
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         return;
     }
     NSString *word = _candidates[row];
-    if ([self mixedInput] && row < _mixedEnglishCount) {
-        [self commitMixedEnglishWord:word sender:sender];
+    if ([self mixedInput] && [_mixedRowIsEnglish[row] boolValue]) {
+        [self commitEnglishCandidateWord:word withSpace:withSpace sender:sender];
         return;
     }
     NSInteger rimeIndex = row;
     if ([self mixedInput]) {
-        rimeIndex = [_mixedChineseRimeIndexes[row - _mixedEnglishCount] integerValue];
+        rimeIndex = [_mixedRowRimeIndexes[row] integerValue];
     }
     [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:rimeIndex];
     [self rimeUpdate:sender];
 }
 
-- (void)commitMixedEnglishWord:(NSString *)word sender:(id)sender {
+- (void)commitEnglishCandidateWord:(NSString *)word withSpace:(BOOL)withSpace sender:(id)sender {
     [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
     [self setComposedBuffer:word];
     [self setOriginalBuffer:word];
-    [self commitEnglishComposition:sender];
+    if (withSpace) {
+        [self commitEnglishComposition:sender];
+    } else {
+        [self commitCompositionWithoutSpace:sender];
+    }
+    _lastCommittedWasChinese = NO;
     [self rimeUpdate:sender];
 }
 
@@ -253,6 +272,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
         [sender insertText:commitText replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+        // remember the language for mixed mode's dynamic candidate ordering
+        _lastCommittedWasChinese = ContainsHanCharacter(commitText);
     }
 
     NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
@@ -480,7 +501,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates hide];
     _candidates = [[NSMutableArray alloc] init];
     _rimePageCandidates = [[NSMutableArray alloc] init];
-    _mixedChineseRimeIndexes = [[NSMutableArray alloc] init];
+    _mixedRowIsEnglish = [[NSMutableArray alloc] init];
+    _mixedRowRimeIndexes = [[NSMutableArray alloc] init];
     _panelHighlight = 0;
     [sharedCandidates setCandidateData:@[]];
     [_annotationWin setAnnotation:@""];
@@ -550,13 +572,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([self mixedInput]) {
-        // up to 5 English candidates (existing English query), then the rest
-        // of the 9-row page is filled with Chinese candidates from Rime.
-        // Reads from _rimePageCandidates (kept separate from _candidates) so
-        // repeated IMK callbacks can't recombine an already-combined list;
-        // _mixedChineseRimeIndexes remembers which Rime page index each
-        // Chinese row shows, so selection stays positionally correct even
-        // when duplicates are skipped.
+        // Order the two blocks by the last committed language: the block
+        // matching that language leads (up to 5 rows), the other fills the
+        // rest of the 9-row page. Reads from _rimePageCandidates (kept
+        // separate from _candidates) so repeated IMK callbacks can't
+        // recombine an already-combined list; _mixedRowRimeIndexes remembers
+        // which Rime page index each Chinese row shows, so selection stays
+        // positionally correct even when duplicates are skipped.
         NSMutableArray *english = [NSMutableArray array];
         for (NSString *word in [engine getCandidates:originalInput]) {
             if (word.length > 0 && ![english containsObject:word]) {
@@ -569,7 +591,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         NSMutableArray *chinese = [NSMutableArray array];
         NSMutableArray *chineseIndexes = [NSMutableArray array];
         [_rimePageCandidates enumerateObjectsUsingBlock:^(NSString *word, NSUInteger idx, BOOL *stop) {
-            if (english.count + chinese.count >= 9) {
+            if (chinese.count >= 5) {
                 *stop = YES;
                 return;
             }
@@ -578,10 +600,43 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                 [chineseIndexes addObject:@(idx)];
             }
         }];
-        NSMutableArray *combined = [NSMutableArray arrayWithArray:english];
-        [combined addObjectsFromArray:chinese];
-        _mixedEnglishCount = english.count;
-        _mixedChineseRimeIndexes = chineseIndexes;
+
+        NSMutableArray *combined = [NSMutableArray array];
+        NSMutableArray *rowIsEnglish = [NSMutableArray array];
+        NSMutableArray *rowRimeIndexes = [NSMutableArray array];
+        void (^appendEnglish)(NSString *word) = ^(NSString *word) {
+            [combined addObject:word];
+            [rowIsEnglish addObject:@YES];
+            [rowRimeIndexes addObject:@(NSNotFound)];
+        };
+        void (^appendChinese)(NSUInteger idx) = ^(NSUInteger idx) {
+            [combined addObject:_rimePageCandidates[idx]];
+            [rowIsEnglish addObject:@NO];
+            [rowRimeIndexes addObject:@(idx)];
+        };
+        if (_lastCommittedWasChinese) {
+            for (NSUInteger i = 0; i < chinese.count && combined.count < 9; i++) {
+                appendChinese([chineseIndexes[i] integerValue]);
+            }
+            for (NSString *word in english) {
+                if (combined.count >= 9) {
+                    break;
+                }
+                appendEnglish(word);
+            }
+        } else {
+            for (NSString *word in english) {
+                if (combined.count >= 9) {
+                    break;
+                }
+                appendEnglish(word);
+            }
+            for (NSUInteger i = 0; i < chinese.count && combined.count < 9; i++) {
+                appendChinese([chineseIndexes[i] integerValue]);
+            }
+        }
+        _mixedRowIsEnglish = rowIsEnglish;
+        _mixedRowRimeIndexes = rowRimeIndexes;
         _candidates = combined;
         return combined;
     }
@@ -613,7 +668,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (void)candidateSelected:(NSAttributedString *)candidateString {
     NSUInteger index = [_candidates indexOfObject:candidateString.string];
     if (index != NSNotFound) {
-        [self commitSelectedRow:(NSInteger)index sender:_currentClient];
+        [self commitSelectedRow:(NSInteger)index withSpace:YES sender:_currentClient];
     }
 }
 
