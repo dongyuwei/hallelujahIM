@@ -20,7 +20,7 @@
 7. 按键盘右侧`shift` 键可以在智能英语输入模式与传统英语输入模式间切换。
 8. 选词方式：数字键 1~9 及 `Enter` 回车键和 `Space` 空格键均可选词提交。`Space` 空格键选词默认会自动附加一个空格在单词后面，可以在配置页面关闭自动附加空格功能。`Enter` 回车键选词则不会附加空格。
 9. **上下文预测(Next-Word Prediction)**：基于 Google Books Ngram Corpus (2010-2019) 英语语料库的 n-gram 频率数据，在用户输入时根据前文预测下一个单词。例如输入"i do not"后，输入法会优先推荐"know"、"think"、"want"等高频后续词。目前默认关闭这个功能，需要在输入法配置中手动打开。
-10. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键切换到拼音输入模式，输入拼音（或首字母缩写）即可打出中文汉字。例如输入 `niha` 或首字母 `nh`，候选词会显示"你好"、"你还"等。再次按`右Command` 切回智能英语输入模式。
+10. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键切换到拼音输入模式，输入拼音（或首字母缩写）即可打出中文汉字。例如输入 `niha` 或首字母 `nh`，候选词会显示"你好"、"你还"等。再次按`右Command` 切回智能英语输入模式。开启「中英混合输入」偏好后无需切换模式，输入时同时给出英文与中文候选（每页 5 英文 + 4 中文）。
 
 # 下载与安装
 
@@ -70,6 +70,9 @@
 ![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
 <img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/93fa771f-e896-4afc-bb66-50858a596830" />
+
+- **Mixed Chinese/English input（中英混合输入）**：默认关闭。开启后不再需要右 Command 切换模式，输入时同时查询英文候选与中文候选，候选窗每页显示 5 个英文候选（数字键 1-5 选择）+ 4 个中文候选（数字键 6-9 选择，空格提交高亮中文候选）。
+- **Horizontal candidate panel（水平候选窗）**：默认关闭（垂直单列）。开启后候选词以水平单行卷轴方式显示。
 
 
 ## 编译本输入法

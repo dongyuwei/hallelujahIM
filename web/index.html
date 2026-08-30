@@ -21,6 +21,14 @@
           Next-Word Prediction (ngram):
           <input type="checkbox" v-model="preference.enableNextWordPrediction" />
         </label>
+        <label>
+          Mixed Chinese/English input (disables right-Command switching):
+          <input type="checkbox" v-model="preference.mixedInput" />
+        </label>
+        <label>
+          Horizontal candidate panel:
+          <input type="checkbox" v-model="preference.candidateHorizontal" />
+        </label>
         <button :disabled="loading">
           {{ loading ? "loading..." : "Save" }}
         </button>

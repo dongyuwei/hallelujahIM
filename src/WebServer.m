@@ -10,6 +10,8 @@ extern ConversionEngine *engine;
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
 NSString *ENABLE_NEXT_WORD_PREDICTION_KEY = @"enableNextWordPrediction";
+NSString *MIXED_INPUT_KEY = @"mixedInput";
+NSString *CANDIDATE_HORIZONTAL_KEY = @"candidateHorizontal";
 
 @interface WebServer ()
 
@@ -49,7 +51,9 @@ static int port = 62718;
                           return [GCDWebServerDataResponse responseWithJSONObject:@{
                               TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                               COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
-                              ENABLE_NEXT_WORD_PREDICTION_KEY : @([preference boolForKey:ENABLE_NEXT_WORD_PREDICTION_KEY])
+                              ENABLE_NEXT_WORD_PREDICTION_KEY : @([preference boolForKey:ENABLE_NEXT_WORD_PREDICTION_KEY]),
+                              MIXED_INPUT_KEY : @([preference boolForKey:MIXED_INPUT_KEY]),
+                              CANDIDATE_HORIZONTAL_KEY : @([preference boolForKey:CANDIDATE_HORIZONTAL_KEY])
                           }];
                       }];
 
@@ -67,6 +71,12 @@ static int port = 62718;
 
                           bool enableNextWordPrediction = [data[ENABLE_NEXT_WORD_PREDICTION_KEY] boolValue];
                           [preference setBool:enableNextWordPrediction forKey:ENABLE_NEXT_WORD_PREDICTION_KEY];
+
+                          bool mixedInput = [data[MIXED_INPUT_KEY] boolValue];
+                          [preference setBool:mixedInput forKey:MIXED_INPUT_KEY];
+
+                          bool candidateHorizontal = [data[CANDIDATE_HORIZONTAL_KEY] boolValue];
+                          [preference setBool:candidateHorizontal forKey:CANDIDATE_HORIZONTAL_KEY];
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];
                       }];
