@@ -163,29 +163,32 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return handled;
 }
 
-// Digits select from the combined mixed-mode page: 1-5 English, 6-9 Chinese.
+// Digits select from the combined mixed-mode page: English candidates first
+// (up to 5), then the Chinese candidates filling the rest of the page.
+// Uses the layout computed by the last candidates: callback (what the panel
+// actually shows) via _mixedEnglishCount/_mixedChineseRimeIndexes.
 - (BOOL)onMixedDigitKey:(NSString *)chars client:(id)sender {
     if ([self originalBuffer].length == 0) {
         return NO; // nothing to select; let the digit pass through
     }
     int digit = chars.intValue;
-
-    if (digit >= 1 && digit <= 5) {
-        NSArray *english = [engine getCandidates:[self originalBuffer]];
-        if (digit > (int)english.count) {
-            return NO;
-        }
-        [self commitMixedEnglishWord:english[digit - 1] sender:sender];
-        return YES;
+    if (digit < 1 || digit > 9) {
+        return NO;
     }
 
-    if (digit >= 6 && digit <= 9) {
-        NSInteger index = digit - 6;
-        NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
-        if (index >= (NSInteger)rimeCandidates.count) {
-            return NO;
+    if (digit <= (int)_mixedEnglishCount) {
+        NSString *word = _candidates[digit - 1];
+        if (word.length > 0) {
+            [self commitMixedEnglishWord:word sender:sender];
+            return YES;
         }
-        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:index];
+        return NO;
+    }
+
+    NSInteger row = digit - (int)_mixedEnglishCount - 1;
+    if (row >= 0 && row < (NSInteger)_mixedChineseRimeIndexes.count) {
+        NSInteger rimeIndex = [_mixedChineseRimeIndexes[row] integerValue];
+        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:rimeIndex];
         [self rimeUpdate:sender];
         return YES;
     }
@@ -211,8 +214,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
     _candidates = [NSMutableArray array];
+    _rimePageCandidates = [NSMutableArray array];
     for (RimeCandidateItem *candidate in rimeCandidates) {
         [_candidates addObject:candidate.text];
+        [_rimePageCandidates addObject:candidate.text];
     }
 
     // in mixed mode the English query follows Rime's raw input
@@ -232,13 +237,15 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates updateCandidates];
     [sharedCandidates show:kIMKLocateCandidatesBelowHint];
     // mirror Rime's highlighted candidate in the panel; in mixed mode the
-    // Chinese block sits below the 5 English rows
+    // Chinese block sits below the English rows (positions may diverge from
+    // Rime's page when duplicates were skipped)
     NSInteger highlighted = [rimeEngine highlightedIndex:(RimeSessionId)_rimeSession];
     if (highlighted < 0) {
         highlighted = 0;
     }
     if ([self mixedInput]) {
-        highlighted += _mixedEnglishCount;
+        NSUInteger row = [_mixedChineseRimeIndexes indexOfObject:@(highlighted)];
+        highlighted = (NSInteger)_mixedEnglishCount + (row == NSNotFound ? 0 : (NSInteger)row);
     }
     while (_panelHighlight < highlighted) {
         [sharedCandidates moveDown:self];
@@ -446,6 +453,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates clearSelection];
     [sharedCandidates hide];
     _candidates = [[NSMutableArray alloc] init];
+    _rimePageCandidates = [[NSMutableArray alloc] init];
+    _mixedChineseRimeIndexes = [[NSMutableArray alloc] init];
+    _panelHighlight = 0;
     [sharedCandidates setCandidateData:@[]];
     [_annotationWin setAnnotation:@""];
     [_annotationWin hideWindow];
@@ -546,14 +556,38 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     if ([self mixedInput]) {
-        // each page: 5 English candidates (existing English query) + 4 Chinese
-        // candidates from Rime's current page
-        NSArray *english = [engine getCandidates:originalInput];
-        NSArray *englishPage = english.count > 5 ? [english subarrayWithRange:NSMakeRange(0, 5)] : english;
-        NSArray *chinesePage = _candidates.count > 4 ? [_candidates subarrayWithRange:NSMakeRange(0, 4)] : _candidates;
-        NSMutableArray *combined = [NSMutableArray arrayWithArray:englishPage];
-        [combined addObjectsFromArray:chinesePage];
-        _mixedEnglishCount = englishPage.count;
+        // up to 5 English candidates (existing English query), then the rest
+        // of the 9-row page is filled with Chinese candidates from Rime.
+        // Reads from _rimePageCandidates (kept separate from _candidates) so
+        // repeated IMK callbacks can't recombine an already-combined list;
+        // _mixedChineseRimeIndexes remembers which Rime page index each
+        // Chinese row shows, so selection stays positionally correct even
+        // when duplicates are skipped.
+        NSMutableArray *english = [NSMutableArray array];
+        for (NSString *word in [engine getCandidates:originalInput]) {
+            if (word.length > 0 && ![english containsObject:word]) {
+                [english addObject:word];
+            }
+            if (english.count == 5) {
+                break;
+            }
+        }
+        NSMutableArray *chinese = [NSMutableArray array];
+        NSMutableArray *chineseIndexes = [NSMutableArray array];
+        [_rimePageCandidates enumerateObjectsUsingBlock:^(NSString *word, NSUInteger idx, BOOL *stop) {
+            if (english.count + chinese.count >= 9) {
+                *stop = YES;
+                return;
+            }
+            if (word.length > 0 && ![english containsObject:word] && ![chinese containsObject:word]) {
+                [chinese addObject:word];
+                [chineseIndexes addObject:@(idx)];
+            }
+        }];
+        NSMutableArray *combined = [NSMutableArray arrayWithArray:english];
+        [combined addObjectsFromArray:chinese];
+        _mixedEnglishCount = english.count;
+        _mixedChineseRimeIndexes = chineseIndexes;
         _candidates = combined;
         return combined;
     }
@@ -616,8 +650,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (index < (NSUInteger)_mixedEnglishCount) {
             [self commitMixedEnglishWord:candidateString.string sender:_currentClient];
         } else {
-            [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:index - _mixedEnglishCount];
-            [self rimeUpdate:_currentClient];
+            NSUInteger row = index - (NSUInteger)_mixedEnglishCount;
+            if (row < _mixedChineseRimeIndexes.count) {
+                [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[_mixedChineseRimeIndexes[row] integerValue]];
+                [self rimeUpdate:_currentClient];
+            }
         }
         return;
     }

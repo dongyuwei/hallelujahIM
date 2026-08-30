@@ -61,7 +61,7 @@ click `Preferences...` or visit web ui: http://localhost:62718/index.html
 preferences config:<br/>
 <img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/74e9f7a3-3287-43e5-92f2-08105dc1b461" />
 
-- **Mixed Chinese/English input**: off by default. When enabled, the right-Command mode toggle is disabled; typing queries both English and Chinese candidates, each page shows 5 English candidates (select with digits 1-5) + 4 Chinese candidates (select with digits 6-9, space commits the highlighted Chinese candidate).
+- **Mixed Chinese/English input**: off by default. When enabled, the right-Command mode toggle is disabled; typing queries both English and Chinese candidates, each page shows up to 5 English candidates with the remaining rows filled by Chinese candidates, selectable by row number (space commits the highlighted Chinese candidate).
 - **Horizontal candidate panel**: off by default (vertical single column). When enabled, candidates display in a horizontal scrolling row.
 
 
