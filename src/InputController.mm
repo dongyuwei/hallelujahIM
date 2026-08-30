@@ -128,10 +128,27 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return NO;
     }
 
-    if ([self mixedInput]) {
+    // Candidate selection and up/down navigation are owned by the input
+    // method, not Rime: digits pick a row, space commits the highlighted row,
+    // arrows move the highlight. Rime only builds the composition; the
+    // Chinese rows commit through selectCandidateOnCurrentPage.
+    NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+    if (rawInput.length > 0) {
         NSString *chars = event.characters;
-        if (chars.length == 1 && [[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[chars characterAtIndex:0]]) {
-            return [self onMixedDigitKey:chars client:sender];
+        if (chars.length == 1) {
+            unichar ch = [chars characterAtIndex:0];
+            if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch] && [self onCandidateDigitKey:chars sender:sender]) {
+                return YES;
+            }
+            if (ch == ' ' && [self onCandidateSpaceKey:sender]) {
+                return YES;
+            }
+        }
+        if (event.keyCode == KEY_ARROW_DOWN && [self moveCandidateSelection:YES sender:sender]) {
+            return YES;
+        }
+        if (event.keyCode == KEY_ARROW_UP && [self moveCandidateSelection:NO sender:sender]) {
+            return YES;
         }
     }
 
@@ -163,43 +180,72 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return handled;
 }
 
-// Digits select from the combined mixed-mode page: English candidates first
-// (up to 5), then the Chinese candidates filling the rest of the page.
-// Uses the layout computed by the last candidates: callback (what the panel
-// actually shows) via _mixedEnglishCount/_mixedChineseRimeIndexes.
-- (BOOL)onMixedDigitKey:(NSString *)chars client:(id)sender {
-    if ([self originalBuffer].length == 0) {
-        return NO; // nothing to select; let the digit pass through
-    }
+// Digits pick a row of the candidate panel (row 1-9).
+- (BOOL)onCandidateDigitKey:(NSString *)chars sender:(id)sender {
     int digit = chars.intValue;
-    if (digit < 1 || digit > 9) {
+    if (digit < 1 || digit > 9 || digit > (int)_candidates.count) {
+        return NO; // not a selectable row; let Rime/app handle the digit
+    }
+    [self commitSelectedRow:digit - 1 sender:sender];
+    return YES;
+}
+
+// Space commits the highlighted row; with no candidates left, hand the key
+// back to Rime (e.g. to commit the raw input).
+- (BOOL)onCandidateSpaceKey:(id)sender {
+    if (_candidates.count == 0) {
         return NO;
     }
+    NSInteger row = _panelHighlight;
+    if (row < 0 || row >= (NSInteger)_candidates.count) {
+        row = 0;
+    }
+    [self commitSelectedRow:row sender:sender];
+    return YES;
+}
 
-    if (digit <= (int)_mixedEnglishCount) {
-        NSString *word = _candidates[digit - 1];
-        if (word.length > 0) {
-            [self commitMixedEnglishWord:word sender:sender];
-            return YES;
-        }
+- (BOOL)moveCandidateSelection:(BOOL)down sender:(id)sender {
+    if (_candidates.count == 0) {
         return NO;
     }
-
-    NSInteger row = digit - (int)_mixedEnglishCount - 1;
-    if (row >= 0 && row < (NSInteger)_mixedChineseRimeIndexes.count) {
-        NSInteger rimeIndex = [_mixedChineseRimeIndexes[row] integerValue];
-        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:rimeIndex];
-        [self rimeUpdate:sender];
+    NSInteger row = down ? MIN(_panelHighlight + 1, (NSInteger)_candidates.count - 1) : MAX(_panelHighlight - 1, 0);
+    if (row == _panelHighlight) {
         return YES;
     }
-    return NO;
+    if (down) {
+        [sharedCandidates moveDown:self];
+    } else {
+        [sharedCandidates moveUp:self];
+    }
+    _panelHighlight = row;
+    return YES;
+}
+
+// Commits the candidate shown on the given panel row. English rows (mixed
+// mode) go through the English commit path; Chinese rows map back to their
+// Rime page index and commit through Rime.
+- (void)commitSelectedRow:(NSInteger)row sender:(id)sender {
+    if (row < 0 || row >= (NSInteger)_candidates.count) {
+        return;
+    }
+    NSString *word = _candidates[row];
+    if ([self mixedInput] && row < _mixedEnglishCount) {
+        [self commitMixedEnglishWord:word sender:sender];
+        return;
+    }
+    NSInteger rimeIndex = row;
+    if ([self mixedInput]) {
+        rimeIndex = [_mixedChineseRimeIndexes[row - _mixedEnglishCount] integerValue];
+    }
+    [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:rimeIndex];
+    [self rimeUpdate:sender];
 }
 
 - (void)commitMixedEnglishWord:(NSString *)word sender:(id)sender {
     [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
     [self setComposedBuffer:word];
     [self setOriginalBuffer:word];
-    [self commitCompositionWithoutSpace:sender];
+    [self commitEnglishComposition:sender];
     [self rimeUpdate:sender];
 }
 
@@ -236,25 +282,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates clearSelection];
     [sharedCandidates updateCandidates];
     [sharedCandidates show:kIMKLocateCandidatesBelowHint];
-    // mirror Rime's highlighted candidate in the panel; in mixed mode the
-    // Chinese block sits below the English rows (positions may diverge from
-    // Rime's page when duplicates were skipped)
-    NSInteger highlighted = [rimeEngine highlightedIndex:(RimeSessionId)_rimeSession];
-    if (highlighted < 0) {
-        highlighted = 0;
-    }
-    if ([self mixedInput]) {
-        NSUInteger row = [_mixedChineseRimeIndexes indexOfObject:@(highlighted)];
-        highlighted = (NSInteger)_mixedEnglishCount + (row == NSNotFound ? 0 : (NSInteger)row);
-    }
-    while (_panelHighlight < highlighted) {
-        [sharedCandidates moveDown:self];
-        _panelHighlight++;
-    }
-    while (_panelHighlight > highlighted) {
-        [sharedCandidates moveUp:self];
-        _panelHighlight--;
-    }
+    // selection state is owned by the input method; a fresh page starts at row 0
+    _panelHighlight = 0;
 
     NSDictionary *rawAttrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, preedit.length)];
     NSDictionary *convertedAttrs = [self markForStyle:kTSMHiliteConvertedText atRange:NSMakeRange(0, preedit.length)];
@@ -408,6 +437,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return;
     }
 
+    [self commitEnglishComposition:sender];
+}
+
+// English-mode commit, honoring the commitWordWithSpace preference.
+- (void)commitEnglishComposition:(id)sender {
     NSString *text = [self composedBuffer];
 
     if (text == nil || text.length == 0) {
@@ -616,7 +650,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
     if (_pinyinMode || [self mixedInput]) {
-        // the panel highlight mirrors Rime's own highlight; nothing to sync here
+        // highlight state is owned by the input method; nothing to sync here
         return;
     }
 
@@ -633,35 +667,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)candidateSelected:(NSAttributedString *)candidateString {
-    if (_pinyinMode) {
-        NSUInteger index = [_candidates indexOfObject:candidateString.string];
-        if (index != NSNotFound) {
-            [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:index];
-            [self rimeUpdate:_currentClient];
-        }
-        return;
+    NSUInteger index = [_candidates indexOfObject:candidateString.string];
+    if (index != NSNotFound) {
+        [self commitSelectedRow:(NSInteger)index sender:_currentClient];
     }
-
-    if ([self mixedInput]) {
-        NSUInteger index = [_candidates indexOfObject:candidateString.string];
-        if (index == NSNotFound) {
-            return;
-        }
-        if (index < (NSUInteger)_mixedEnglishCount) {
-            [self commitMixedEnglishWord:candidateString.string sender:_currentClient];
-        } else {
-            NSUInteger row = index - (NSUInteger)_mixedEnglishCount;
-            if (row < _mixedChineseRimeIndexes.count) {
-                [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[_mixedChineseRimeIndexes[row] integerValue]];
-                [self rimeUpdate:_currentClient];
-            }
-        }
-        return;
-    }
-
-    [self _updateComposedBuffer:candidateString];
-
-    [self commitComposition:_currentClient];
 }
 
 - (void)_updateComposedBuffer:(NSAttributedString *)candidateString {
