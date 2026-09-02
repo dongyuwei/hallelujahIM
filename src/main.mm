@@ -60,7 +60,11 @@ void deactivateInputSource() {
 
 void initPreference() {
     preference = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultPrefs = @{@"commitWordWithSpace" : @YES, @"showTranslation" : @YES, @"mixedInput" : @NO};
+    NSDictionary *defaultPrefs =
+        @{@"commitWordWithSpace" : @YES,
+          @"showTranslation" : @YES,
+          @"mixedInput" : @NO,
+          @"useGridCandidatePanel" : @NO};
     [preference registerDefaults:defaultPrefs];
 }
 
@@ -83,13 +87,16 @@ int main(int argc, char *argv[]) {
     NSString *connectionName = [identifier stringByAppendingString:@"_Connection"];
     IMKServer *server = [[IMKServer alloc] initWithName:connectionName bundleIdentifier:identifier];
 
-    sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:kIMKSingleColumnScrollingCandidatePanel];
+    initPreference();
+    BOOL useGridCandidatePanel = [preference boolForKey:@"useGridCandidatePanel"];
+    IMKCandidatePanelType panelType = useGridCandidatePanel ? kIMKScrollingGridCandidatePanel : kIMKSingleColumnScrollingCandidatePanel;
+    sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:panelType];
     // pinyin mode routes every key through librime first; the panel must not
-    // intercept digits/arrows before the input controller sees them
+    // intercept digits/arrows before the input controller sees them. Grid
+    // navigation is driven by the input controller too, via the move*: SPI.
     [sharedCandidates setAttributes:@{
         IMKCandidatesSendServerKeyEventFirst : @YES,
     }];
-
     if (!sharedCandidates) {
         NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", connectionName);
         return -1;
@@ -105,8 +112,6 @@ int main(int argc, char *argv[]) {
     [[NSBundle mainBundle] loadNibNamed:@"AnnotationWindow" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
-
-    initPreference();
 
     [[WebServer sharedServer] start];
 

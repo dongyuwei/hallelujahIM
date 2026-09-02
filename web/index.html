@@ -21,6 +21,10 @@
           Mixed Chinese/English input (disables right-Command switching):
           <input type="checkbox" v-model="preference.mixedInput" />
         </label>
+        <label>
+          Use grid candidate panel:
+          <input type="checkbox" v-model="preference.useGridCandidatePanel" />
+        </label>
         <button :disabled="loading">
           {{ loading ? "loading..." : "Save" }}
         </button>
