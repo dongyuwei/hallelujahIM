@@ -857,6 +857,12 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
+    // The annotation window is positioned against the single-column candidate
+    // frame; with the wider grid panel it lands at the wrong place, so keep it
+    // closed entirely in grid mode.
+    if ([preference boolForKey:@"useGridCandidatePanel"]) {
+        return;
+    }
     NSString *annotation = [engine getAnnotation:candidateString.string];
     if (annotation && annotation.length > 0) {
         [_annotationWin setAnnotation:annotation];
