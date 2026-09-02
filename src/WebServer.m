@@ -73,8 +73,13 @@ static int port = 62718;
                           [preference setBool:mixedInput forKey:MIXED_INPUT_KEY];
                           bool useGridCandidatePanel = [data[GRID_CANDIDATE_PANEL_KEY] boolValue];
                           [preference setBool:useGridCandidatePanel forKey:GRID_CANDIDATE_PANEL_KEY];
-                          [sharedCandidates setPanelType:useGridCandidatePanel ? kIMKScrollingGridCandidatePanel
-                                                                               : kIMKSingleColumnScrollingCandidatePanel];
+                          // setPanelType: rebuilds the candidate window controller (hiding the
+                          // previous window), which AppKit only allows on the main thread; the
+                          // web server handler runs on a GCD queue, so hop over first.
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              [sharedCandidates setPanelType:useGridCandidatePanel ? kIMKScrollingGridCandidatePanel
+                                                                                   : kIMKSingleColumnScrollingCandidatePanel];
+                          });
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];
                       }];
