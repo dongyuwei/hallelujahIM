@@ -46,6 +46,10 @@
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
 		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
 		F1BF613D22D4DF6F003B946F /* AnnotationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */; };
+		A11122233301 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
+		A11122233302 /* CandidatePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233402 /* CandidatePanel.m */; };
+		A11122233303 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
+		A11122233304 /* TestCandidatePanelState.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233403 /* TestCandidatePanelState.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +112,11 @@
 		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
 		F1BF613C22D4DF6F003B946F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AnnotationWindow.xib; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
+		A11122233401 /* CandidatePanelState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandidatePanelState.m; path = src/CandidatePanelState.m; sourceTree = "<group>"; };
+		A11122233402 /* CandidatePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandidatePanel.m; path = src/CandidatePanel.m; sourceTree = "<group>"; };
+		A11122233403 /* TestCandidatePanelState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCandidatePanelState.mm; sourceTree = "<group>"; };
+		A11122233404 /* CandidatePanelState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanelState.h; path = src/CandidatePanelState.h; sourceTree = "<group>"; };
+		A11122233405 /* CandidatePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanel.h; path = src/CandidatePanel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +188,10 @@
 				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
 				3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */,
 				3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */,
+				A11122233404 /* CandidatePanelState.h */,
+				A11122233401 /* CandidatePanelState.m */,
+				A11122233405 /* CandidatePanel.h */,
+				A11122233402 /* CandidatePanel.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -262,6 +275,7 @@
 			children = (
 				3833665822DD6F45004BA2D1 /* TestConversionEngine.mm */,
 				7A1E00000000000000000015 /* TestRimeEngine.mm */,
+				A11122233403 /* TestCandidatePanelState.mm */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -488,6 +502,8 @@
 				7A1E00000000000000000003 /* TestRimeEngine.mm in Sources */,
 				7A1E00000000000000000004 /* RimeEngine.mm in Sources */,
 				7A1E00000000000000000005 /* RimeKeymap.mm in Sources */,
+				A11122233304 /* TestCandidatePanelState.mm in Sources */,
+				A11122233303 /* CandidatePanelState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +512,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
+				A11122233301 /* CandidatePanelState.m in Sources */,
+				A11122233302 /* CandidatePanel.m in Sources */,
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,

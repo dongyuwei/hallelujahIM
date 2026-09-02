@@ -1,13 +1,14 @@
 #import <AppKit/NSSpellChecker.h>
 #import <CoreServices/CoreServices.h>
 
+#import "CandidatePanel.h"
 #import "InputApplicationDelegate.h"
 #import "InputController.h"
 #import "NSScreen+PointConversion.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
 
-extern IMKCandidates *sharedCandidates;
+extern CandidatePanel *sharedCandidates;
 extern NSUserDefaults *preference;
 extern ConversionEngine *engine;
 extern RimeEngine *rimeEngine;
@@ -15,23 +16,6 @@ extern RimeEngine *rimeEngine;
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
-
-// Grid panels lay candidates out 5 per row (kIMKScrollingGridCandidatePanel),
-// but the panel recomputes its column count from the available width on its
-// own, so coordinates are never derived here — the panel's own move*: methods
-// do the geometry and the resulting highlight is read back afterwards.
-
-// IMKCandidates implements expand/isExpanded/setSortingModes at runtime but
-// does not declare them in its public SDK header (same position as
-// moveLeft:/moveRight:, which are NSResponder methods that IMKCandidates
-// overrides). Verifying respondsToSelector: before calling keeps the fallback
-// safe on older systems. Without a sorting-modes list (even an empty one) the
-// grid panel's expand asserts on nil segment labels, so set @[] first.
-@interface IMKCandidates (GridNavigationSPI)
-- (BOOL)isExpanded;
-- (void)expand;
-- (void)setSortingModes:(NSArray *)modes;
-@end
 
 // English and Chinese (half-width and full-width) punctuation each count as
 // their language for mixed mode's dynamic candidate ordering.
@@ -48,7 +32,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     return NO;
 }
 
-@interface InputController ()
+@interface InputController () <CandidatePanelDelegate>
 
 @end
 
@@ -259,29 +243,24 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     [self commitSelectedRow:row withSpace:withSpace sender:sender];
     return YES;
 }
-
 - (BOOL)moveCandidateSelection:(BOOL)down sender:(id)sender {
     if (_candidates.count == 0) {
         return NO;
     }
-    NSInteger row = down ? MIN(_panelHighlight + 1, (NSInteger)_candidates.count - 1) : MAX(_panelHighlight - 1, 0);
-    if (row == _panelHighlight) {
-        return YES;
-    }
     if (down) {
-        [sharedCandidates moveDown:self];
+        [sharedCandidates moveSelectionDown];
     } else {
-        [sharedCandidates moveUp:self];
+        [sharedCandidates moveSelectionUp];
     }
-    _panelHighlight = row;
+    [self syncHighlightFromPanel];
     return YES;
 }
-// Arrow-key navigation for the grid candidate panel. The first down-arrow
-// press expands the collapsed panel so every row is visible; afterwards
-// left/right/up/down are passed to the panel's own move*: methods (which
-// handle the column geometry). In grid mode arrow keys are always consumed so
-// the event never falls through to the single-column path. Returns NO only
-// when the grid panel preference is off.
+
+// Arrow-key navigation for the grid layout. The panel owns the geometry
+// (5 columns per row, first down press expands, up collapses at row 0,
+// left/right wrap within the active row). Arrow keys are always consumed in
+// grid mode so the event never falls through to the vertical path. Returns NO
+// only when the grid panel preference is off.
 - (BOOL)navigateGridPanelWithKeyCode:(NSInteger)keyCode sender:(id)sender {
     if (![preference boolForKey:@"useGridCandidatePanel"]) {
         return NO;
@@ -289,56 +268,32 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     if (_candidates.count == 0) {
         return NO;
     }
-    if (keyCode == KEY_ARROW_DOWN && [sharedCandidates respondsToSelector:@selector(isExpanded)] && ![sharedCandidates isExpanded]) {
-        if ([sharedCandidates respondsToSelector:@selector(setSortingModes:)]) {
-            [sharedCandidates setSortingModes:@[]]; // SPI: expand asserts on nil sorting labels otherwise
-        }
-        [sharedCandidates expand]; // first down-press: reveal the full grid
-        return YES;
-    }
     switch (keyCode) {
     case KEY_ARROW_LEFT:
-        [sharedCandidates moveLeft:self];
+        [sharedCandidates gridMoveLeft];
         break;
     case KEY_ARROW_RIGHT:
-        [sharedCandidates moveRight:self];
+        [sharedCandidates gridMoveRight];
         break;
     case KEY_ARROW_UP:
-        [sharedCandidates moveUp:self];
+        [sharedCandidates gridMoveUp];
         break;
     case KEY_ARROW_DOWN:
-        [sharedCandidates moveDown:self];
+        [sharedCandidates gridMoveDown];
         break;
     default:
         return NO;
     }
-    [self syncGridSelectionHighlight];
+    [self syncHighlightFromPanel];
     return YES;
 }
 
-// The panel never calls candidateSelectionChanged: for programmatic move*:
-// moves, so read the panel's own highlight back after moving and mirror it
-// into the composition state (in English mode space/enter commit
-// _composedBuffer).
-- (void)syncGridSelectionHighlight {
-    [self applyGridSelectionString:[sharedCandidates selectedCandidateString].string];
-}
-
-// Mirrors the grid panel's highlighted candidate into _panelHighlight and the
-// composition state. Pinyin/mixed modes commit straight from _panelHighlight;
-// English mode commits _composedBuffer, which is kept in sync here.
-- (void)applyGridSelectionString:(NSString *)candidateString {
-    if (candidateString.length == 0) {
-        return;
-    }
-    NSInteger idx = [_candidates indexOfObject:candidateString];
-    if (idx != NSNotFound) {
-        _panelHighlight = idx;
-    }
-    if (_panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
-        return;
-    }
-    if (_pinyinMode || [self mixedInput]) {
+// Mirrors the panel's highlight into the composition state so space, enter
+// and digits commit what the user sees (English mode commits _composedBuffer;
+// pinyin/mixed commit straight from _panelHighlight).
+- (void)syncHighlightFromPanel {
+    _panelHighlight = sharedCandidates.selectedIndex;
+    if (_pinyinMode || [self mixedInput] || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
         return;
     }
     NSString *word = _candidates[_panelHighlight];
@@ -412,9 +367,8 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         return;
     }
 
-    [sharedCandidates clearSelection];
-    [sharedCandidates updateCandidates];
-    [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+    [sharedCandidates updateCandidates:_candidates];
+    [sharedCandidates showAtClient:_currentClient];
     // selection state is owned by the input method; a fresh page starts at row 0
     _panelHighlight = 0;
 
@@ -470,8 +424,9 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
         [self originalBufferAppend:characters client:sender];
 
-        [sharedCandidates updateCandidates];
-        [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+        [sharedCandidates updateCandidates:_candidates];
+        [sharedCandidates showAtClient:_currentClient];
+        [self syncHighlightFromPanel];
         return YES;
     }
 
@@ -485,15 +440,17 @@ static BOOL ContainsChineseCharacter(NSString *text) {
             }
 
             if (keyCode == KEY_ARROW_DOWN) {
-                [sharedCandidates moveDown:self];
+                [sharedCandidates moveSelectionDown];
                 _currentCandidateIndex++;
-                return NO;
+                [self syncHighlightFromPanel];
+                return YES;
             }
 
             if (keyCode == KEY_ARROW_UP) {
-                [sharedCandidates moveUp:self];
+                [sharedCandidates moveSelectionUp];
                 _currentCandidateIndex--;
-                return NO;
+                [self syncHighlightFromPanel];
+                return YES;
             }
         }
 
@@ -553,8 +510,9 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         [self showPreeditString:convertedString];
 
         if (convertedString && convertedString.length > 0) {
-            [sharedCandidates updateCandidates];
-            [sharedCandidates show:kIMKLocateCandidatesBelowHint];
+            [sharedCandidates updateCandidates:_candidates];
+            [sharedCandidates showAtClient:_currentClient];
+            [self syncHighlightFromPanel];
         } else {
             [self reset];
         }
@@ -618,14 +576,13 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
     _currentCandidateIndex = 1;
-    [sharedCandidates clearSelection];
     [sharedCandidates hide];
+    [sharedCandidates updateCandidates:@[]];
     _candidates = [[NSMutableArray alloc] init];
     _rimePageCandidates = [[NSMutableArray alloc] init];
     _mixedRowIsEnglish = [[NSMutableArray alloc] init];
     _mixedRowRimeIndexes = [[NSMutableArray alloc] init];
     _panelHighlight = 0;
-    [sharedCandidates setCandidateData:@[]];
     [_annotationWin setAnnotation:@""];
     [_annotationWin hideWindow];
 }
@@ -769,11 +726,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
-    if ([preference boolForKey:@"useGridCandidatePanel"]) {
-        [self applyGridSelectionString:candidateString.string];
-        return;
-    }
-
     if (_pinyinMode || [self mixedInput]) {
         // highlight state is owned by the input method; nothing to sync here
         return;
@@ -789,6 +741,10 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     if (showTranslation) {
         [self showAnnotation:candidateString];
     }
+}
+
+- (void)candidatePanel:(CandidatePanel *)panel clickedIndex:(NSInteger)index {
+    [self commitSelectedRow:index withSpace:YES sender:_currentClient];
 }
 
 - (void)candidateSelected:(NSAttributedString *)candidateString {
@@ -815,6 +771,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         _annotationWin = [AnnotationWinController sharedController];
     }
 
+    sharedCandidates.delegate = self;
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
 }

@@ -1,3 +1,4 @@
+#import "CandidatePanel.h"
 #import "ConversionEngine.h"
 #import "RimeEngine.h"
 #import "WebServer.h"
@@ -9,7 +10,7 @@ NSUserDefaults *preference;
 ConversionEngine *engine;
 RimeEngine *rimeEngine;
 
-IMKCandidates *sharedCandidates;
+CandidatePanel *sharedCandidates;
 
 static const unsigned char kInstallLocation[] = "/Library/Input Methods/hallelujah.app";
 static NSString *const kSourceID = @"github.dongyuwei.inputmethod.hallelujahInputMethod";
@@ -88,19 +89,8 @@ int main(int argc, char *argv[]) {
     IMKServer *server = [[IMKServer alloc] initWithName:connectionName bundleIdentifier:identifier];
 
     initPreference();
-    BOOL useGridCandidatePanel = [preference boolForKey:@"useGridCandidatePanel"];
-    IMKCandidatePanelType panelType = useGridCandidatePanel ? kIMKScrollingGridCandidatePanel : kIMKSingleColumnScrollingCandidatePanel;
-    sharedCandidates = [[IMKCandidates alloc] initWithServer:server panelType:panelType];
-    // pinyin mode routes every key through librime first; the panel must not
-    // intercept digits/arrows before the input controller sees them. Grid
-    // navigation is driven by the input controller too, via the move*: SPI.
-    [sharedCandidates setAttributes:@{
-        IMKCandidatesSendServerKeyEventFirst : @YES,
-    }];
-    if (!sharedCandidates) {
-        NSLog(@"Fatal error: Cannot initialize shared candidate panel with connection %@.", connectionName);
-        return -1;
-    }
+    sharedCandidates = [[CandidatePanel alloc] init];
+    [sharedCandidates setGridLayout:[preference boolForKey:@"useGridCandidatePanel"]];
 
     engine = [ConversionEngine sharedEngine];
 

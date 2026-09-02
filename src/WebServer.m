@@ -1,13 +1,13 @@
 #import "WebServer.h"
+#import "CandidatePanel.h"
 #import "ConversionEngine.h"
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
 #import "GCDWebServerURLEncodedFormRequest.h"
-#import <InputMethodKit/InputMethodKit.h>
 
 extern NSUserDefaults *preference;
 extern ConversionEngine *engine;
-extern IMKCandidates *sharedCandidates;
+extern CandidatePanel *sharedCandidates;
 
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
@@ -73,12 +73,11 @@ static int port = 62718;
                           [preference setBool:mixedInput forKey:MIXED_INPUT_KEY];
                           bool useGridCandidatePanel = [data[GRID_CANDIDATE_PANEL_KEY] boolValue];
                           [preference setBool:useGridCandidatePanel forKey:GRID_CANDIDATE_PANEL_KEY];
-                          // setPanelType: rebuilds the candidate window controller (hiding the
-                          // previous window), which AppKit only allows on the main thread; the
-                          // web server handler runs on a GCD queue, so hop over first.
+                          // The custom panel rebuilds its window when switching layouts;
+                          // window operations are main-thread-only, and the web server
+                          // handler runs on a GCD queue, so hop over first.
                           dispatch_async(dispatch_get_main_queue(), ^{
-                              [sharedCandidates setPanelType:useGridCandidatePanel ? kIMKScrollingGridCandidatePanel
-                                                                                   : kIMKSingleColumnScrollingCandidatePanel];
+                              [sharedCandidates setGridLayout:useGridCandidatePanel];
                           });
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];
