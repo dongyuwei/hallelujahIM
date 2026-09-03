@@ -143,6 +143,20 @@ static const NSInteger kGridColumns = 5;
     self.gridActiveColumn = MAX(0, MIN(self.gridActiveColumn, cols - 1));
 }
 
+- (NSInteger)indexForDigit:(NSInteger)digit {
+    if (digit < 1 || digit > 9) {
+        return NSNotFound;
+    }
+    if (self.layout == CandidatePanelLayoutGrid) {
+        if (digit - 1 >= [self columnCountForRow:self.gridActiveRow]) {
+            return NSNotFound;
+        }
+        return self.gridActiveRow * self.gridColumns + (digit - 1);
+    }
+    NSInteger index = self.verticalTopVisibleLine + (digit - 1);
+    return index < (NSInteger)self.candidates.count ? index : NSNotFound;
+}
+
 - (void)clampGridVisibleWindow {
     if (self.gridActiveRow < self.gridVisibleRowOffset) {
         self.gridVisibleRowOffset = self.gridActiveRow;

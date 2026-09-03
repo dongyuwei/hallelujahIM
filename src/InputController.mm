@@ -219,13 +219,18 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     return handled;
 }
 
-// Digits pick a row of the candidate panel (row 1-9).
+// Digits pick a candidate at a selectable key position: the column within
+// the active row in grid mode, the window offset in vertical mode.
 - (BOOL)onCandidateDigitKey:(NSString *)chars sender:(id)sender {
     int digit = chars.intValue;
-    if (digit < 1 || digit > 9 || digit > (int)_candidates.count) {
-        return NO; // not a selectable row; let Rime/app handle the digit
+    if (digit < 1 || digit > 9) {
+        return NO; // not a selectable key; let Rime/app handle the digit
     }
-    [self commitSelectedRow:digit - 1 withSpace:YES sender:sender];
+    NSInteger index = [sharedCandidates indexForDigit:digit];
+    if (index == NSNotFound || index >= (NSInteger)_candidates.count) {
+        return NO;
+    }
+    [self commitSelectedRow:index withSpace:YES sender:sender];
     return YES;
 }
 
@@ -472,16 +477,13 @@ static BOOL ContainsChineseCharacter(NSString *text) {
                 return YES;
             }
 
-            if (isCandidatesVisible) { // use 1~9 digital numbers as selection keys
+            if (isCandidatesVisible) { // digits are selection keys
                 int pressedNumber = characters.intValue;
-                NSString *candidate;
-                int pageSize = 9;
-                if (_currentCandidateIndex <= pageSize) {
-                    candidate = _candidates[pressedNumber - 1];
-                } else {
-                    candidate = _candidates[pageSize * (_currentCandidateIndex / pageSize - 1) + (_currentCandidateIndex % pageSize) +
-                                            pressedNumber - 1];
+                NSInteger index = [sharedCandidates indexForDigit:pressedNumber];
+                if (index == NSNotFound || index >= (NSInteger)_candidates.count) {
+                    return NO;
                 }
+                NSString *candidate = _candidates[index];
                 [self cancelComposition];
                 [self setComposedBuffer:candidate];
                 [self setOriginalBuffer:candidate];

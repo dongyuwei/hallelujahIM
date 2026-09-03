@@ -58,9 +58,14 @@ static const CGFloat kFallbackLineHeight = 20;
             }
             NSRect cellRect = NSMakeRect(col * cellWidth, row * kRowHeight, cellWidth, kRowHeight);
             BOOL active = index == state.selectedIndex;
-            // Selection keys map to absolute candidate positions (digit k picks
-            // _candidates[k-1]); show numbers 1-9 only where a key can reach.
-            NSInteger number = grid ? (index < 9 ? index + 1 : 0) : row + 1;
+            // Selection keys apply to the active grid row only: digits pick
+            // the column of the highlighted row, so numerate that row.
+            NSInteger number = 0;
+            if (grid) {
+                number = ((rowOffset + row) == state.gridActiveRow) ? col + 1 : 0;
+            } else {
+                number = row + 1;
+            }
             [self drawCellWithAttributedText:[self cellText:state.candidates[index] number:number active:active]
                                       active:active
                                       inRect:cellRect];
@@ -244,6 +249,10 @@ static const CGFloat kFallbackLineHeight = 20;
     [self contentDidChangeWithReframe:NO];
 }
 
+- (NSInteger)indexForDigit:(NSInteger)digit {
+    return [self.state indexForDigit:digit];
+}
+
 #pragma mark - Private
 
 - (void)contentDidChangeWithReframe:(BOOL)reframe {
@@ -282,7 +291,7 @@ static const CGFloat kFallbackLineHeight = 20;
                 if (index >= (NSInteger)state.candidates.count) {
                     continue;
                 }
-                NSInteger number = index < 9 ? index + 1 : 0;
+                NSInteger number = (state.gridVisibleRowOffset + row) == state.gridActiveRow ? col + 1 : 0;
                 NSAttributedString *cell = [self.content cellText:state.candidates[index] number:number active:NO];
                 cellWidth = MAX(cellWidth, cell.size.width);
             }

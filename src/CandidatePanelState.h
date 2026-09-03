@@ -39,6 +39,11 @@ typedef NS_ENUM(NSInteger, CandidatePanelLayout) {
 - (void)gridMoveRight; // cycles within the active row
 - (void)gridMoveLeft;
 
+// 1-based selection key: the vertical offset within the window, or the
+// column within the active grid row. NSNotFound when no candidate is
+// reachable at that position.
+- (NSInteger)indexForDigit:(NSInteger)digit;
+
 @property(nonatomic, readonly) NSInteger selectedIndex; // absolute index of the highlight, 0 when empty
 @property(nonatomic, readonly) NSInteger verticalTopVisibleLine;
 @property(nonatomic, readonly) BOOL gridIsExpanded;

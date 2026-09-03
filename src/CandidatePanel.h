@@ -36,4 +36,8 @@
 - (void)gridMoveRight;
 - (void)gridMoveLeft;
 
+// 1-based selection key → absolute candidate index (NSNotFound when the
+// panel has nothing to select at that position).
+- (NSInteger)indexForDigit:(NSInteger)digit;
+
 @end

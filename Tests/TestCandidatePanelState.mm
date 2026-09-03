@@ -138,6 +138,32 @@
     XCTAssertEqual(s.selectedIndex, 10);
 }
 
+- (void)testGridDigitsMapToActiveRowColumns {
+    CandidatePanelState *s = [self gridWithCount:15];
+    XCTAssertEqual([s indexForDigit:1], 0);
+    XCTAssertEqual([s indexForDigit:5], 4);
+    XCTAssertEqual([s indexForDigit:6], NSNotFound); // beyond the 5-column row
+    [s gridMoveDown];                                // expand
+    [s gridMoveDown];                                // row 1
+    XCTAssertEqual([s indexForDigit:1], 5);
+    XCTAssertEqual([s indexForDigit:5], 9);
+    [s gridMoveDown]; // row 2
+    XCTAssertEqual([s indexForDigit:1], 10);
+    XCTAssertEqual([s indexForDigit:5], 14);
+}
+
+- (void)testVerticalDigitsMapToWindow {
+    CandidatePanelState *s = [self verticalWithCount:20];
+    XCTAssertEqual([s indexForDigit:1], 0);
+    XCTAssertEqual([s indexForDigit:9], 8);
+    for (NSInteger i = 0; i < 10; i++) {
+        [s moveDown];
+    }
+    // after scrolling, digits address the visible window (top = 2)
+    XCTAssertEqual([s indexForDigit:1], 2);
+    XCTAssertEqual([s indexForDigit:5], 6);
+}
+
 - (void)testEmptyCandidatesAreSafe {
     CandidatePanelState *s = [[CandidatePanelState alloc] initWithCandidates:@[] layout:CandidatePanelLayoutGrid];
     [s gridMoveDown];
