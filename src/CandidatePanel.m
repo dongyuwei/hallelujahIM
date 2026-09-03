@@ -283,34 +283,33 @@ static const CGFloat kFallbackLineHeight = 20;
     BOOL grid = state.layout == CandidatePanelLayoutGrid;
 
     if (grid) {
-        NSInteger rows = state.gridRenderedRowCount;
+        // Width is driven by the longest candidate in the whole list so the
+        // panel never truncates (or jitters when rows appear/disappear).
         CGFloat cellWidth = 0;
-        for (NSInteger row = 0; row < rows; row++) {
-            for (NSInteger col = 0; col < state.gridColumns; col++) {
-                NSInteger index = (state.gridVisibleRowOffset + row) * state.gridColumns + col;
-                if (index >= (NSInteger)state.candidates.count) {
-                    continue;
-                }
-                NSInteger number = (state.gridVisibleRowOffset + row) == state.gridActiveRow ? col + 1 : 0;
-                NSAttributedString *cell = [self.content cellText:state.candidates[index] number:number active:NO];
-                cellWidth = MAX(cellWidth, cell.size.width);
-            }
+        for (NSInteger index = 0; index < (NSInteger)state.candidates.count; index++) {
+            // worst case: always account for the number gutter, even on rows
+            // that currently render without one
+            NSInteger number = index % state.gridColumns + 1;
+            NSAttributedString *cell = [self.content cellText:state.candidates[index] number:number active:NO];
+            cellWidth = MAX(cellWidth, cell.size.width);
         }
-        cellWidth += kCellPadding * 2;
-        return NSMakeSize(MAX(kMinPanelWidth, cellWidth * state.gridColumns), rows * kRowHeight + kPadding * 2);
+        // text is inset by the pill margin (kPadding) and the cell padding
+        // (kCellPadding) on each side
+        cellWidth += kPadding * 2 + kCellPadding * 2;
+        return NSMakeSize(MAX(kMinPanelWidth, cellWidth * state.gridColumns), state.gridRenderedRowCount * kRowHeight + kPadding * 2);
     }
 
     CGFloat width = 0;
     NSInteger count = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
-    for (NSInteger i = 0; i < count; i++) {
-        NSInteger index = state.verticalTopVisibleLine + i;
+    for (NSInteger row = 0; row < count; row++) {
+        NSInteger index = state.verticalTopVisibleLine + row;
         if (index >= (NSInteger)state.candidates.count) {
             break;
         }
-        NSAttributedString *cell = [self.content cellText:state.candidates[index] number:i + 1 active:NO];
+        NSAttributedString *cell = [self.content cellText:state.candidates[index] number:row + 1 active:NO];
         width = MAX(width, cell.size.width);
     }
-    width += kCellPadding * 2;
+    width += kPadding * 2 + kCellPadding * 2;
     return NSMakeSize(MAX(kMinPanelWidth, width), count * kRowHeight + kPadding * 2);
 }
 
