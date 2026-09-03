@@ -1,13 +1,16 @@
 #import "CandidatePanel.h"
 
-static const CGFloat kRowHeight = 26;
-static const CGFloat kPadding = 8;
-static const CGFloat kCellPadding = 12;
+static const CGFloat kRowHeight = 24;
+static const CGFloat kPadding = 6;
+static const CGFloat kCellPadding = 10;
 static const CGFloat kCornerRadius = 10;
 static const CGFloat kSelectionGap = 4;
 static const CGFloat kMinPanelWidth = 120;
 static const CGFloat kMaxCellWidth = 200; // a single cell never grows wider than this
 static const CGFloat kFallbackLineHeight = 20;
+
+// Cell insets used by drawing (kPadding + kCellPadding on each side).
+static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 // Renders the candidates described by CandidatePanelState. Single drawRect
 // pass: vertical rows or grid cells, with a pill behind the active candidate.
@@ -17,6 +20,7 @@ static const CGFloat kFallbackLineHeight = 20;
 @property(nonatomic, copy) void (^clickHandler)(NSInteger index);
 
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active;
+- (NSArray<NSNumber *> *)gridColumnWidths;
 
 @end
 
@@ -44,7 +48,7 @@ static const CGFloat kFallbackLineHeight = 20;
     NSInteger rowOffset = grid ? state.gridVisibleRowOffset : state.verticalTopVisibleLine;
 
     NSInteger columns = grid ? state.gridColumns : 1;
-    CGFloat cellWidth = grid ? MIN(bounds.size.width / columns, kMaxCellWidth) : bounds.size.width;
+    NSArray<NSNumber *> *columnWidths = grid ? [self gridColumnWidths] : nil;
 
     for (NSInteger row = 0; row < rowCount; row++) {
         for (NSInteger col = 0; col < columns; col++) {
@@ -57,7 +61,11 @@ static const CGFloat kFallbackLineHeight = 20;
             if (index >= (NSInteger)state.candidates.count) {
                 continue;
             }
-            NSRect cellRect = NSMakeRect(col * cellWidth, row * kRowHeight, cellWidth, kRowHeight);
+            CGFloat x = 0;
+            for (NSInteger c = 0; c < col; c++) {
+                x += columnWidths[c].doubleValue;
+            }
+            NSRect cellRect = NSMakeRect(x, row * kRowHeight, columnWidths[col].doubleValue, kRowHeight);
             BOOL active = index == state.selectedIndex;
             // Selection keys apply to the active grid row only: digits pick
             // the column of the highlighted row, so numerate that row.
@@ -72,6 +80,25 @@ static const CGFloat kFallbackLineHeight = 20;
                                       inRect:cellRect];
         }
     }
+}
+
+// Each grid column is sized to its widest candidate (with the number gutter),
+// so short-word columns stay snug instead of inheriting the widest word.
+- (NSArray<NSNumber *> *)gridColumnWidths {
+    CandidatePanelState *state = self.state;
+    NSInteger columns = state.gridColumns;
+    CGFloat widths[8] = {0};
+    for (NSInteger index = 0; index < (NSInteger)state.candidates.count; index++) {
+        NSInteger col = index % columns;
+        NSInteger number = col + 1; // worst case: gutter present
+        NSAttributedString *cell = [self cellText:state.candidates[index] number:number active:NO];
+        widths[col] = MAX(widths[col], cell.size.width + kCellInset);
+    }
+    NSMutableArray<NSNumber *> *result = [NSMutableArray arrayWithCapacity:columns];
+    for (NSInteger col = 0; col < columns; col++) {
+        [result addObject:@(MIN(widths[col], kMaxCellWidth))];
+    }
+    return result;
 }
 
 // Single attributed string per cell: number (mono, dim) + word. Measuring and
@@ -118,8 +145,21 @@ static const CGFloat kFallbackLineHeight = 20;
     NSPoint p = [self convertPoint:event.locationInWindow fromView:nil];
     BOOL grid = state.layout == CandidatePanelLayoutGrid;
     NSInteger columns = grid ? state.gridColumns : 1;
+    NSArray<NSNumber *> *columnWidths = grid ? [self gridColumnWidths] : nil;
+
     NSInteger row = MIN((NSInteger)(p.y / kRowHeight), (grid ? state.gridRenderedRowCount : state.verticalVisibleRows) - 1);
-    NSInteger col = MAX(0, MIN((NSInteger)(p.x / (self.bounds.size.width / columns)), columns - 1));
+    NSInteger col = 0;
+    if (grid) {
+        CGFloat x = 0;
+        for (NSInteger c = 0; c < columns; c++) {
+            x += columnWidths[c].doubleValue;
+            if (p.x < x) {
+                col = c;
+                break;
+            }
+            col = c;
+        }
+    }
     NSInteger index = row * columns + col;
     if (grid) {
         index += state.gridVisibleRowOffset * columns;
@@ -282,24 +322,13 @@ static const CGFloat kFallbackLineHeight = 20;
         return NSZeroSize;
     }
     BOOL grid = state.layout == CandidatePanelLayoutGrid;
-
     if (grid) {
-        // Width is driven by the longest candidate in the whole list so the
-        // panel never truncates (or jitters when rows appear/disappear).
-        CGFloat cellWidth = 0;
-        for (NSInteger index = 0; index < (NSInteger)state.candidates.count; index++) {
-            // worst case: always account for the number gutter, even on rows
-            // that currently render without one
-            NSInteger number = index % state.gridColumns + 1;
-            NSAttributedString *cell = [self.content cellText:state.candidates[index] number:number active:NO];
-            cellWidth = MAX(cellWidth, cell.size.width);
+        NSArray<NSNumber *> *widths = [self.content gridColumnWidths];
+        CGFloat panelWidth = 0;
+        for (NSNumber *w in widths) {
+            panelWidth += w.doubleValue;
         }
-        // text is inset by the pill margin (kPadding) and the cell padding
-        // (kCellPadding) on each side; cap extremely long candidates so a
-        // runaway measurement can never produce a screen-wide panel
-        cellWidth += kPadding * 2 + kCellPadding * 2;
-        cellWidth = MIN(cellWidth, kMaxCellWidth);
-        return NSMakeSize(MAX(kMinPanelWidth, cellWidth * state.gridColumns), state.gridRenderedRowCount * kRowHeight + kPadding * 2);
+        return NSMakeSize(MAX(kMinPanelWidth, panelWidth), state.gridRenderedRowCount * kRowHeight + kPadding * 2);
     }
 
     CGFloat width = 0;
