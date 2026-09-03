@@ -1,8 +1,8 @@
 #import "CandidatePanel.h"
 
-static const CGFloat kRowHeight = 23;
-static const CGFloat kPadding = 5;
-static const CGFloat kCellPadding = 8;
+static const CGFloat kRowHeight = 22;
+static const CGFloat kPadding = 4;
+static const CGFloat kCellPadding = 5;
 static const CGFloat kCornerRadius = 10;
 static const CGFloat kSelectionGap = 4;
 static const CGFloat kMinPanelWidth = 120;
@@ -125,11 +125,12 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 - (void)drawCellWithAttributedText:(NSAttributedString *)cellText active:(BOOL)active inRect:(NSRect)cellRect {
     NSSize textSize = [cellText size];
-    // The pill hugs the text (plus padding), not the whole column, so a short
-    // highlighted word doesn't sit in an oversized box.
+    // Center the cell content in the column: short words get balanced margins
+    // on both sides instead of a large empty right half. The pill hugs the
+    // text (plus padding), never the whole column.
     CGFloat pillWidth = MIN(textSize.width + kCellPadding * 2, cellRect.size.width - kPadding * 2);
-    NSRect pillRect =
-        NSMakeRect(cellRect.origin.x + kPadding, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
+    CGFloat pillX = cellRect.origin.x + MAX(kPadding, (cellRect.size.width - pillWidth) / 2);
+    NSRect pillRect = NSMakeRect(pillX, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
     if (active) {
         NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
         [NSColor.controlAccentColor setFill];
