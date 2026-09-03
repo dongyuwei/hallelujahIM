@@ -852,42 +852,30 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (NSPoint)calculatePositionOfTranslationWindow {
-    // Mac Cocoa ui default coordinate system: left-bottom, origin: (x:0, y:0) ↑→
-    // see https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/CoordinateSystem.html
-    // see https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CocoaDrawingGuide/Transforms/Transforms.html
-    // Notice: there is a System bug: candidateFrame.origin always be (0,0), so we can't depending on the origin point.
-    NSRect candidateFrame = [sharedCandidates candidateFrame];
-
-    // line-box of current input text: (width:1, height:17)
-    NSRect lineRect;
-    [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
-    NSPoint cursorPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
-    NSPoint positionPoint = NSMakePoint(NSMinX(lineRect), NSMinY(lineRect));
-    positionPoint.x = positionPoint.x + candidateFrame.size.width;
-    NSScreen *currentScreen = [NSScreen currentScreenForMouseLocation];
-    NSPoint currentPoint = [currentScreen convertPointToScreenCoordinates:cursorPoint];
-    NSRect rect = currentScreen.frame;
-    int screenWidth = (int)rect.size.width;
-    int marginToCandidateFrame = 20;
-    int annotationWindowWidth = _annotationWin.width + marginToCandidateFrame;
-    int lineHeight = lineRect.size.height; // 17px
-
-    if (screenWidth - currentPoint.x >= candidateFrame.size.width) {
-        // safe distance to display candidateFrame at current cursor's left-side.
-        if (screenWidth - currentPoint.x < candidateFrame.size.width + annotationWindowWidth) {
-            positionPoint.x = positionPoint.x - candidateFrame.size.width - annotationWindowWidth;
-        }
-    } else {
-        // assume candidateFrame will display at current cursor's right-side.
-        positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
+    // The candidate panel owns its geometry (and flips at screen edges), so
+    // anchor the annotation to the panel's actual frame instead of doing
+    // cursor-line math here. Screen coordinates: bottom-left origin.
+    NSRect panelFrame = [sharedCandidates candidateFrame];
+    if (NSEqualRects(panelFrame, NSZeroRect)) {
+        // Panel not yet positioned (first paint): fall back to the line box.
+        NSRect lineRect;
+        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
+        return NSMakePoint(NSMaxX(lineRect) + 4, NSMaxY(lineRect) + 4);
     }
-    // Anchor to the candidate panel's actual top edge (window frame origin is
-    // bottom-left), instead of the cursor line plus magic offsets - the panel
-    // itself shifts/flips near screen edges, and only its own frame tells
-    // where the top really is.
-    positionPoint.y = candidateFrame.origin.y + candidateFrame.size.height;
 
-    return positionPoint;
+    NSRect visible = NSScreen.mainScreen.visibleFrame; // excludes menu bar/dock
+
+    // Prefer the panel's right side; flip to its left when too close to the
+    // screen edge, then clamp into the visible frame.
+    CGFloat gap = 4;
+    CGFloat x = NSMaxX(panelFrame) + gap;
+    if (x + _annotationWin.width > NSMaxX(visible)) {
+        x = NSMinX(panelFrame) - gap - _annotationWin.width;
+    }
+    x = MIN(MAX(x, visible.origin.x), NSMaxX(visible) - _annotationWin.width);
+
+    // Annotation and panel share the same height, so their tops coincide.
+    return NSMakePoint(x, NSMaxY(panelFrame));
 }
 
 @end
