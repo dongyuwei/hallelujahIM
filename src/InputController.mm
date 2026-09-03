@@ -292,7 +292,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     [self syncHighlightFromPanel];
     return YES;
 }
-
 // Mirrors the panel's highlight into the composition state so space, enter
 // and digits commit what the user sees (English mode commits _composedBuffer;
 // pinyin/mixed commit straight from _panelHighlight).
@@ -305,6 +304,14 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     [self setComposedBuffer:word];
     [self showPreeditString:word];
     _insertionIndex = word.length;
+
+    // The old IMKCandidates drove the translation popup through the
+    // candidateSelectionChanged: delegate callback, which the custom panel
+    // never fires; show the annotation for the highlighted word directly.
+    BOOL showTranslation = [preference boolForKey:@"showTranslation"];
+    if (showTranslation) {
+        [self showAnnotation:[[NSAttributedString alloc] initWithString:word]];
+    }
 }
 
 // Commits the candidate shown on the given panel row. English rows (mixed
