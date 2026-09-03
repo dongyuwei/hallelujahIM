@@ -1,5 +1,7 @@
 #import "AnnotationWinController.h"
 
+static const CGFloat kCornerRadius = 6;
+
 static AnnotationWinController *sharedController;
 
 @interface AnnotationWinController ()
@@ -25,8 +27,15 @@ static AnnotationWinController *sharedController;
     // Make sure panel can float over full screen apps
     //  self.panel.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces;
     (self.panel).styleMask = NSWindowStyleMaskBorderless;
-    // Match the candidate panel: dark background, light text.
-    (self.panel).backgroundColor = [NSColor colorWithCalibratedRed:0x1B / 255.0 green:0x1B / 255.0 blue:0x1B / 255.0 alpha:1.0];
+    // Match the candidate panel: dark background, light text, rounded corners.
+    (self.panel).backgroundColor = [NSColor clearColor];
+    (self.panel).opaque = NO;
+    NSView *contentView = (self.panel).contentView;
+    contentView.wantsLayer = YES;
+    contentView.layer.cornerRadius = kCornerRadius;
+    contentView.layer.backgroundColor =
+        [NSColor colorWithCalibratedRed:0x1B / 255.0 green:0x1B / 255.0 blue:0x1B / 255.0 alpha:1.0].CGColor;
+    contentView.layer.masksToBounds = YES;
     [self.view setTextColor:[NSColor colorWithCalibratedRed:0xFC / 255.0 green:0xFC / 255.0 blue:0xFC / 255.0 alpha:1.0]];
     [self.view setDrawsBackground:NO];
     [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];
