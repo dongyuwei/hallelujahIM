@@ -15,16 +15,14 @@ static const CGFloat kFallbackLineHeight = 20;
 @property(nonatomic, strong) CandidatePanelState *state;
 @property(nonatomic, copy) void (^clickHandler)(NSInteger index);
 
+- (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active;
+
 @end
 
 @implementation CandidatePanelContent
 
 - (BOOL)isFlipped {
     return YES; // top-left origin makes row math straightforward
-}
-
-- (void)animateHighlightCandidate {
-    // no animation; redraw is enough
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -60,12 +58,19 @@ static const CGFloat kFallbackLineHeight = 20;
             }
             NSRect cellRect = NSMakeRect(col * cellWidth, row * kRowHeight, cellWidth, kRowHeight);
             BOOL active = index == state.selectedIndex;
-            [self drawCellWithText:state.candidates[index] numberKey:grid ? col + 1 : row + 1 active:active inRect:cellRect];
+            // Selection keys map to absolute candidate positions (digit k picks
+            // _candidates[k-1]); show numbers 1-9 only where a key can reach.
+            NSInteger number = grid ? (index < 9 ? index + 1 : 0) : row + 1;
+            [self drawCellWithAttributedText:[self cellText:state.candidates[index] number:number active:active]
+                                      active:active
+                                      inRect:cellRect];
         }
     }
 }
 
-- (void)drawCellWithText:(NSString *)text numberKey:(NSInteger)numberKey active:(BOOL)active inRect:(NSRect)cellRect {
+// Single attributed string per cell: number (mono, dim) + word. Measuring and
+// drawing the same string guarantees the pill and width always fit.
+- (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
     NSDictionary *wordAttrs = @{
         NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
         NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor : NSColor.labelColor,
@@ -75,7 +80,17 @@ static const CGFloat kFallbackLineHeight = 20;
         NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor
                                                 : [NSColor.secondaryLabelColor colorWithAlphaComponent:0.8],
     };
+    NSMutableAttributedString *cell = [[NSMutableAttributedString alloc] init];
+    if (number > 0 && number <= 9) {
+        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)number]
+                                                                     attributes:numberAttrs]];
+        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:@"  " attributes:numberAttrs]];
+    }
+    [cell appendAttributedString:[[NSAttributedString alloc] initWithString:text attributes:wordAttrs]];
+    return cell;
+}
 
+- (void)drawCellWithAttributedText:(NSAttributedString *)cellText active:(BOOL)active inRect:(NSRect)cellRect {
     NSRect pillRect = NSInsetRect(cellRect, kPadding, kSelectionGap);
     if (active) {
         NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
@@ -83,16 +98,10 @@ static const CGFloat kFallbackLineHeight = 20;
         [pill fill];
     }
 
-    NSString *number = [NSString stringWithFormat:@"%ld ", (long)numberKey];
-    CGSize numberSize = [number sizeWithAttributes:numberAttrs];
-    NSRect textRect = NSInsetRect(pillRect, kCellPadding, 0);
-    CGFloat wordHeight = [wordAttrs[NSFontAttributeName] pointSize];
-    [number drawInRect:NSMakeRect(textRect.origin.x, textRect.origin.y + (kRowHeight - numberSize.height) / 2, numberSize.width,
-                                  numberSize.height)
-        withAttributes:numberAttrs];
-    [text drawInRect:NSMakeRect(textRect.origin.x + numberSize.width, textRect.origin.y + (kRowHeight - wordHeight) * 0.75,
-                                MAX(0, textRect.size.width - numberSize.width), textRect.size.height)
-        withAttributes:wordAttrs];
+    NSSize textSize = [cellText size];
+    NSRect textRect = NSMakeRect(pillRect.origin.x + kCellPadding, pillRect.origin.y + MAX(0, (pillRect.size.height - textSize.height) / 2),
+                                 MAX(0, MIN(textSize.width, pillRect.size.width - kCellPadding * 2)), textSize.height);
+    [cellText drawWithRect:textRect options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine context:nil];
 }
 
 - (void)mouseDown:(NSEvent *)event {
@@ -263,8 +272,6 @@ static const CGFloat kFallbackLineHeight = 20;
         return NSZeroSize;
     }
     BOOL grid = state.layout == CandidatePanelLayoutGrid;
-    NSFont *font = [NSFont systemFontOfSize:14 weight:NSFontWeightMedium];
-    NSDictionary *attrs = @{NSFontAttributeName : font};
 
     if (grid) {
         NSInteger rows = state.gridRenderedRowCount;
@@ -275,11 +282,12 @@ static const CGFloat kFallbackLineHeight = 20;
                 if (index >= (NSInteger)state.candidates.count) {
                     continue;
                 }
-                CGFloat w = [state.candidates[index] sizeWithAttributes:attrs].width;
-                cellWidth = MAX(cellWidth, w);
+                NSInteger number = index < 9 ? index + 1 : 0;
+                NSAttributedString *cell = [self.content cellText:state.candidates[index] number:number active:NO];
+                cellWidth = MAX(cellWidth, cell.size.width);
             }
         }
-        cellWidth += kCellPadding * 2 + 20; // number key + paddings
+        cellWidth += kCellPadding * 2;
         return NSMakeSize(MAX(kMinPanelWidth, cellWidth * state.gridColumns), rows * kRowHeight + kPadding * 2);
     }
 
@@ -290,10 +298,10 @@ static const CGFloat kFallbackLineHeight = 20;
         if (index >= (NSInteger)state.candidates.count) {
             break;
         }
-        CGFloat w = [state.candidates[index] sizeWithAttributes:attrs].width;
-        width = MAX(width, w);
+        NSAttributedString *cell = [self.content cellText:state.candidates[index] number:i + 1 active:NO];
+        width = MAX(width, cell.size.width);
     }
-    width += kCellPadding * 2 + 20;
+    width += kCellPadding * 2;
     return NSMakeSize(MAX(kMinPanelWidth, width), count * kRowHeight + kPadding * 2);
 }
 
