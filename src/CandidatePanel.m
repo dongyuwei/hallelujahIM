@@ -124,14 +124,18 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 }
 
 - (void)drawCellWithAttributedText:(NSAttributedString *)cellText active:(BOOL)active inRect:(NSRect)cellRect {
-    NSRect pillRect = NSInsetRect(cellRect, kPadding, kSelectionGap);
+    NSSize textSize = [cellText size];
+    // The pill hugs the text (plus padding), not the whole column, so a short
+    // highlighted word doesn't sit in an oversized box.
+    CGFloat pillWidth = MIN(textSize.width + kCellPadding * 2, cellRect.size.width - kPadding * 2);
+    NSRect pillRect =
+        NSMakeRect(cellRect.origin.x + kPadding, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
     if (active) {
         NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
         [NSColor.controlAccentColor setFill];
         [pill fill];
     }
 
-    NSSize textSize = [cellText size];
     NSRect textRect = NSMakeRect(pillRect.origin.x + kCellPadding, pillRect.origin.y + MAX(0, (pillRect.size.height - textSize.height) / 2),
                                  MAX(0, MIN(textSize.width, pillRect.size.width - kCellPadding * 2)), textSize.height);
     [cellText drawWithRect:textRect options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine context:nil];
