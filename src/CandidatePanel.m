@@ -1,8 +1,8 @@
 #import "CandidatePanel.h"
 
-static const CGFloat kRowHeight = 22;
-static const CGFloat kPadding = 4;
-static const CGFloat kCellPadding = 5;
+static const CGFloat kRowHeight = 20;
+static const CGFloat kPadding = 3;
+static const CGFloat kCellPadding = 4;
 static const CGFloat kCornerRadius = 10;
 static const CGFloat kSelectionGap = 4;
 static const CGFloat kMinPanelWidth = 120;
