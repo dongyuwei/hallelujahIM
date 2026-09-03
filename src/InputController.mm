@@ -881,11 +881,11 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         // assume candidateFrame will display at current cursor's right-side.
         positionPoint.x = screenWidth - candidateFrame.size.width - annotationWindowWidth;
     }
-    if (currentPoint.y >= candidateFrame.size.height) {
-        positionPoint.y = positionPoint.y - 8; // Both 8 and 3 are magic numbers to adjust the position
-    } else {
-        positionPoint.y = positionPoint.y + candidateFrame.size.height + lineHeight + 3;
-    }
+    // Anchor to the candidate panel's actual top edge (window frame origin is
+    // bottom-left), instead of the cursor line plus magic offsets - the panel
+    // itself shifts/flips near screen edges, and only its own frame tells
+    // where the top really is.
+    positionPoint.y = candidateFrame.origin.y + candidateFrame.size.height;
 
     return positionPoint;
 }
