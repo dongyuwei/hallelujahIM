@@ -1,13 +1,20 @@
 #import "CandidatePanel.h"
 
-static const CGFloat kRowHeight = 20;
+// SwiftType-style palette and metrics (cloned from its Theme):
+// background #1B1B1B, border #1B1B1B (2pt), corner radius 6,
+// text #FCFCFC, number #A0796A, highlight text #FF9900, highlight #533566.
+static const CGFloat kRowHeight = 24;
 static const CGFloat kPadding = 3;
-static const CGFloat kCellPadding = 4;
-static const CGFloat kCornerRadius = 10;
-static const CGFloat kSelectionGap = 4;
+static const CGFloat kCellPadding = 3;
+static const CGFloat kCornerRadius = 6;
+static const CGFloat kSelectionGap = 3;
 static const CGFloat kMinPanelWidth = 120;
 static const CGFloat kMaxCellWidth = 150; // a single cell never grows wider than this
 static const CGFloat kFallbackLineHeight = 20;
+
+static NSColor *PanelColor(int r, int g, int b, CGFloat alpha) {
+    return [NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:alpha];
+}
 
 // Cell insets used by drawing (kPadding + kCellPadding on each side).
 static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
@@ -38,9 +45,9 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
     NSRect bounds = self.bounds;
     NSBezierPath *bg = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:kCornerRadius yRadius:kCornerRadius];
-    [NSColor.windowBackgroundColor setFill];
+    [PanelColor(0x1B, 0x1B, 0x1B, 1) setFill];
     [bg fill];
-    [[NSColor.separatorColor colorWithAlphaComponent:0.5] setStroke];
+    [[PanelColor(0x1B, 0x1B, 0x1B, 1) colorWithAlphaComponent:0.85] setStroke];
     [bg stroke];
 
     BOOL grid = state.layout == CandidatePanelLayoutGrid;
@@ -101,17 +108,18 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     return result;
 }
 
-// Single attributed string per cell: number (mono, dim) + word. Measuring and
-// drawing the same string guarantees the pill and width always fit.
+// Single attributed string per cell: number (mono, muted) + word. Measuring
+// and drawing the same string guarantees the pill and width always fit.
+// Colors cloned from SwiftType's default theme: word #FCFCFC (highlight
+// #FF9900), number #A0796A.
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
     NSDictionary *wordAttrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:13 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor : NSColor.labelColor,
+        NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0x99, 0x00, 1) : PanelColor(0xFC, 0xFC, 0xFC, 1),
     };
     NSDictionary *numberAttrs = @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:10 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor
-                                                : [NSColor.secondaryLabelColor colorWithAlphaComponent:0.8],
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
     };
     NSMutableAttributedString *cell = [[NSMutableAttributedString alloc] init];
     if (number > 0 && number <= 9) {
@@ -133,7 +141,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         NSMakeRect(cellRect.origin.x + kPadding, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
     if (active) {
         NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
-        [NSColor.controlAccentColor setFill];
+        [PanelColor(0x53, 0x35, 0x66, 0.9) setFill];
         [pill fill];
     }
 
