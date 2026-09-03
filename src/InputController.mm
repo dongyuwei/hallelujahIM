@@ -367,6 +367,13 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         return;
     }
 
+    // The custom panel never pulls candidates through the candidates:
+    // callback (the old IMKCandidates did), and in mixed mode that callback
+    // builds the combined English+Chinese page — request it when needed.
+    if ([self mixedInput]) {
+        [self candidates:sender];
+    }
+
     [sharedCandidates updateCandidates:_candidates];
     [sharedCandidates showAtClient:_currentClient];
     // selection state is owned by the input method; a fresh page starts at row 0
@@ -424,6 +431,10 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
         [self originalBufferAppend:characters client:sender];
 
+        // The old IMKCandidates used to pull candidates through the
+        // candidates: callback on updateCandidates; the custom panel never
+        // does, so request them here.
+        [self candidates:sender];
         [sharedCandidates updateCandidates:_candidates];
         [sharedCandidates showAtClient:_currentClient];
         [self syncHighlightFromPanel];
@@ -510,6 +521,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         [self showPreeditString:convertedString];
 
         if (convertedString && convertedString.length > 0) {
+            [self candidates:sender]; // custom panel does not pull candidates itself
             [sharedCandidates updateCandidates:_candidates];
             [sharedCandidates showAtClient:_currentClient];
             [self syncHighlightFromPanel];
