@@ -89,17 +89,25 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     }
 }
 
-// Each grid column is sized to its widest candidate (with the number gutter),
-// so short-word columns stay snug instead of inheriting the widest word.
+// Each grid column is sized to its widest candidate among the VISIBLE rows
+// only, like NSGridView's fitting size (hidden rows contribute nothing). A
+// collapsed single-row bar therefore stays snug; the panel widens when the
+// grid expands and already-showing rows come into play.
 - (NSArray<NSNumber *> *)gridColumnWidths {
     CandidatePanelState *state = self.state;
     NSInteger columns = state.gridColumns;
     CGFloat widths[8] = {0};
-    for (NSInteger index = 0; index < (NSInteger)state.candidates.count; index++) {
-        NSInteger col = index % columns;
-        NSInteger number = col + 1; // worst case: gutter present
-        NSAttributedString *cell = [self cellText:state.candidates[index] number:number active:NO];
-        widths[col] = MAX(widths[col], cell.size.width + kCellInset);
+    NSInteger rows = state.gridRenderedRowCount;
+    for (NSInteger row = 0; row < rows; row++) {
+        for (NSInteger col = 0; col < columns; col++) {
+            NSInteger index = (state.gridVisibleRowOffset + row) * columns + col;
+            if (index >= (NSInteger)state.candidates.count) {
+                continue;
+            }
+            NSInteger number = col + 1; // worst case: gutter present
+            NSAttributedString *cell = [self cellText:state.candidates[index] number:number active:NO];
+            widths[col] = MAX(widths[col], cell.size.width + kCellInset);
+        }
     }
     NSMutableArray<NSNumber *> *result = [NSMutableArray arrayWithCapacity:columns];
     for (NSInteger col = 0; col < columns; col++) {
