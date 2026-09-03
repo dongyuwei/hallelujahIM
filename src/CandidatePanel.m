@@ -6,6 +6,7 @@ static const CGFloat kCellPadding = 12;
 static const CGFloat kCornerRadius = 10;
 static const CGFloat kSelectionGap = 4;
 static const CGFloat kMinPanelWidth = 120;
+static const CGFloat kMaxCellWidth = 200; // a single cell never grows wider than this
 static const CGFloat kFallbackLineHeight = 20;
 
 // Renders the candidates described by CandidatePanelState. Single drawRect
@@ -43,7 +44,7 @@ static const CGFloat kFallbackLineHeight = 20;
     NSInteger rowOffset = grid ? state.gridVisibleRowOffset : state.verticalTopVisibleLine;
 
     NSInteger columns = grid ? state.gridColumns : 1;
-    CGFloat cellWidth = grid ? bounds.size.width / columns : bounds.size.width;
+    CGFloat cellWidth = grid ? MIN(bounds.size.width / columns, kMaxCellWidth) : bounds.size.width;
 
     for (NSInteger row = 0; row < rowCount; row++) {
         for (NSInteger col = 0; col < columns; col++) {
@@ -294,8 +295,10 @@ static const CGFloat kFallbackLineHeight = 20;
             cellWidth = MAX(cellWidth, cell.size.width);
         }
         // text is inset by the pill margin (kPadding) and the cell padding
-        // (kCellPadding) on each side
+        // (kCellPadding) on each side; cap extremely long candidates so a
+        // runaway measurement can never produce a screen-wide panel
         cellWidth += kPadding * 2 + kCellPadding * 2;
+        cellWidth = MIN(cellWidth, kMaxCellWidth);
         return NSMakeSize(MAX(kMinPanelWidth, cellWidth * state.gridColumns), state.gridRenderedRowCount * kRowHeight + kPadding * 2);
     }
 
@@ -321,6 +324,9 @@ static const CGFloat kFallbackLineHeight = 20;
     NSRect frame = self.panel.frame;
     frame.size = size;
     [self.panel setFrame:frame display:YES];
+    // keep the content view in lockstep with the panel in case a resize
+    // happened while the content was not yet in the window
+    [self.content setFrame:self.panel.contentView.bounds];
 }
 
 - (void)reposition {
