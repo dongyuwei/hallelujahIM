@@ -8,6 +8,8 @@
 
 - (void)showWindow:(NSPoint)origin;
 
+- (void)setWindowHeight:(CGFloat)height;
+
 - (void)hideWindow;
 
 - (void)setAnnotation:(NSString *)annotation;

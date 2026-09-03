@@ -25,8 +25,21 @@ static AnnotationWinController *sharedController;
     // Make sure panel can float over full screen apps
     //  self.panel.collectionBehavior = NSWindowCollectionBehaviorCanJoinAllSpaces;
     (self.panel).styleMask = NSWindowStyleMaskBorderless;
+    // Match the candidate panel: dark background, light text.
+    (self.panel).backgroundColor = [NSColor colorWithCalibratedRed:0x1B / 255.0 green:0x1B / 255.0 blue:0x1B / 255.0 alpha:1.0];
+    [self.view setTextColor:[NSColor colorWithCalibratedRed:0xFC / 255.0 green:0xFC / 255.0 blue:0xFC / 255.0 alpha:1.0]];
+    [self.view setDrawsBackground:NO];
     [self performSelector:@selector(hideWindow) withObject:nil afterDelay:0.01];
     // [self showWindow:NSMakePoint(10, self.height + 10)]; //for dev debug
+}
+
+- (void)setWindowHeight:(CGFloat)height {
+    NSRect panelFrame = self.panel.frame;
+    panelFrame.size.height = height;
+    [self.panel setFrame:panelFrame display:NO];
+    NSRect viewFrame = self.view.frame;
+    viewFrame.size.height = height;
+    self.view.frame = viewFrame;
 }
 
 - (void)showWindow:(NSPoint)origin {

@@ -844,6 +844,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     NSString *annotation = [engine getAnnotation:candidateString.string];
     if (annotation && annotation.length > 0) {
         [_annotationWin setAnnotation:annotation];
+        [_annotationWin setWindowHeight:[sharedCandidates candidateFrame].size.height];
         [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
     } else {
         [_annotationWin hideWindow];
