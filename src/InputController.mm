@@ -486,13 +486,13 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 
             if (keyCode == KEY_ARROW_DOWN) {
                 [sharedCandidates moveDown:self];
-                _currentCandidateIndex++;
+                _currentCandidateIndex = MIN(_currentCandidateIndex + 1, (NSInteger)_candidates.count);
                 return NO;
             }
 
             if (keyCode == KEY_ARROW_UP) {
                 [sharedCandidates moveUp:self];
-                _currentCandidateIndex--;
+                _currentCandidateIndex = MAX(_currentCandidateIndex - 1, 1);
                 return NO;
             }
         }
@@ -505,15 +505,20 @@ static BOOL ContainsChineseCharacter(NSString *text) {
             }
 
             if (isCandidatesVisible) { // use 1~9 digital numbers as selection keys
-                int pressedNumber = characters.intValue;
-                NSString *candidate;
-                int pageSize = 9;
-                if (_currentCandidateIndex <= pageSize) {
-                    candidate = _candidates[pressedNumber - 1];
-                } else {
-                    candidate = _candidates[pageSize * (_currentCandidateIndex / pageSize - 1) + (_currentCandidateIndex % pageSize) +
-                                            pressedNumber - 1];
+                NSInteger pressedNumber = characters.integerValue;
+                NSInteger pageSize = 9;
+                if (pressedNumber < 1 || pressedNumber > pageSize || _candidates.count == 0) {
+                    return NO;
                 }
+
+                NSInteger currentIndex = MIN(MAX(_currentCandidateIndex, 1), (NSInteger)_candidates.count);
+                NSInteger pageStart = ((currentIndex - 1) / pageSize) * pageSize;
+                NSInteger candidateIndex = pageStart + pressedNumber - 1;
+                if (candidateIndex < 0 || candidateIndex >= (NSInteger)_candidates.count) {
+                    return NO;
+                }
+
+                NSString *candidate = _candidates[candidateIndex];
                 [self cancelComposition];
                 [self setComposedBuffer:candidate];
                 [self setOriginalBuffer:candidate];
