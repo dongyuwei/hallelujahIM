@@ -1,12 +1,12 @@
 #import "CandidatePanel.h"
 
-static const CGFloat kRowHeight = 24;
-static const CGFloat kPadding = 6;
-static const CGFloat kCellPadding = 10;
+static const CGFloat kRowHeight = 23;
+static const CGFloat kPadding = 5;
+static const CGFloat kCellPadding = 8;
 static const CGFloat kCornerRadius = 10;
 static const CGFloat kSelectionGap = 4;
 static const CGFloat kMinPanelWidth = 120;
-static const CGFloat kMaxCellWidth = 200; // a single cell never grows wider than this
+static const CGFloat kMaxCellWidth = 150; // a single cell never grows wider than this
 static const CGFloat kFallbackLineHeight = 20;
 
 // Cell insets used by drawing (kPadding + kCellPadding on each side).
@@ -105,11 +105,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // drawing the same string guarantees the pill and width always fit.
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
     NSDictionary *wordAttrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
+        NSFontAttributeName : [NSFont systemFontOfSize:13 weight:NSFontWeightMedium],
         NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor : NSColor.labelColor,
     };
     NSDictionary *numberAttrs = @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:10 weight:NSFontWeightMedium],
         NSForegroundColorAttributeName : active ? NSColor.alternateSelectedControlTextColor
                                                 : [NSColor.secondaryLabelColor colorWithAlphaComponent:0.8],
     };
@@ -117,7 +117,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     if (number > 0 && number <= 9) {
         [cell appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)number]
                                                                      attributes:numberAttrs]];
-        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:@"  " attributes:numberAttrs]];
+        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:numberAttrs]];
     }
     [cell appendAttributedString:[[NSAttributedString alloc] initWithString:text attributes:wordAttrs]];
     return cell;
