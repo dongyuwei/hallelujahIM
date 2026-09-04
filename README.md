@@ -20,7 +20,7 @@
 7. 按键盘右侧`shift` 键可以在智能英语输入模式与传统英语输入模式间切换。
 8. 选词方式：数字键 1~9 及 `Enter` 回车键和 `Space` 空格键均可选词提交。`Space` 空格键选词默认会自动附加一个空格在单词后面，可以在配置页面关闭自动附加空格功能。`Enter` 回车键选词则不会附加空格。
 9. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键切换到拼音输入模式，输入拼音即可打出中文汉字，`空格` 或数字键提交高亮候选，`Enter` 回车键提交高亮候选（不附加空格）。再次按`右Command` 切回智能英语输入模式。开启「中英混合输入」偏好后无需切换模式，输入时同时给出英文与中文候选：每块最多 5 个候选，页面剩余位置由另一语言补满，并且会根据上一次提交的内容动态排序（上次输入中文或中文标点则中文候选在上，反之英文或英文标点在上）；标点符号也跟随语言：提交英文后半角标点直接上屏，提交中文后标点转为中文全角标点。
-10. **自绘候选面板（竖排 + 网格）**：候选面板由输入法自身实现（`CandidatePanel` + `CandidatePanelState`），默认竖排候选列表，可在偏好设置中切换为 5 列网格布局。网格布局参考了 SwiftType 输入法的 Grid Panel 实现：方向键导航，首次按 `↓` 展开网格，之后上下左右均可导航，在第一行再按 `↑` 收起；`←`/`→` 在当前行内循环移动；空格/回车/数字键提交高亮候选。
+10. **自绘候选面板（竖排 + 网格）**：候选面板由输入法自身实现（`CandidatePanel` + `CandidatePanelState`），默认竖排候选列表，可在偏好设置中切换为 5 列网格布局。网格布局参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现：方向键导航，首次按 `↓` 展开网格，之后上下左右均可导航，在第一行再按 `↑` 收起；`←`/`→` 在当前行内循环移动；空格/回车/数字键提交高亮候选。
 
 # 下载与安装
 
@@ -81,7 +81,7 @@
 - `src/CandidatePanelState`：纯导航状态机（无 AppKit），竖排 9 行浮动窗口、网格展开/收起、列循环、行窗口滚动等逻辑全部可单测覆盖；
 - `src/CandidatePanel`：`NSPanel` 封装 + `drawRect` 渲染，负责定位（光标下方、屏幕内钳制）、高亮、鼠标点击提交。
 
-网格布局的导航语义（首次按下展开、上下左右导航、行内循环）参考了 SwiftType 输入法的 Grid Panel 实现。
+网格布局的导航语义（首次按下展开、上下左右导航、行内循环）参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv) 的优秀工作！
 
 
 ## 编译本输入法
@@ -174,6 +174,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 6. [talisman](https://github.com/Yomguithereal/talisman)，使用其中的 phonex 算法，实现模糊近似音输入。
 7. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein)，配合 talisman 的 phonex 算法，在音似词中按 Damerau Levenshtein 编辑距离筛选最接近的候选词。
 8. [鼠鬚管 squirrel 输入法](https://github.com/rime/squirrel) 哈利路亚输入法安装包 pkg 的制作 copy/参考了 squirrel 的实现。
+9. [SwiftType](https://github.com/mgxv/SwiftType/)，网格候选面板的导航语义（首次按下展开、四向导航、行内循环）参考了其 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv)！
 
 ## 贡献代码
 
