@@ -17,9 +17,9 @@
 4. 即时翻译功能(显示音标，及英文单词的中文释义)。
 5. 支持按拼音来输出对应英文。如输入`suanfa`，输入法会候选词中会显示 `algorithm`。
 6. 支持按英文单词的模糊音来输入。 如输入 `cerrage` 或者 `kerrage` 可以得到 `courage` 候选词，也可以输入 `aosome` 或者 `ausome` 来得到 `awesome` 候选词。
-7. 按键盘右侧`shift` 键可以在智能英语输入模式与传统英语输入模式间切换。
+7. 按键盘右侧`Command` 键可在 **智能英语**、**传统英语**、**拼音** 三种输入模式间循环切换（智能英语 → 传统英语 → 拼音 → 智能英语）。传统英语模式下按键直接透传给系统；智能英语模式提供英文候选与翻译；拼音模式下输入拼音即可打出中文。
 8. 选词方式：数字键 1~9 及 `Enter` 回车键和 `Space` 空格键均可选词提交。`Space` 空格键选词默认会自动附加一个空格在单词后面，可以在配置页面关闭自动附加空格功能。`Enter` 回车键选词则不会附加空格。
-9. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键切换到拼音输入模式，输入拼音即可打出中文汉字，`空格` 或数字键提交高亮候选，`Enter` 回车键提交高亮候选（不附加空格）。再次按`右Command` 切回智能英语输入模式。
+9. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键循环到拼音输入模式，输入拼音即可打出中文汉字，`空格` 或数字键提交高亮候选，`Enter` 回车键提交高亮候选（不附加空格）。再次按`右Command` 循环到智能英语模式。
 10. **自绘候选面板（竖排 + 网格）**：候选面板由输入法自身实现（`CandidatePanel` + `CandidatePanelState`），默认竖排候选列表，可在偏好设置中切换为 5 列网格布局。网格布局参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现：方向键导航，首次按 `↓` 展开网格，之后上下左右均可导航，在第一行再按 `↑` 收起；`←`/`→` 在当前行内循环移动；空格/回车/数字键提交高亮候选。
 11. **翻译集成到候选面板（取代独立翻译窗口）**：高亮词的音标与翻译直接绘制在候选面板内，不再使用独立的悬浮窗口。竖排布局在右侧展开一列显示音标与词义（无翻译时自动收拢为单列）；网格布局在底部显示一行紧凑的释义。选中不同候选即时刷新。
 
@@ -145,7 +145,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 2. **拼音引擎（librime）**: 拼音输入模式由 [librime](https://github.com/rime/librime) 驱动
    - 使用「朙月拼音」(luna_pinyin) 方案，默认输出简体中文（OpenCC t2s 转换）
-   - 通过右 Command 键切换到拼音输入模式
+   - 通过右 Command 键循环到拼音输入模式
    - 方案与词典数据位于 app bundle 内 `Contents/SharedSupport/rime-data/`
    - 首次启动时自动部署（编译产物写入 `~/Library/Application Support/hallelujah/rime/`）
    - librime 为预编译 universal 库，通过 `scripts/get-librime.sh` 下载并嵌入 app bundle

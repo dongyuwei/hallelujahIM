@@ -3,14 +3,20 @@
 
 #import "ConversionEngine.h"
 
+// The three input modes the right-Command key cycles through.
+typedef NS_ENUM(NSInteger, InputMode) {
+    InputModeHallelujahEnglish = 0, // intelligent English candidates
+    InputModeRawEnglish = 1,        // keys pass straight through to the app
+    InputModePinyin = 2,            // Rime-driven Chinese composition
+};
+
 @interface InputController : IMKInputController {
     NSMutableString *_composedBuffer;
     NSMutableString *_originalBuffer;
     NSInteger _insertionIndex;
     NSInteger _currentCandidateIndex;
     NSMutableArray *_candidates;
-    BOOL _defaultEnglishMode;
-    BOOL _pinyinMode;
+    InputMode _inputMode;
     NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet
     NSInteger _panelHighlight; // candidate row mirrored from Rime's highlight
     id _currentClient;

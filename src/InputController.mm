@@ -15,7 +15,7 @@ extern RimeEngine *rimeEngine;
 
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
-                     KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
+                     KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_COMMAND = 54;
 
 @interface InputController () <CandidatePanelDelegate>
 
@@ -38,43 +38,14 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             return YES;
         }
 
-        // Right Command key: toggle pinyin mode
+        // Right Command key: cycle between hallelujah-english, raw-english
+        // and pinyin input modes.
         if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && event.keyCode == KEY_RIGHT_COMMAND) {
-            _pinyinMode = !_pinyinMode;
-            if (_pinyinMode) {
-                // commit what was typed in english mode so far before entering pinyin mode
-                NSString *bufferedText = [self originalBuffer];
-                if (bufferedText && bufferedText.length > 0) {
-                    [self cancelComposition];
-                    [self commitCompositionWithoutSpace:sender];
-                }
-                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
-            } else {
-                // flush rime's unconverted input as plain text before going back to english mode
-                NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
-                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
-                if (rawInput.length > 0) {
-                    [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
-                }
-            }
-            [self reset];
-        }
-
-        if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && _lastModifiers[1] == NSEventModifierFlagShift &&
-            event.keyCode == KEY_RIGHT_SHIFT && !(_lastModifiers[0] & NSEventModifierFlagShift)) {
-
-            _defaultEnglishMode = !_defaultEnglishMode;
-            if (_defaultEnglishMode) {
-                NSString *bufferedText = [self originalBuffer];
-                if (bufferedText && bufferedText.length > 0) {
-                    [self cancelComposition];
-                    [self commitComposition:sender];
-                }
-            }
+            [self cycleInputMode:sender];
         }
         break;
     case NSEventTypeKeyDown:
-        if (_defaultEnglishMode) {
+        if (_inputMode == InputModeRawEnglish) {
             break;
         }
 
@@ -82,7 +53,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         if (modifiers & NSEventModifierFlagCommand)
             break;
 
-        if (_pinyinMode) {
+        if (_inputMode == InputModePinyin) {
             handled = [self onRimeKeyEvent:event client:sender];
             break;
         }
@@ -106,6 +77,35 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     _lastModifiers[1] = modifiers;
     _lastEventTypes[1] = event.type;
     return handled;
+}
+
+// Right Command cycles: hallelujah-english -> raw-english -> pinyin -> back.
+// Switching away from a composing mode flushes what was typed so nothing is
+// lost: hallelujah-english commits its buffered word, pinyin flushes Rime's
+// unconverted input as plain text.
+- (void)cycleInputMode:(id)sender {
+    switch (_inputMode) {
+    case InputModeHallelujahEnglish: {
+        NSString *bufferedText = [self originalBuffer];
+        if (bufferedText && bufferedText.length > 0) {
+            [self cancelComposition];
+            [self commitCompositionWithoutSpace:sender];
+        }
+        break;
+    }
+    case InputModeRawEnglish:
+        break; // nothing buffered; keys pass straight through
+    case InputModePinyin: {
+        NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+        [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+        if (rawInput.length > 0) {
+            [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+        }
+        break;
+    }
+    }
+    _inputMode = (InputMode)((_inputMode + 1) % 3);
+    [self reset];
 }
 
 // Pinyin mode: Rime drives the composition; the candidate panel mirrors each
@@ -259,7 +259,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 // pinyin commits straight from _panelHighlight).
 - (void)syncHighlightFromPanel {
     _panelHighlight = sharedCandidates.selectedIndex;
-    if (_pinyinMode || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
+    if (_inputMode == InputModePinyin || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
         return;
     }
     NSString *word = _candidates[_panelHighlight];
@@ -466,7 +466,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)commitComposition:(id)sender {
-    if (_pinyinMode) {
+    if (_inputMode == InputModePinyin) {
         // server-driven commit (e.g. focus loss): flush the unconverted input
         NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
         [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
@@ -490,7 +490,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     BOOL commitWordWithSpace = [preference boolForKey:@"commitWordWithSpace"];
 
-    if (!_pinyinMode && commitWordWithSpace && text.length > 0) {
+    if (_inputMode != InputModePinyin && commitWordWithSpace && text.length > 0) {
         char firstChar = [text characterAtIndex:0];
         char lastChar = [text characterAtIndex:text.length - 1];
         if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
@@ -584,7 +584,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (NSArray *)candidates:(id)sender {
     NSString *originalInput = [self originalBuffer];
 
-    if (_pinyinMode) {
+    if (_inputMode == InputModePinyin) {
         // candidates are refreshed by rimeUpdate after each processed key
         return _candidates;
     }
@@ -596,7 +596,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
-    if (_pinyinMode) {
+    if (_inputMode == InputModePinyin) {
         // highlight state is owned by the input method; nothing to sync here
         return;
     }
@@ -622,7 +622,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (index == NSNotFound) {
         return;
     }
-    if (_pinyinMode) {
+    if (_inputMode == InputModePinyin) {
         [self commitSelectedRow:(NSInteger)index withSpace:YES sender:_currentClient];
         return;
     }

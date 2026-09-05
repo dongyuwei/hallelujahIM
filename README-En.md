@@ -14,8 +14,8 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 4. Instant translation is available as you type words (currently, it only supports English-to-Chinese, but the translation dictionary can be configured later on).
 5. Pinyin to English: you can input Hanyu Pinyin and receive the matching English word.
 6. Fuzzy phonetic match is another feature. For example, you can input `cerrage` or `kerrage` to get `courage`, and `aosome` or `ausome` to get `awesome`.
-7. You can switch to the default English input mode (the normal, quiet, or silent mode) by pressing the **right shift** key. Pressing shift again will switch back to the auto-suggestion mode.
-8. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin and get Chinese hanzi candidates; `space` or a digit key commits the highlighted candidate, `Enter` commits it without a trailing space. Press right `Command` again to switch back to intelligent English input mode.
+7. The right **Command** key cycles through three input modes: intelligent English → traditional English (raw, keys pass straight through to the app) → Pinyin → back to intelligent English.
+8. **Pinyin to Chinese**: Press the right `Command` key to cycle into Pinyin input mode. Type Chinese pinyin and get Chinese hanzi candidates; `space` or a digit key commits the highlighted candidate, `Enter` commits it without a trailing space. Press right `Command` again to cycle back to intelligent English input mode.
 9. **Custom candidate panel (vertical + grid)**: the candidate panel is drawn by the input method itself (`CandidatePanel` + `CandidatePanelState`): the default vertical candidate list, switchable to a 5-column grid layout in Preferences. The grid layout follows [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel design: arrow-key navigation, the first `↓` expands the grid, afterwards all four arrows navigate (another `↑` at the first row collapses it), `←`/`→` cycle within the active row, and space/Enter/digit keys commit the highlighted candidate.
 10. **Translation drawn inside the candidate panel (replaces the separate annotation window)**: the highlighted word's phonetic symbol and gloss are drawn directly in the candidate panel instead of a floating window. The vertical layout expands a right column for the phonetic and meanings (collapsing back to a single column when there's no translation); the grid layout shows a compact gloss row at the bottom. Refreshes as you move the highlight.
 
@@ -106,7 +106,7 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 2. **Pinyin engine (librime)**: the pinyin input mode is powered by [librime](https://github.com/rime/librime)
    - Uses the luna_pinyin (朙月拼音) schema, Simplified Chinese output by default (OpenCC t2s)
-   - Switch to pinyin mode via right Command key
+   - Cycle into pinyin mode via right Command key
    - Schema and dictionary data live in the app bundle at `Contents/SharedSupport/rime-data/`
    - Deployment runs automatically on first launch (artifacts go to `~/Library/Application Support/hallelujah/rime/`)
    - librime is a prebuilt universal library, downloaded and embedded via `scripts/get-librime.sh`
