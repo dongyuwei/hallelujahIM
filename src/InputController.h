@@ -3,11 +3,13 @@
 
 #import "ConversionEngine.h"
 
-// The three input modes the right-Command key cycles through.
+// The three input modes the right-Command key cycles through, in cycle order
+// (each value one step further than the previous): intelligent English ->
+// pinyin -> traditional English.
 typedef NS_ENUM(NSInteger, InputMode) {
     InputModeHallelujahEnglish = 0, // intelligent English candidates
-    InputModeRawEnglish = 1,        // keys pass straight through to the app
-    InputModePinyin = 2,            // Rime-driven Chinese composition
+    InputModePinyin = 1,            // Rime-driven Chinese composition
+    InputModeRawEnglish = 2,        // keys pass straight through to the app
 };
 
 @interface InputController : IMKInputController {

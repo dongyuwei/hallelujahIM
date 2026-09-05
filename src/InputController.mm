@@ -79,7 +79,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return handled;
 }
 
-// Right Command cycles: hallelujah-english -> raw-english -> pinyin -> back.
+// Right Command cycles: hallelujah-english -> pinyin -> raw-english -> back.
 // Switching away from a composing mode flushes what was typed so nothing is
 // lost: hallelujah-english commits its buffered word, pinyin flushes Rime's
 // unconverted input as plain text.
