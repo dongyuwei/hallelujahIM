@@ -7,8 +7,7 @@ var app = new Vue({
     newValue: "",
     preference: {
       showTranslation: true,
-      commitWordWithSpace: true,
-      mixedInput: false
+      commitWordWithSpace: true
     },
     substitutions: {}
   },

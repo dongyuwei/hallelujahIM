@@ -17,21 +17,6 @@ typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_SHIFT = 60, KEY_RIGHT_COMMAND = 54;
 
-// English and Chinese (half-width and full-width) punctuation each count as
-// their language for mixed mode's dynamic candidate ordering.
-static BOOL ContainsChineseCharacter(NSString *text) {
-    for (NSUInteger i = 0; i < text.length; i++) {
-        unichar ch = [text characterAtIndex:i];
-        BOOL han = (ch >= 0x3400 && ch <= 0x4DBF) || (ch >= 0x4E00 && ch <= 0x9FFF) || (ch >= 0xF900 && ch <= 0xFAFF);
-        // CJK Symbols and Punctuation (。、《》【】…) and Fullwidth Forms (，：？！…)
-        BOOL chinesePunctuation = (ch >= 0x3000 && ch <= 0x303F) || (ch >= 0xFF00 && ch <= 0xFFEF);
-        if (han || chinesePunctuation) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
 @interface InputController () <CandidatePanelDelegate>
 
 @end
@@ -53,8 +38,8 @@ static BOOL ContainsChineseCharacter(NSString *text) {
             return YES;
         }
 
-        // Right Command key: toggle pinyin mode (disabled in mixed mode)
-        if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && event.keyCode == KEY_RIGHT_COMMAND && ![self mixedInput]) {
+        // Right Command key: toggle pinyin mode
+        if (modifiers == 0 && _lastEventTypes[1] == NSEventTypeFlagsChanged && event.keyCode == KEY_RIGHT_COMMAND) {
             _pinyinMode = !_pinyinMode;
             if (_pinyinMode) {
                 // commit what was typed in english mode so far before entering pinyin mode
@@ -97,7 +82,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         if (modifiers & NSEventModifierFlagCommand)
             break;
 
-        if (_pinyinMode || [self mixedInput]) {
+        if (_pinyinMode) {
             handled = [self onRimeKeyEvent:event client:sender];
             break;
         }
@@ -123,14 +108,8 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     return handled;
 }
 
-// Mixed Chinese/English input: both engines run side by side and each page
-// shows 5 English candidates (digits 1-5) followed by 4 Chinese candidates
-// (digits 6-9). Rime still drives the composition; the English query runs
-// against Rime's raw input.
-- (BOOL)mixedInput {
-    return [preference boolForKey:@"mixedInput"];
-}
-
+// Pinyin mode: Rime drives the composition; the candidate panel mirrors each
+// page of Chinese candidates.
 - (BOOL)onRimeKeyEvent:(NSEvent *)event client:(id)sender {
     _currentClient = sender;
 
@@ -146,23 +125,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     // arrows move the highlight. Rime only builds the composition; the
     // Chinese rows commit through selectCandidateOnCurrentPage.
     NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
-
-    // Mixed mode: punctuation follows the last committed language. After
-    // English (or before anything was committed), punctuation is passed
-    // through as-is — any pending input is flushed raw first. After Chinese,
-    // Rime converts it to full-width punctuation.
-    if ([self mixedInput] && !_lastCommittedWasChinese && event.characters.length == 1) {
-        unichar ch = [event.characters characterAtIndex:0];
-        if (([[NSCharacterSet punctuationCharacterSet] characterIsMember:ch] ||
-             [[NSCharacterSet symbolCharacterSet] characterIsMember:ch])) {
-            if (rawInput.length > 0) {
-                [sender insertText:rawInput replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
-                [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
-                [self rimeUpdate:sender];
-            }
-            return NO; // let the app type the punctuation itself
-        }
-    }
 
     if (rawInput.length > 0) {
         NSString *chars = event.characters;
@@ -294,10 +256,10 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 // Mirrors the panel's highlight into the composition state so space, enter
 // and digits commit what the user sees (English mode commits _composedBuffer;
-// pinyin/mixed commit straight from _panelHighlight).
+// pinyin commits straight from _panelHighlight).
 - (void)syncHighlightFromPanel {
     _panelHighlight = sharedCandidates.selectedIndex;
-    if (_pinyinMode || [self mixedInput] || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
+    if (_pinyinMode || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
         return;
     }
     NSString *word = _candidates[_panelHighlight];
@@ -314,36 +276,13 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     }
 }
 
-// Commits the candidate shown on the given panel row. English rows (mixed
-// mode) go through the English commit path; Chinese rows map back to their
-// Rime page index and commit through Rime.
+// Commits the candidate shown on the given panel row by its Rime page index
+// (pinyin) or the English commit path (English mode).
 - (void)commitSelectedRow:(NSInteger)row withSpace:(BOOL)withSpace sender:(id)sender {
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         return;
     }
-    NSString *word = _candidates[row];
-    if ([self mixedInput] && [_mixedRowIsEnglish[row] boolValue]) {
-        [self commitEnglishCandidateWord:word withSpace:withSpace sender:sender];
-        return;
-    }
-    NSInteger rimeIndex = row;
-    if ([self mixedInput]) {
-        rimeIndex = [_mixedRowRimeIndexes[row] integerValue];
-    }
-    [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:rimeIndex];
-    [self rimeUpdate:sender];
-}
-
-- (void)commitEnglishCandidateWord:(NSString *)word withSpace:(BOOL)withSpace sender:(id)sender {
-    [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
-    [self setComposedBuffer:word];
-    [self setOriginalBuffer:word];
-    if (withSpace) {
-        [self commitEnglishComposition:sender];
-    } else {
-        [self commitCompositionWithoutSpace:sender];
-    }
-    _lastCommittedWasChinese = NO;
+    [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:row];
     [self rimeUpdate:sender];
 }
 
@@ -354,21 +293,12 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
         [sender insertText:commitText replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
-        // remember the language for mixed mode's dynamic candidate ordering
-        _lastCommittedWasChinese = ContainsChineseCharacter(commitText);
     }
 
     NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
     _candidates = [NSMutableArray array];
-    _rimePageCandidates = [NSMutableArray array];
     for (RimeCandidateItem *candidate in rimeCandidates) {
         [_candidates addObject:candidate.text];
-        [_rimePageCandidates addObject:candidate.text];
-    }
-
-    // in mixed mode the English query follows Rime's raw input
-    if ([self mixedInput]) {
-        [self setOriginalBuffer:[rimeEngine rawInput:(RimeSessionId)_rimeSession]];
     }
 
     NSInteger selStart = 0, selLength = 0, caretPos = 0;
@@ -377,13 +307,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         [sharedCandidates hide];
         _panelHighlight = 0;
         return;
-    }
-
-    // The custom panel never pulls candidates through the candidates:
-    // callback (the old IMKCandidates did), and in mixed mode that callback
-    // builds the combined English+Chinese page — request it when needed.
-    if ([self mixedInput]) {
-        [self candidates:sender];
     }
 
     [sharedCandidates updateCandidates:_candidates];
@@ -543,7 +466,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (void)commitComposition:(id)sender {
-    if (_pinyinMode || [self mixedInput]) {
+    if (_pinyinMode) {
         // server-driven commit (e.g. focus loss): flush the unconverted input
         NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
         [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
@@ -600,9 +523,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     [sharedCandidates hide];
     [sharedCandidates updateCandidates:@[]];
     _candidates = [[NSMutableArray alloc] init];
-    _rimePageCandidates = [[NSMutableArray alloc] init];
-    _mixedRowIsEnglish = [[NSMutableArray alloc] init];
-    _mixedRowRimeIndexes = [[NSMutableArray alloc] init];
     _panelHighlight = 0;
     [sharedCandidates setAnnotation:@""];
 }
@@ -669,76 +589,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
         return _candidates;
     }
 
-    if ([self mixedInput]) {
-        // Order the two blocks by the last committed language: the block
-        // matching that language leads (up to 5 rows), the other fills the
-        // rest of the 9-row page. Reads from _rimePageCandidates (kept
-        // separate from _candidates) so repeated IMK callbacks can't
-        // recombine an already-combined list; _mixedRowRimeIndexes remembers
-        // which Rime page index each Chinese row shows, so selection stays
-        // positionally correct even when duplicates are skipped.
-        NSMutableArray *english = [NSMutableArray array];
-        for (NSString *word in [engine getCandidates:originalInput]) {
-            if (word.length > 0 && ![english containsObject:word]) {
-                [english addObject:word];
-            }
-            if (english.count == 5) {
-                break;
-            }
-        }
-        NSMutableArray *chinese = [NSMutableArray array];
-        NSMutableArray *chineseIndexes = [NSMutableArray array];
-        [_rimePageCandidates enumerateObjectsUsingBlock:^(NSString *word, NSUInteger idx, BOOL *stop) {
-            if (chinese.count >= 5) {
-                *stop = YES;
-                return;
-            }
-            if (word.length > 0 && ![english containsObject:word] && ![chinese containsObject:word]) {
-                [chinese addObject:word];
-                [chineseIndexes addObject:@(idx)];
-            }
-        }];
-
-        NSMutableArray *combined = [NSMutableArray array];
-        NSMutableArray *rowIsEnglish = [NSMutableArray array];
-        NSMutableArray *rowRimeIndexes = [NSMutableArray array];
-        void (^appendEnglish)(NSString *word) = ^(NSString *word) {
-            [combined addObject:word];
-            [rowIsEnglish addObject:@YES];
-            [rowRimeIndexes addObject:@(NSNotFound)];
-        };
-        void (^appendChinese)(NSUInteger idx) = ^(NSUInteger idx) {
-            [combined addObject:_rimePageCandidates[idx]];
-            [rowIsEnglish addObject:@NO];
-            [rowRimeIndexes addObject:@(idx)];
-        };
-        if (_lastCommittedWasChinese) {
-            for (NSUInteger i = 0; i < chinese.count && combined.count < 9; i++) {
-                appendChinese([chineseIndexes[i] integerValue]);
-            }
-            for (NSString *word in english) {
-                if (combined.count >= 9) {
-                    break;
-                }
-                appendEnglish(word);
-            }
-        } else {
-            for (NSString *word in english) {
-                if (combined.count >= 9) {
-                    break;
-                }
-                appendEnglish(word);
-            }
-            for (NSUInteger i = 0; i < chinese.count && combined.count < 9; i++) {
-                appendChinese([chineseIndexes[i] integerValue]);
-            }
-        }
-        _mixedRowIsEnglish = rowIsEnglish;
-        _mixedRowRimeIndexes = rowRimeIndexes;
-        _candidates = combined;
-        return combined;
-    }
-
     NSArray *candidateList = [engine getCandidates:originalInput];
 
     _candidates = [NSMutableArray arrayWithArray:candidateList];
@@ -746,7 +596,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (void)candidateSelectionChanged:(NSAttributedString *)candidateString {
-    if (_pinyinMode || [self mixedInput]) {
+    if (_pinyinMode) {
         // highlight state is owned by the input method; nothing to sync here
         return;
     }
@@ -772,7 +622,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     if (index == NSNotFound) {
         return;
     }
-    if (_pinyinMode || [self mixedInput]) {
+    if (_pinyinMode) {
         [self commitSelectedRow:(NSInteger)index withSpace:YES sender:_currentClient];
         return;
     }

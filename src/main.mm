@@ -61,11 +61,7 @@ void deactivateInputSource() {
 
 void initPreference() {
     preference = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultPrefs =
-        @{@"commitWordWithSpace" : @YES,
-          @"showTranslation" : @YES,
-          @"mixedInput" : @NO,
-          @"useGridCandidatePanel" : @NO};
+    NSDictionary *defaultPrefs = @{@"commitWordWithSpace" : @YES, @"showTranslation" : @YES, @"useGridCandidatePanel" : @NO};
     [preference registerDefaults:defaultPrefs];
 }
 

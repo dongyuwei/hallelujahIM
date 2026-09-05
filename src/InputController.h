@@ -11,12 +11,8 @@
     NSMutableArray *_candidates;
     BOOL _defaultEnglishMode;
     BOOL _pinyinMode;
-    NSUInteger _rimeSession;                          // RimeSessionId, 0 when no session yet
-    NSInteger _panelHighlight;                        // candidate row mirrored from Rime's highlight
-    BOOL _lastCommittedWasChinese;                    // drives mixed-mode candidate ordering
-    NSMutableArray<NSString *> *_rimePageCandidates;  // raw Rime page, kept apart from the combined list
-    NSMutableArray<NSNumber *> *_mixedRowIsEnglish;   // per mixed-mode row: YES = English candidate
-    NSMutableArray<NSNumber *> *_mixedRowRimeIndexes; // per mixed-mode row: Rime page index (NSNotFound for English)
+    NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet
+    NSInteger _panelHighlight; // candidate row mirrored from Rime's highlight
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];

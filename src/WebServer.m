@@ -11,7 +11,6 @@ extern CandidatePanel *sharedCandidates;
 
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
-NSString *MIXED_INPUT_KEY = @"mixedInput";
 NSString *GRID_CANDIDATE_PANEL_KEY = @"useGridCandidatePanel";
 
 @interface WebServer ()
@@ -52,7 +51,6 @@ static int port = 62718;
                           return [GCDWebServerDataResponse responseWithJSONObject:@{
                               TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                               COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
-                              MIXED_INPUT_KEY : @([preference boolForKey:MIXED_INPUT_KEY]),
                               GRID_CANDIDATE_PANEL_KEY : @([preference boolForKey:GRID_CANDIDATE_PANEL_KEY]),
                           }];
                       }];
@@ -69,8 +67,6 @@ static int port = 62718;
                           bool commitWordWithSpace = [data[COMMIT_WORD_WITH_SPACE_KEY] boolValue];
                           [preference setBool:commitWordWithSpace forKey:COMMIT_WORD_WITH_SPACE_KEY];
 
-                          bool mixedInput = [data[MIXED_INPUT_KEY] boolValue];
-                          [preference setBool:mixedInput forKey:MIXED_INPUT_KEY];
                           bool useGridCandidatePanel = [data[GRID_CANDIDATE_PANEL_KEY] boolValue];
                           [preference setBool:useGridCandidatePanel forKey:GRID_CANDIDATE_PANEL_KEY];
                           // The custom panel rebuilds its window when switching layouts;
