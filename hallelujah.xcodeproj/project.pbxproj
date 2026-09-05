@@ -44,8 +44,6 @@
 		F102C5A61F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */; };
 		F102C5AA1F4882C80005B03F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5A91F4882C80005B03F /* main.mm */; };
 		F102C5AC1F4882D30005B03F /* InputController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F102C5AB1F4882D30005B03F /* InputController.mm */; };
-		F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */ = {isa = PBXBuildFile; fileRef = F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */; };
-		F1BF613D22D4DF6F003B946F /* AnnotationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */; };
 		A11122233301 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
 		A11122233302 /* CandidatePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233402 /* CandidatePanel.m */; };
 		A11122233303 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
@@ -108,9 +106,6 @@
 		F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; name = words_with_frequency_and_translation_and_ipa.sqlite3; path = dictionary/words_with_frequency_and_translation_and_ipa.sqlite3; sourceTree = "<group>"; };
 		F102C5A91F4882C80005B03F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = "<group>"; };
 		F102C5AB1F4882D30005B03F /* InputController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InputController.mm; path = src/InputController.mm; sourceTree = "<group>"; };
-		F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnotationWinController.m; path = src/AnnotationWinController.m; sourceTree = "<group>"; };
-		F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnotationWinController.h; path = src/AnnotationWinController.h; sourceTree = "<group>"; };
-		F1BF613C22D4DF6F003B946F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AnnotationWindow.xib; sourceTree = "<group>"; };
 		F1CDA2A41B55180A005086C6 /* InputController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputController.h; path = src/InputController.h; sourceTree = "<group>"; };
 		A11122233401 /* CandidatePanelState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandidatePanelState.m; path = src/CandidatePanelState.m; sourceTree = "<group>"; };
 		A11122233402 /* CandidatePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandidatePanel.m; path = src/CandidatePanel.m; sourceTree = "<group>"; };
@@ -184,8 +179,6 @@
 				F102C5A91F4882C80005B03F /* main.mm */,
 				F1CDA2A41B55180A005086C6 /* InputController.h */,
 				F102C5AB1F4882D30005B03F /* InputController.mm */,
-				F109B4901E1A83AF00AA7A41 /* AnnotationWinController.h */,
-				F109B48F1E1A83AF00AA7A41 /* AnnotationWinController.m */,
 				3804D23620F2FC2A00CF1BD9 /* NSScreen+PointConversion.h */,
 				3804D23520F2FC2A00CF1BD9 /* NSScreen+PointConversion.m */,
 				A11122233404 /* CandidatePanelState.h */,
@@ -240,7 +233,6 @@
 			isa = PBXGroup;
 			children = (
 				38788DC8231EA73B0005685A /* cedict.json */,
-				F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */,
 				3817857A22D0E2240091268E /* phonex.js */,
 				3802CD9922CF591100A7E2F9 /* phonex_encoded_words.json */,
 				F102C5A51F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 */,
@@ -392,7 +384,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1BF613D22D4DF6F003B946F /* AnnotationWindow.xib in Resources */,
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
 				3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */,
 				38788DC9231EA73C0005685A /* cedict.json in Resources */,
@@ -517,7 +508,6 @@
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,
-				F109B4911E1A83AF00AA7A41 /* AnnotationWinController.m in Sources */,
 				381CD8C622C60D610098764F /* WebServer.m in Sources */,
 				386E1C0022DC5E9C000C6DCF /* ConversionEngine.mm in Sources */,
 				7A1E00000000000000000001 /* RimeEngine.mm in Sources */,
@@ -542,14 +532,6 @@
 				38A9EAC522CB4136003CCF52 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		F1BF613B22D4DF6F003B946F /* AnnotationWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1BF613C22D4DF6F003B946F /* Base */,
-			);
-			name = AnnotationWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
