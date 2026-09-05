@@ -139,6 +139,15 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 ### snapshots
 
+#### New UI
+
+![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
+![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
+![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
+![pinyin-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-v.png)
+
+#### Old UI
+
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)

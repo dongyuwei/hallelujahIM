@@ -193,6 +193,15 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ### 一些截图
 
+#### New UI
+
+![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
+![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
+![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
+![pinyin-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-v.png)
+
+#### Old UI
+
 auto suggestion from local dictionary:<br/>
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
 ![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
