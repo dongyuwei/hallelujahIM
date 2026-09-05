@@ -604,8 +604,7 @@ static BOOL ContainsChineseCharacter(NSString *text) {
     _mixedRowIsEnglish = [[NSMutableArray alloc] init];
     _mixedRowRimeIndexes = [[NSMutableArray alloc] init];
     _panelHighlight = 0;
-    [_annotationWin setAnnotation:@""];
-    [_annotationWin hideWindow];
+    [sharedCandidates setAnnotation:@""];
 }
 
 - (NSMutableString *)composedBuffer {
@@ -788,10 +787,6 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 - (void)activateServer:(id)sender {
     [sender overrideKeyboardWithKeyboardNamed:@"com.apple.keylayout.US"];
 
-    if (_annotationWin == nil) {
-        _annotationWin = [AnnotationWinController sharedController];
-    }
-
     sharedCandidates.delegate = self;
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
@@ -835,47 +830,12 @@ static BOOL ContainsChineseCharacter(NSString *text) {
 }
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
-    // The annotation window is positioned against the single-column candidate
-    // frame; with the wider grid panel it lands at the wrong place, so keep it
-    // closed entirely in grid mode.
-    if ([preference boolForKey:@"useGridCandidatePanel"]) {
-        return;
-    }
+    // The gloss lives inside the candidate panel now: it grows a footer row
+    // under the grid/list instead of opening a second window. Both vertical
+    // and grid layouts render it the same way, so the separate annotation
+    // window is retired.
     NSString *annotation = [engine getAnnotation:candidateString.string];
-    if (annotation && annotation.length > 0) {
-        [_annotationWin setAnnotation:annotation];
-        [_annotationWin setWindowHeight:[sharedCandidates candidateFrame].size.height];
-        [_annotationWin showWindow:[self calculatePositionOfTranslationWindow]];
-    } else {
-        [_annotationWin hideWindow];
-    }
-}
-
-- (NSPoint)calculatePositionOfTranslationWindow {
-    // The candidate panel owns its geometry (and flips at screen edges), so
-    // anchor the annotation to the panel's actual frame instead of doing
-    // cursor-line math here. Screen coordinates: bottom-left origin.
-    NSRect panelFrame = [sharedCandidates candidateFrame];
-    if (NSEqualRects(panelFrame, NSZeroRect)) {
-        // Panel not yet positioned (first paint): fall back to the line box.
-        NSRect lineRect;
-        [_currentClient attributesForCharacterIndex:0 lineHeightRectangle:&lineRect];
-        return NSMakePoint(NSMaxX(lineRect) + 4, NSMaxY(lineRect) + 4);
-    }
-
-    NSRect visible = NSScreen.mainScreen.visibleFrame; // excludes menu bar/dock
-
-    // Prefer the panel's right side; flip to its left when too close to the
-    // screen edge, then clamp into the visible frame.
-    CGFloat gap = 4;
-    CGFloat x = NSMaxX(panelFrame) + gap;
-    if (x + _annotationWin.width > NSMaxX(visible)) {
-        x = NSMinX(panelFrame) - gap - _annotationWin.width;
-    }
-    x = MIN(MAX(x, visible.origin.x), NSMaxX(visible) - _annotationWin.width);
-
-    // Annotation and panel share the same height, so their tops coincide.
-    return NSMakePoint(x, NSMaxY(panelFrame));
+    [sharedCandidates setAnnotation:annotation ?: @""];
 }
 
 @end

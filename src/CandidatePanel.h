@@ -26,6 +26,10 @@
 - (void)hide;
 - (void)setGridLayout:(BOOL)useGrid;
 
+// Translation/IPA gloss for the highlighted candidate. Non-empty grows a
+// footer row inside the panel; empty (or the panel is hidden) collapses it.
+- (void)setAnnotation:(NSString *)annotation;
+
 // Vertical list navigation.
 - (void)moveSelectionDown;
 - (void)moveSelectionUp;

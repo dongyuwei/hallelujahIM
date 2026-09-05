@@ -99,8 +99,6 @@ int main(int argc, char *argv[]) {
     NSString *userDataDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/hallelujah/rime"];
     [rimeEngine startWithSharedDataDir:sharedDataDir userDataDir:userDataDir];
 
-    [[NSBundle mainBundle] loadNibNamed:@"AnnotationWindow" owner:[NSApplication sharedApplication] topLevelObjects:nil];
-
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
     [[WebServer sharedServer] start];

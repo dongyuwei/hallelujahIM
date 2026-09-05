@@ -17,6 +17,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 7. You can switch to the default English input mode (the normal, quiet, or silent mode) by pressing the **right shift** key. Pressing shift again will switch back to the auto-suggestion mode.
 8. **Pinyin to Chinese**: Press the right `Command` key to switch to Pinyin input mode. Type Chinese pinyin and get Chinese hanzi candidates; `space` or a digit key commits the highlighted candidate, `Enter` commits it without a trailing space. Press right `Command` again to switch back to intelligent English input mode. With "Mixed Chinese/English input" enabled, no mode switching is needed: both English and Chinese candidates are shown per page (up to 5 rows per language block, the rest of the page filled by the other), and the blocks are ordered dynamically by the last committed content (Chinese text or Chinese punctuation puts the Chinese block on top, English text or punctuation puts English on top); punctuation also follows the language: after an English commit half-width punctuation passes through as-is, after a Chinese commit it becomes full-width.
 9. **Custom candidate panel (vertical + grid)**: the candidate panel is drawn by the input method itself (`CandidatePanel` + `CandidatePanelState`): the default vertical candidate list, switchable to a 5-column grid layout in Preferences. The grid layout follows [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel design: arrow-key navigation, the first `↓` expands the grid, afterwards all four arrows navigate (another `↑` at the first row collapses it), `←`/`→` cycle within the active row, and space/Enter/digit keys commit the highlighted candidate.
+10. **Translation drawn inside the candidate panel (replaces the separate annotation window)**: the highlighted word's phonetic symbol and gloss are drawn directly in the candidate panel instead of a floating window. The vertical layout expands a right column for the phonetic and meanings (collapsing back to a single column when there's no translation); the grid layout shows a compact gloss row at the bottom. Refreshes as you move the highlight.
 
 # download and install
 
@@ -62,14 +63,14 @@ preferences config:<br/>
 <img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/74e9f7a3-3287-43e5-92f2-08105dc1b461" />
 
 - **Mixed Chinese/English input**: off by default. When enabled, the right-Command mode toggle is disabled; typing queries both English and Chinese candidates, each page shows up to 5 English candidates with the remaining rows filled by Chinese candidates, selectable by row number (space commits the highlighted Chinese candidate).
-- **Use grid candidate panel**: off by default. Shows candidates as a 5-column grid: the first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. Off keeps the default vertical list. Both layouts are custom-drawn; the translation popup stays disabled in grid mode.
+- **Use grid candidate panel**: off by default. Shows candidates as a 5-column grid: the first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. Off keeps the default vertical list. Both layouts are custom-drawn; in either layout the highlighted word's phonetic and gloss are drawn inside the panel (a right column sized to the widest gloss line in vertical mode, a bottom gloss row in grid mode) and auto-hide when there's no translation.
 
 ## Candidate panel implementation
 
 The candidate panel is drawn by the input method itself instead of the system `IMKCandidates`:
 
 - `src/CandidatePanelState`: a pure navigation state machine with no AppKit dependency — vertical 9-row window scrolling, grid expand/collapse, column cycling, row-window scrolling — fully covered by unit tests;
-- `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, and mouse-click commit.
+- `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, mouse-click commit, and the annotation (via `ConversionEngine`'s `getAnnotation`) drawn as a built-in gloss column or bottom gloss row.
 
 The grid navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv) for the great work!
 
