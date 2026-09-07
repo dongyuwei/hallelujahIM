@@ -125,6 +125,11 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
    );
    ```
 
+### Database performance comparison
+[benchmarks](benchmarks/)
+
+1. [LMDB vs SQLite](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
+
 ### Thanks to the following projects:
 
 1. [FMDB](https://github.com/ccgus/fmdb), SQLite wrapper for efficient prefix matching queries.

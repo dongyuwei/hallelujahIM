@@ -3,7 +3,7 @@
 set -euo pipefail
 
 script_directory=$(cd "$(dirname "$0")" && pwd)
-repository_root=$(cd "$script_directory/../../../.." && pwd)
+repository_root=$(cd "$script_directory/../../.." && pwd)
 lmdb_prefix=${LMDB_PREFIX:-$(brew --prefix lmdb)}
 fmdb_directory="$repository_root/Pods/FMDB/src/fmdb"
 build_directory=$(mktemp -d /tmp/hallelujah-objective-c-benchmark.XXXXXX)
@@ -35,7 +35,7 @@ common_flags=(
 )
 
 clang "${common_flags[@]}" -Wall -Wextra -Werror \
-  -c "$script_directory/objective_c_storage_benchmark.m" \
+  -c "$script_directory/objective_c_storage.m" \
   -o "$benchmark_object"
 clang "${common_flags[@]}" -c "$fmdb_directory/FMDatabase.m" \
   -o "$database_object"
