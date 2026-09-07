@@ -69,8 +69,8 @@ C benchmark 直接调用 `sqlite3` 和 `liblmdb`；Objective-C benchmark 的 SQL
 
 ```bash
 brew install lmdb
-bash Tests/benchmarks/macOS-15.7.3/m4/run_native_benchmark.sh
-bash Tests/benchmarks/macOS-15.7.3/m4/run_objective_c_benchmark.sh
+bash benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/run_native.sh
+bash benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/run_objective_c.sh
 ```
 
 可通过 `--iterations` 或 `--warmup` 调整测试负载。包装脚本使用
@@ -84,6 +84,6 @@ bash Tests/benchmarks/macOS-15.7.3/m4/run_objective_c_benchmark.sh
 
 ```bash
 python3 -m venv /tmp/hallelujah-benchmark-venv
-/tmp/hallelujah-benchmark-venv/bin/pip install -r Tests/benchmarks/macOS-15.7.3/m4/requirements.txt
-/tmp/hallelujah-benchmark-venv/bin/python Tests/benchmarks/macOS-15.7.3/m4/storage_benchmark.py
+/tmp/hallelujah-benchmark-venv/bin/pip install -r benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/requirements.txt
+/tmp/hallelujah-benchmark-venv/bin/python benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/storage.py
 ```

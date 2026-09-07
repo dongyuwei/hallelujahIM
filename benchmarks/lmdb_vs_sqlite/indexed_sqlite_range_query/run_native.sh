@@ -3,7 +3,7 @@
 set -euo pipefail
 
 script_directory=$(cd "$(dirname "$0")" && pwd)
-repository_root=$(cd "$script_directory/../../../.." && pwd)
+repository_root=$(cd "$script_directory/../../.." && pwd)
 lmdb_prefix=${LMDB_PREFIX:-$(brew --prefix lmdb)}
 build_directory=$(mktemp -d /tmp/hallelujah-native-benchmark.XXXXXX)
 benchmark_binary="$build_directory/native_storage_benchmark"
@@ -22,7 +22,7 @@ clang \
   -Werror \
   -I"$lmdb_prefix/include" \
   -L"$lmdb_prefix/lib" \
-  "$script_directory/native_storage_benchmark.c" \
+  "$script_directory/native_storage.c" \
   -llmdb \
   -lsqlite3 \
   -o "$benchmark_binary"
