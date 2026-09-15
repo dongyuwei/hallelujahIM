@@ -9,10 +9,13 @@
 以及使用应用现有 FMDB 依赖和 Foundation 结果对象的 Objective-C benchmark。三者
 使用相同的查询负载，对比：
 
-- 当前 SQLite `LIKE prefix%` 查询；
+- 当前 SQLite `LIKE prefix%` 查询（本基准测试编写时应用所用的查询）；
 - 等价的 SQLite B-tree 范围查询；
 - LMDB 游标前缀扫描；
 - 单词及注释的精确查询。
+
+本基准测试之后，应用已采用范围查询形式（`ConversionEngine -wordsStartsWith:`），
+因此 `LIKE` 那一列现在是对照基线，而不再是线上行为。
 
 Python 与原生 C 实验还会记录数据库构建时间、逻辑文件大小和实际占用空间。
 

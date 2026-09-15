@@ -11,10 +11,15 @@ native C benchmark, and an Objective-C benchmark that uses the application's FMD
 dependency and Foundation result objects. All three use the same query workload
 to compare:
 
-- the current SQLite `LIKE prefix%` query;
+- the SQLite `LIKE prefix%` query the application used when this benchmark was
+  written;
 - an equivalent SQLite B-tree range query;
 - an LMDB cursor prefix scan;
 - exact word and annotation lookups.
+
+Following this benchmark the application adopted the range form
+(`ConversionEngine -wordsStartsWith:`), so the `LIKE` column is now a
+before/after reference rather than the shipped behaviour.
 
 The Python and native C experiments also report database build time, logical file
 size, and actual allocated space.

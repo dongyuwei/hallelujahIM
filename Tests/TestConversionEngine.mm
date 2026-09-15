@@ -15,25 +15,44 @@
 
 - (void)testWordsStartsWith {
     NSArray *words = [self.engine wordsStartsWith:@"tes"];
-    XCTAssert(words.count == 64);
-    XCTAssertTrue([[words objectAtIndex:0] isEqualToString:@"test"]);
+    XCTAssertEqual(words.count, 50U); // capped at the panel's candidate limit
     NSArray *words5 = [words subarrayWithRange:NSMakeRange(0, 5)];
     XCTAssertTrue([[words5 componentsJoinedByString:@";"] isEqualToString:@"test;testing;tests;tested;testimonials"]);
-}
-
-- (void)testSortWordsByFrequency {
-    NSArray *words = [self.engine wordsStartsWith:@"tes"];
-    NSArray *sorted = [self.engine sortWordsByFrequency:words];
-    NSArray *words10 = [sorted subarrayWithRange:NSMakeRange(0, 10)];
-    XCTAssertTrue([[words10 objectAtIndex:0] isEqualToString:@"test"]);
+    NSArray *words10 = [words subarrayWithRange:NSMakeRange(0, 10)];
     XCTAssertTrue([[words10 componentsJoinedByString:@";"]
         isEqualToString:@"test;testing;tests;tested;testimonials;testimony;testament;tester;testified;testers"]);
 }
 
-- (void)testSortWordsByFrequencyFromLargeNumberOfCandidates {
-    NSArray *words = [self.engine wordsStartsWith:@"in"];
-    NSArray *sorted = [self.engine sortWordsByFrequency:words];
-    XCTAssertTrue([[sorted objectAtIndex:0] isEqualToString:@"in"]);
+// The prefix lookup is a B-tree range (`word >= prefix AND word < prefix +
+// U+10FFFF`) rather than LIKE: same words, but it uses idx_word instead of
+// scanning all 140k rows.
+- (void)testWordsStartsWithRangeBoundaries {
+    // a whole word that is also a prefix is itself the first match
+    XCTAssertTrue([[[self.engine wordsStartsWith:@"in"] objectAtIndex:0] isEqualToString:@"in"]);
+    // the range is exact: nothing that sorts after the prefix leaks in
+    NSArray *testamentWords = [self.engine wordsStartsWith:@"testament"];
+    XCTAssertEqual(testamentWords.count, 3U);
+    for (NSString *word in testamentWords) {
+        XCTAssertTrue([word hasPrefix:@"testament"]);
+    }
+    XCTAssertEqual([self.engine wordsStartsWith:@"notaword"].count, 0U);
+    XCTAssertEqual([self.engine wordsStartsWith:@"zz"].count, 5U);
+    // non-ASCII input must not break the range bound
+    XCTAssertEqual([self.engine wordsStartsWith:@"日本語"].count, 0U);
+    XCTAssertEqual([self.engine wordsStartsWith:@"caFé"].count, 0U);
+}
+
+- (void)testWordsStartsWithFoldsCase {
+    NSArray *upper = [self.engine wordsStartsWith:@"TES"];
+    NSArray *lower = [self.engine wordsStartsWith:@"tes"];
+    XCTAssertTrue([upper isEqualToArray:lower]);
+}
+
+// LIKE treated `_` and `%` from the typed prefix as wildcards; a range query
+// treats them as literal characters.
+- (void)testWordsStartsWithTreatsWildcardsLiterally {
+    XCTAssertEqual([self.engine wordsStartsWith:@"a_c"].count, 0U);
+    XCTAssertEqual([self.engine wordsStartsWith:@"a%c"].count, 0U);
 }
 
 - (void)testPhonexEncode {

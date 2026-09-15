@@ -7,7 +7,6 @@
 
 + (instancetype)sharedEngine;
 - (NSMutableArray *)wordsStartsWith:(NSString *)prefix;
-- (NSArray *)sortWordsByFrequency:(NSArray *)filtered;
 - (NSString *)phonexEncode:(NSString *)word;
 - (NSArray *)getTranslations:(NSString *)word;
 - (NSString *)getPhoneticSymbolOfWord:(NSString *)candidateString;
