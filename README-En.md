@@ -62,7 +62,7 @@ click `Preferences...` or visit web ui: http://localhost:62718/index.html
 preferences config:<br/>
 <img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/74e9f7a3-3287-43e5-92f2-08105dc1b461" />
 
-- **Use grid candidate panel**: off by default. Shows candidates as a grid of 5–9 columns (default 5; the column count is set in the web Preferences page). While collapsed the bar is sized to the visible row so it stays compact; once expanded the columns are sized to every candidate, so opening/closing is the only resize and the columns never move while you navigate or scroll. The first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. Off keeps the default vertical list. Both layouts are custom-drawn; in either layout the highlighted word's phonetic and gloss are drawn inside the panel (a right column sized to the widest gloss line in vertical mode, a bottom gloss row in grid mode) and auto-hide when there's no translation.
+- **Use grid candidate panel**: off by default. Shows candidates as a grid of 5–9 columns (default 5; the column count is set in the web Preferences page). Column widths fit the rows that are on screen — the first row while collapsed (so the bar stays compact), the visible rows once expanded (never reserving room for words scrolled out of view). Opening or closing the grid is therefore a deliberate re-fit, and scrolling to another screenful re-fits again, but navigating within a screenful never moves a column. Every cell reserves the same number gutter, so words line up whether or not their row shows selection keys. The first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. Off keeps the default vertical list. Both layouts are custom-drawn; in either layout the highlighted word's phonetic and gloss are drawn inside the panel (a right column sized to the widest gloss line in vertical mode, a bottom gloss row in grid mode) and auto-hide when there's no translation.
 
 ## Candidate panel implementation
 
@@ -89,7 +89,7 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 1. **English word database**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
    - Contains ~140,402 English words with frequency, Chinese translation, and IPA
    - Auto-copied from the app bundle during installation
-   - Used for prefix matching candidate queries
+   - Used for prefix matching candidate queries, as an `idx_word` B-tree range scan (`word >= prefix AND word < prefix + U+10FFFF`) with a row limit. `LIKE 'prefix%'` is deliberately avoided: the index is BINARY, so SQLite's LIKE optimization cannot use it and it scanned all ~140k rows.
 
    Schema:
 

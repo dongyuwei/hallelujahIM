@@ -39,7 +39,13 @@ exact-query words, ten warm-up iterations, and 100 timed iterations per input.
 Each cell below is `p50 / p95` in milliseconds. Prefix values aggregate all nine
 inputs, while exact-query values aggregate all eight inputs.
 
-| Implementation | Current SQLite `LIKE` | SQLite indexed range | LMDB prefix | SQLite exact | LMDB exact |
+> Note: the p50 aggregates all nine prefixes, so it is dominated by the cheap
+> narrow prefixes (the SQLite range 0.026 ms is a `tes`-like input). The worst
+> case, the one-character prefix `a` with 9,242 results, is listed separately
+> below; its cost is dominated by the `ORDER BY frequency` sort rather than the
+> index scan, which is why it is only about 2.7x faster than `LIKE`.
+
+| Implementation | SQLite `LIKE` (baseline) | SQLite indexed range | LMDB prefix | SQLite exact | LMDB exact |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Python | 5.406 / 7.979 | 0.026 / 2.896 | 0.032 / 5.850 | 0.005 / 0.005 | 0.001 / 0.001 |
 | C | 5.5558 / 7.2420 | 0.0161 / 1.8716 | 0.0053 / 0.8729 | 0.0042 / 0.0046 | 0.0002 / 0.0003 |
@@ -58,8 +64,10 @@ experiment is bold.
 
 Taken together, the three experiments show:
 
-- The current `LIKE` query has a p50 of about 5.4–5.6 ms in every implementation
-  and is consistently the slowest prefix-query option.
+- The `LIKE` query (what the application ran when this benchmark was written) has
+  a p50 of about 5.4–5.6 ms in every implementation and is consistently the
+  slowest prefix-query option; the application now uses the indexed range form
+  and no longer scans the table.
 - Python favors SQLite range for all three representative prefixes.
   Native C favors LMDB by about 2.1x, 2.2x, and 3.0x respectively, showing that
   Python LMDB cursor iteration and sorting overhead changes the result.
