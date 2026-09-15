@@ -2,9 +2,8 @@
 
 // Vertical window: 9 rows (matches the old page size).
 static const NSInteger kVerticalVisibleRows = 9;
-// Grid window: 5 rows of 5 columns before the window starts scrolling.
+// Grid window: 5 rows before the window starts scrolling.
 static const NSInteger kGridVisibleRows = 5;
-static const NSInteger kGridColumns = 5;
 
 @interface CandidatePanelState ()
 
@@ -25,11 +24,15 @@ static const NSInteger kGridColumns = 5;
 @implementation CandidatePanelState
 
 - (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout {
+    return [self initWithCandidates:candidates layout:layout columns:kCandidateGridDefaultColumns];
+}
+
+- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout columns:(NSInteger)columns {
     self = [super init];
     if (self) {
         _candidates = [candidates copy];
         _layout = layout;
-        _gridColumns = kGridColumns;
+        _gridColumns = MAX(kCandidateGridMinColumns, MIN(columns, kCandidateGridMaxColumns));
     }
     return self;
 }

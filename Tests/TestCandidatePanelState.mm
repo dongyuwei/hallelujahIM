@@ -22,6 +22,14 @@
     return [[CandidatePanelState alloc] initWithCandidates:c layout:CandidatePanelLayoutGrid];
 }
 
+- (CandidatePanelState *)gridWithCount:(NSInteger)count columns:(NSInteger)columns {
+    NSMutableArray *c = [NSMutableArray array];
+    for (NSInteger i = 0; i < count; i++) {
+        [c addObject:[NSString stringWithFormat:@"w%ld", (long)i]];
+    }
+    return [[CandidatePanelState alloc] initWithCandidates:c layout:CandidatePanelLayoutGrid columns:columns];
+}
+
 #pragma mark - Vertical
 
 - (void)testVerticalMoveDownClampsAtEnd {
@@ -162,6 +170,63 @@
     // after scrolling, digits address the visible window (top = 2)
     XCTAssertEqual([s indexForDigit:1], 2);
     XCTAssertEqual([s indexForDigit:5], 6);
+}
+
+#pragma mark - Grid column count
+
+- (void)testGridColumnsDefaultToFive {
+    CandidatePanelState *s = [self gridWithCount:15];
+    XCTAssertEqual(s.gridColumns, 5);
+    XCTAssertEqual(s.gridTotalRows, 3);
+}
+
+- (void)testGridColumnsAreClampedToRange {
+    XCTAssertEqual([self gridWithCount:30 columns:0].gridColumns, kCandidateGridMinColumns);
+    XCTAssertEqual([self gridWithCount:30 columns:-4].gridColumns, kCandidateGridMinColumns);
+    XCTAssertEqual([self gridWithCount:30 columns:20].gridColumns, kCandidateGridMaxColumns);
+    XCTAssertEqual([self gridWithCount:30 columns:7].gridColumns, 7);
+}
+
+- (void)testNineColumnsKeepEveryDigitReachable {
+    CandidatePanelState *s = [self gridWithCount:20 columns:9];
+    XCTAssertEqual(s.gridColumns, 9);
+    XCTAssertEqual(s.gridTotalRows, 3); // 9 + 9 + 2
+    for (NSInteger digit = 1; digit <= 9; digit++) {
+        XCTAssertEqual([s indexForDigit:digit], digit - 1);
+    }
+    [s gridMoveDown]; // expand
+    [s gridMoveDown]; // row 1
+    XCTAssertEqual([s indexForDigit:1], 9);
+    XCTAssertEqual([s indexForDigit:9], 17);
+    [s gridMoveDown]; // row 2 holds only 2 cells
+    XCTAssertEqual([s indexForDigit:2], 19);
+    XCTAssertEqual([s indexForDigit:3], NSNotFound);
+}
+
+- (void)testNineColumnWindowScrollsByItsOwnRowCount {
+    CandidatePanelState *s = [self gridWithCount:100 columns:9];
+    XCTAssertEqual(s.gridRenderedRowCount, 1); // collapsed single row
+    [s gridMoveDown];                          // expand
+    XCTAssertEqual(s.gridRenderedRowCount, MIN(s.gridTotalRows, 5));
+    for (NSInteger i = 0; i < 7; i++) {
+        [s gridMoveDown];
+    }
+    XCTAssertEqual(s.gridActiveRow, 7);
+    XCTAssertEqual(s.selectedIndex, 7 * 9);
+    XCTAssertEqual(s.gridVisibleRowOffset, 3); // active row kept inside the 5-row window
+}
+
+- (void)testColumnsBelowMinimumClampToFive {
+    CandidatePanelState *s = [self gridWithCount:11 columns:1];
+    XCTAssertEqual(kCandidateGridMinColumns, 5);
+    XCTAssertEqual(s.gridColumns, 5);   // 1 column is not a useful grid
+    XCTAssertEqual(s.gridTotalRows, 3); // 5 + 5 + 1
+    [s gridMoveDown];                   // expand
+    [s gridMoveDown];                   // row 1
+    XCTAssertEqual(s.selectedIndex, 5);
+    [s gridMoveDown]; // row 2 holds a single cell
+    XCTAssertEqual([s indexForDigit:1], 10);
+    XCTAssertEqual([s indexForDigit:2], NSNotFound);
 }
 
 - (void)testEmptyCandidatesAreSafe {

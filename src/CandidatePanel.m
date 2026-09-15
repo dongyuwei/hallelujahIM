@@ -2,14 +2,33 @@
 
 // SwiftType-style palette and metrics (cloned from its Theme):
 // background #1B1B1B, border #1B1B1B (2pt), corner radius 6,
-// text #FCFCFC, number #A0796A, highlight text #FF9900, highlight #533566.
+// text #FCFCFC, number #A0796A, highlight #533566.
+// Selection is carried by the opaque highlight pill plus a white candidate
+// (7.6:1 on the rendered pill); the number keycap keeps the theme's warm accent
+// but brightened to #FFCC80 (5.1:1), because the muted #A0796A it uses when
+// unselected would be 2.8:1 on the pill and effectively invisible.
 static const CGFloat kRowHeight = 24;
-static const CGFloat kPadding = 3;
-static const CGFloat kCellPadding = 3;
+// kPadding + kCellPadding is also the horizontal gap between grid columns
+// (2 * (kPadding + kCellPadding) per cell, i.e. 8pt today). Keep them tight:
+// this is a HUD, and the panel is as wide as the sum of its columns.
+static const CGFloat kPadding = 2;
+static const CGFloat kCellPadding = 2;
 static const CGFloat kCornerRadius = 6;
-static const CGFloat kSelectionGap = 3;
+// Gap between the highlight pill and the row edge. The pill is therefore
+// kRowHeight - 2 * kSelectionGap = 20pt tall, only 3pt more than the 14pt
+// font's line box: at 3pt (18pt pill) the baseline sat low enough that a
+// descender ('y' in "testimony") came within 1pt of the pill's bottom edge.
+static const CGFloat kSelectionGap = 2;
+// Optical correction: a line box reserves more room above its ascenders than a
+// lowercase word actually uses, so centring the BOX leaves the ink about 0.5pt
+// below the middle of the pill. Nudging the text up makes the common
+// (descender-less) candidate look centred; it is applied to every cell, so all
+// rows keep one baseline.
+static const CGFloat kTextOpticalRise = 0.5;
 static const CGFloat kMinPanelWidth = 44;
-static const CGFloat kMaxCellWidth = 150; // a single cell never grows wider than this
+static const CGFloat kMinCellWidth = 44;     // per-cell floor when the display forces a narrower grid
+static const CGFloat kMaxCellWidth = 150;    // a single cell never grows wider than this
+static const CGFloat kNumberGapFontSize = 5; // gap between a digit and its word, in the key font
 static const CGFloat kFallbackLineHeight = 20;
 static const CGFloat kFooterGap = 5;              // space above the translation footer
 static const CGFloat kDetailGap = 3;              // vertical: gap between candidate and detail columns
@@ -35,6 +54,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active;
 - (NSArray<NSNumber *> *)gridColumnWidths;
+- (CGFloat)maxGridCellWidthForColumns:(NSInteger)columns;
 - (CGFloat)footerHeight;
 - (NSString *)annotationText;
 
@@ -284,52 +304,88 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     return ceil(textRect.size.height) + kFooterGap + kSelectionGap * 2;
 }
 
-// Each grid column is sized to its widest candidate among the VISIBLE rows
-// only, like NSGridView's fitting size (hidden rows contribute nothing). A
-// collapsed single-row bar therefore stays snug; the panel widens when the
-// grid expands and already-showing rows come into play.
+// Per-cell width cap for a grid of `columns` columns. kMaxCellWidth keeps a
+// single long candidate from ballooning its column; the display budget keeps
+// the whole grid on screen when many columns are configured, shrinking the cap
+// (and so ellipsizing sooner) instead of letting the panel grow off-screen.
+- (CGFloat)maxGridCellWidthForColumns:(NSInteger)columns {
+    CGFloat budget = kMaxCellWidth;
+    NSScreen *screen = NSScreen.mainScreen;
+    if (screen != nil && columns > 0) {
+        budget = MIN(budget, (screen.visibleFrame.size.width - kPadding * 2) / columns);
+    }
+    return MAX(kMinCellWidth, budget);
+}
+
+// Columns are sized to the rows actually on screen - the first row while
+// collapsed, the visible window while expanded - so the grid is never wider
+// than what the user can read.
+//
+// Fitting every candidate instead (so that scrolling could never re-fit) made
+// the grid as wide as words that are scrolled out of view: in a measured
+// 7-column session the panel was 808pt, and 83pt of that was two columns
+// reserving room for off-screen words (column 2 held 124pt for visible words
+// that needed 80pt). Compactness wins over never re-fitting: the panel is a
+// floating HUD that must not sprawl, and re-fitting on scroll is the same
+// behaviour the list had before the grid existed.
 - (NSArray<NSNumber *> *)gridColumnWidths {
     CandidatePanelState *state = self.state;
     NSInteger columns = state.gridColumns;
-    CGFloat widths[8] = {0};
-    NSInteger rows = state.gridRenderedRowCount;
-    for (NSInteger row = 0; row < rows; row++) {
-        for (NSInteger col = 0; col < columns; col++) {
-            NSInteger index = (state.gridVisibleRowOffset + row) * columns + col;
-            if (index >= (NSInteger)state.candidates.count) {
-                continue;
-            }
-            NSInteger number = col + 1; // worst case: gutter present
-            NSAttributedString *cell = [self cellText:state.candidates[index] number:number active:NO];
-            widths[col] = MAX(widths[col], cell.size.width + kCellInset);
-        }
+    CGFloat widths[kCandidateGridMaxColumns] = {0};
+    CGFloat cellCap = [self maxGridCellWidthForColumns:columns];
+    NSInteger count = (NSInteger)state.candidates.count;
+    NSInteger first = state.gridVisibleRowOffset * columns;
+    NSInteger last = MIN(count, first + state.gridRenderedRowCount * columns);
+    for (NSInteger index = first; index < last; index++) {
+        NSInteger col = index % columns; // the column this candidate is laid out in
+        // worst case: gutter present, so the word x never depends on the row
+        // that happens to carry the selection keys
+        NSAttributedString *cell = [self cellText:state.candidates[index] number:col + 1 active:NO];
+        widths[col] = MAX(widths[col], cell.size.width + kCellInset);
     }
     NSMutableArray<NSNumber *> *result = [NSMutableArray arrayWithCapacity:columns];
     for (NSInteger col = 0; col < columns; col++) {
-        [result addObject:@(MIN(widths[col], kMaxCellWidth))];
+        [result addObject:@(MIN(widths[col], cellCap))];
     }
     return result;
 }
 
-// Single attributed string per cell: number (mono, muted) + word. Measuring
-// and drawing the same string guarantees the pill and width always fit.
+// Single attributed string per cell: number gutter (mono, muted) + word.
+// Measuring and drawing the same string guarantees the pill and width always
+// fit.
+//
+// The gutter is reserved on EVERY cell, numbered row or not, so all rows of a
+// column share one word x. Numbers are drawn only on the row that owns the
+// selection keys, and without a reserved gutter that row's words sat a full
+// gutter to the right of every other row's words in the same column.
+//
+// The gap after the digit is a U+00A0 at kNumberGapFontSize rather than a
+// full-size space: a full space put the word 6.8pt away and the reserved hole
+// in every unnumbered cell read as dead space (a measured 7-column session).
+// U+00A0 can never be split from the digit by line breaking, and a digit and
+// U+00A0 share the monospaced key font's advance at the same size - so a
+// numbered cell ("1" + gap) and a blank one (U+00A0 + gap) reserve exactly the
+// same width, which is what keeps the columns aligned.
 // Colors cloned from SwiftType's default theme: word #FCFCFC (highlight
-// #FF9900), number #A0796A.
+// #FFFFFF on the #533566 pill), number #A0796A (#FFCC80 when highlighted).
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
     NSDictionary *wordAttrs = @{
         NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0x99, 0x00, 1) : PanelColor(0xFC, 0xFC, 0xFC, 1),
+        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0xFF, 0xFF, 1) : PanelColor(0xFC, 0xFC, 0xFC, 1),
     };
     NSDictionary *numberAttrs = @{
         NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
+        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0xCC, 0x80, 1) : PanelColor(0xA0, 0x79, 0x6A, 1),
     };
+    NSDictionary *gapAttrs = @{
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : numberAttrs[NSForegroundColorAttributeName],
+    };
+    NSString *numberText =
+        (number > 0 && number <= kCandidateGridMaxColumns) ? [NSString stringWithFormat:@"%ld", (long)number] : @"\u00A0";
     NSMutableAttributedString *cell = [[NSMutableAttributedString alloc] init];
-    if (number > 0 && number <= 9) {
-        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)number]
-                                                                     attributes:numberAttrs]];
-        [cell appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:numberAttrs]];
-    }
+    [cell appendAttributedString:[[NSAttributedString alloc] initWithString:numberText attributes:numberAttrs]];
+    [cell appendAttributedString:[[NSAttributedString alloc] initWithString:@"\u00A0" attributes:gapAttrs]];
     [cell appendAttributedString:[[NSAttributedString alloc] initWithString:text attributes:wordAttrs]];
     return cell;
 }
@@ -344,11 +400,18 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         NSMakeRect(cellRect.origin.x + kPadding, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
     if (active) {
         NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
-        [PanelColor(0x53, 0x35, 0x66, 0.9) setFill];
+        // Opaque, so the highlight's lightness (and therefore the candidate
+        // text contrast) does not depend on what is painted behind it.
+        [PanelColor(0x53, 0x35, 0x66, 1) setFill];
         [pill fill];
     }
 
-    NSRect textRect = NSMakeRect(pillRect.origin.x + kCellPadding, pillRect.origin.y + MAX(0, (pillRect.size.height - textSize.height) / 2),
+    // Centred on the line box, then raised by the optical correction so the
+    // ink - not the box - sits in the middle of the pill (see
+    // kTextOpticalRise). Same offset for every cell, so the rows share one
+    // baseline whether or not they are highlighted.
+    CGFloat textY = pillRect.origin.y + MAX(0, (pillRect.size.height - textSize.height) / 2) - kTextOpticalRise;
+    NSRect textRect = NSMakeRect(pillRect.origin.x + kCellPadding, textY,
                                  MAX(0, MIN(textSize.width, pillRect.size.width - kCellPadding * 2)), textSize.height);
     [cellText drawWithRect:textRect options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine context:nil];
 }
@@ -405,6 +468,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _gridColumns = kCandidateGridDefaultColumns;
         _panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 300, 30)
                                             styleMask:(NSWindowStyleMaskBorderless | NSWindowStyleMaskNonactivatingPanel)
                                               backing:NSBackingStoreBuffered
@@ -455,7 +519,8 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (void)updateCandidates:(NSArray<NSString *> *)candidates {
     BOOL grid = self.state.layout == CandidatePanelLayoutGrid;
     self.state = [[CandidatePanelState alloc] initWithCandidates:candidates
-                                                          layout:grid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical];
+                                                          layout:grid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical
+                                                         columns:self.gridColumns];
     self.content.state = self.state;
     [self resizeToFit];
     [self reposition];
@@ -464,7 +529,21 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (void)setGridLayout:(BOOL)useGrid {
     CandidatePanelLayout layout = useGrid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical;
     NSArray *candidates = self.state.candidates;
-    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates layout:layout];
+    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates layout:layout columns:self.gridColumns];
+    self.content.state = self.state;
+    [self.content setNeedsDisplay:YES];
+    [self resizeToFit];
+    [self reposition];
+}
+
+// The state clamps to 1...9 columns, so read the count back from it: a caller
+// asking for 20 columns gets a 9-column panel whose digits are all reachable.
+// Assigns the ivar directly - this *is* the property's setter.
+- (void)setGridColumns:(NSInteger)columns {
+    NSArray *candidates = self.state.candidates;
+    CandidatePanelLayout layout = self.state.layout;
+    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates layout:layout columns:columns];
+    _gridColumns = self.state.gridColumns;
     self.content.state = self.state;
     [self.content setNeedsDisplay:YES];
     [self resizeToFit];

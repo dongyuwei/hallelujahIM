@@ -61,7 +61,12 @@ void deactivateInputSource() {
 
 void initPreference() {
     preference = [NSUserDefaults standardUserDefaults];
-    NSDictionary *defaultPrefs = @{@"commitWordWithSpace" : @YES, @"showTranslation" : @YES, @"useGridCandidatePanel" : @NO};
+    NSDictionary *defaultPrefs = @{
+        @"commitWordWithSpace" : @YES,
+        @"showTranslation" : @YES,
+        @"useGridCandidatePanel" : @NO,
+        @"gridCandidateColumns" : @(kCandidateGridDefaultColumns)
+    };
     [preference registerDefaults:defaultPrefs];
 }
 
@@ -86,6 +91,7 @@ int main(int argc, char *argv[]) {
 
     initPreference();
     sharedCandidates = [[CandidatePanel alloc] init];
+    [sharedCandidates setGridColumns:[preference integerForKey:@"gridCandidateColumns"]];
     [sharedCandidates setGridLayout:[preference boolForKey:@"useGridCandidatePanel"]];
 
     engine = [ConversionEngine sharedEngine];

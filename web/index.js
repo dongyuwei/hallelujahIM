@@ -7,7 +7,9 @@ var app = new Vue({
     newValue: "",
     preference: {
       showTranslation: true,
-      commitWordWithSpace: true
+      commitWordWithSpace: true,
+      useGridCandidatePanel: false,
+      gridCandidateColumns: 5
     },
     substitutions: {}
   },

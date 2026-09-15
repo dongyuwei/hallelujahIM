@@ -12,6 +12,7 @@ extern CandidatePanel *sharedCandidates;
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
 NSString *GRID_CANDIDATE_PANEL_KEY = @"useGridCandidatePanel";
+NSString *GRID_CANDIDATE_COLUMNS_KEY = @"gridCandidateColumns";
 
 @interface WebServer ()
 
@@ -38,10 +39,12 @@ static int port = 62718;
     }
 
     GCDWebServer *webServer = [[GCDWebServer alloc] init];
+    // No caching: the preference page ships inside the app bundle, so a stale
+    // cached copy shows settings that the installed build no longer has.
     [webServer addGETHandlerForBasePath:@"/"
                           directoryPath:[NSString stringWithFormat:@"%@/%@", [NSBundle mainBundle].resourcePath, @"web"]
                           indexFilename:nil
-                               cacheAge:3600
+                               cacheAge:0
                      allowRangeRequests:YES];
 
     [webServer addHandlerForMethod:@"GET"
@@ -52,6 +55,7 @@ static int port = 62718;
                               TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                               COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
                               GRID_CANDIDATE_PANEL_KEY : @([preference boolForKey:GRID_CANDIDATE_PANEL_KEY]),
+                              GRID_CANDIDATE_COLUMNS_KEY : @([preference integerForKey:GRID_CANDIDATE_COLUMNS_KEY]),
                           }];
                       }];
 
@@ -69,11 +73,20 @@ static int port = 62718;
 
                           bool useGridCandidatePanel = [data[GRID_CANDIDATE_PANEL_KEY] boolValue];
                           [preference setBool:useGridCandidatePanel forKey:GRID_CANDIDATE_PANEL_KEY];
-                          // The custom panel rebuilds its window when switching layouts;
-                          // window operations are main-thread-only, and the web server
-                          // handler runs on a GCD queue, so hop over first.
+
+                          // Clamped by CandidatePanelState; read the accepted value back.
+                          NSInteger gridCandidateColumns = [data[GRID_CANDIDATE_COLUMNS_KEY] integerValue];
+                          if (data[GRID_CANDIDATE_COLUMNS_KEY] == nil) {
+                              gridCandidateColumns = [preference integerForKey:GRID_CANDIDATE_COLUMNS_KEY];
+                          }
+                          // The custom panel rebuilds its window when the layout or
+                          // the column count changes; window operations are
+                          // main-thread-only, and the web server handler runs on a
+                          // GCD queue, so hop over first.
                           dispatch_async(dispatch_get_main_queue(), ^{
+                              [sharedCandidates setGridColumns:gridCandidateColumns];
                               [sharedCandidates setGridLayout:useGridCandidatePanel];
+                              [preference setInteger:[sharedCandidates gridColumns] forKey:GRID_CANDIDATE_COLUMNS_KEY];
                           });
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];

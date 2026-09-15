@@ -5,6 +5,15 @@ typedef NS_ENUM(NSInteger, CandidatePanelLayout) {
     CandidatePanelLayoutGrid = 1,
 };
 
+// Grid columns are clamped to this range: digits 1-9 are the selection keys, so
+// a row wider than 9 columns would hold cells that no key can reach, and below 5
+// there is no reason to leave the vertical list.
+enum {
+    kCandidateGridMinColumns = 5,
+    kCandidateGridMaxColumns = 9,
+    kCandidateGridDefaultColumns = 5,
+};
+
 // Pure navigation state for the candidate panel: no AppKit, fully testable.
 //
 // Vertical layout: a flat list; `activeIndex` is the highlighted row and
@@ -23,11 +32,16 @@ typedef NS_ENUM(NSInteger, CandidatePanelLayout) {
 
 @property(nonatomic, readonly) NSArray<NSString *> *candidates;
 @property(nonatomic, readonly) CandidatePanelLayout layout;
-@property(nonatomic, readonly) NSInteger gridColumns;         // grid: cells per row
+@property(nonatomic, readonly) NSInteger gridColumns;         // grid: cells per row, 1-9
 @property(nonatomic, readonly) NSInteger verticalVisibleRows; // vertical: rows in window
 @property(nonatomic, readonly) NSInteger gridVisibleRows;     // grid: rows in window
 
 - (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout;
+
+// Designated initializer. `columns` is clamped to
+// kCandidateGridMinColumns...kCandidateGridMaxColumns and only affects the grid
+// layout.
+- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout columns:(NSInteger)columns;
 
 // Vertical navigation.
 - (void)moveDown;

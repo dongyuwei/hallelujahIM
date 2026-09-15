@@ -10,9 +10,9 @@
 @end
 
 // Custom candidate panel replacing IMKCandidates: one borderless NSPanel that
-// renders either the default vertical list or a 5-column grid. The input
-// method keeps driving navigation through the panel methods; the panel owns
-// the visible window (scrolling) and the geometry.
+// renders either the default vertical list or a configurable-column grid. The
+// input method keeps driving navigation through the panel methods; the panel
+// owns the visible window (scrolling) and the geometry.
 @interface CandidatePanel : NSObject
 
 @property(nonatomic, weak) id<CandidatePanelDelegate> delegate;
@@ -20,6 +20,11 @@
 @property(nonatomic, readonly) BOOL isVisible;
 @property(nonatomic, readonly) NSInteger selectedIndex;
 @property(nonatomic, readonly) NSRect candidateFrame;
+
+// Candidates per grid row, clamped to
+// kCandidateGridMinColumns...kCandidateGridMaxColumns and applied to the panel
+// immediately (the panel is rebuilt in place, so a live change is safe).
+@property(nonatomic) NSInteger gridColumns;
 
 - (void)updateCandidates:(NSArray<NSString *> *)candidates;
 - (void)showAtClient:(id<IMKTextInput>)client;
