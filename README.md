@@ -163,10 +163,6 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
        value TEXT
    );
    ```
-### 数据库性能对比
-[benchmarks目录](benchmarks/)
-
-1. [LMDB VS SQLite 性能对比](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
 
 ## 感谢以下开源项目:
 
@@ -184,6 +180,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 提交 PR 之前请执行 `sh format-code.sh` 格式化代码。
 
+## 数据库性能对比
+[benchmarks目录](benchmarks/)
+
+1. [LMDB VS SQLite 性能对比](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
+
 ## 问题反馈，意见和建议
 
 请提交问题单到 https://github.com/dongyuwei/hallelujahIM/issues
@@ -199,6 +200,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 #### New UI
 
+![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/snapshots/english-grid-h-closed.png)
 ![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
 ![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
 ![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)

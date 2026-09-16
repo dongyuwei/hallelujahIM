@@ -125,10 +125,6 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
    );
    ```
 
-### Database performance comparison
-[benchmarks](benchmarks/)
-
-1. [LMDB vs SQLite](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
 
 ### Thanks to the following projects:
 
@@ -142,10 +138,16 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 8. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
 9. [SwiftType](https://github.com/mgxv/SwiftType/), the grid candidate panel's navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by its Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv)!
 
+### Database performance comparison
+[benchmarks](benchmarks/)
+
+1. [LMDB vs SQLite](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
+   
 ### snapshots
 
 #### New UI
 
+![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/snapshots/english-grid-h-closed.png)
 ![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
 ![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
 ![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
