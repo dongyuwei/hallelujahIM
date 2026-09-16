@@ -53,3 +53,4 @@ Pods/Pods.xcodeproj/xcuserdata/yuweidong.xcuserdatad/
 # prebuilt librime (fetched by scripts/get-librime.sh)
 librime/
 .zcode
+agent-docs/
