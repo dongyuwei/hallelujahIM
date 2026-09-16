@@ -11,10 +11,16 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  build:
     runs-on: macos-14
+    # Only the trailing release step needs to write, but permissions are set
+    # per job, so this job carries it for every branch.
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Install CocoaPods dependencies
         run: |
@@ -25,33 +31,18 @@ jobs:
       - name: Run unit tests
         run: sh unit-tests.sh
 
-      # On master the release job packages the app, and packaging runs
-      # build.sh itself, so don't compile a second identical copy here.
+      # On master the packaging step compiles the app itself, so building here
+      # would compile the same configuration twice.
       - name: Build app
-        if: github.event_name != 'push' || github.ref != 'refs/heads/master'
+        if: github.ref != 'refs/heads/master'
         run: sh build.sh
 
-  release:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    runs-on: macos-14
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install CocoaPods dependencies
-        run: |
-          rm -f Podfile.lock
-          rm -rf Pods
-          pod install
-
       - name: Build installer package
+        if: github.ref == 'refs/heads/master'
         run: PKG_POSTINSTALL_ACTION=logout bash package/build-package.bash
 
       - name: Create GitHub release
+        if: github.ref == 'refs/heads/master'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
