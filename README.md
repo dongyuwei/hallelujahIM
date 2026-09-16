@@ -200,7 +200,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 #### New UI
 
-![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/snapshots/english-grid-h-closed.png)
+![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/english-grid-h-closed.png)
 ![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
 ![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
 ![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
