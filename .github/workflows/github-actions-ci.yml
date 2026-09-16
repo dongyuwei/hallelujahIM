@@ -1,9 +1,0 @@
-name: GitHub Actions CI
-on: [push]
-jobs:
-  build:
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run tests and build App
-        run: sh ci-build-and-tests.sh

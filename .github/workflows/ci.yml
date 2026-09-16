@@ -1,20 +1,42 @@
-name: Release
+name: CI
 
 on:
   push:
-    branches:
-      - master
     paths-ignore:
       - '**.md'
       - 'LICENSE'
       - 'snapshots/**'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
+  test:
     runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install CocoaPods dependencies
+        run: |
+          rm -f Podfile.lock
+          rm -rf Pods
+          pod install
+
+      - name: Run unit tests
+        run: sh unit-tests.sh
+
+      # On master the release job packages the app, and packaging runs
+      # build.sh itself, so don't compile a second identical copy here.
+      - name: Build app
+        if: github.event_name != 'push' || github.ref != 'refs/heads/master'
+        run: sh build.sh
+
+  release:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: macos-14
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,9 +47,6 @@ jobs:
           rm -f Podfile.lock
           rm -rf Pods
           pod install
-
-      - name: Run unit tests
-        run: sh unit-tests.sh
 
       - name: Build installer package
         run: PKG_POSTINSTALL_ACTION=logout bash package/build-package.bash
