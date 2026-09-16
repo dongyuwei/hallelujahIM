@@ -140,4 +140,21 @@ static int KeySymForChar(char c) {
     XCTAssertEqual([self.engine highlightedIndex:self.session], 1);
 }
 
+// The keep-alive session holds the loaded schema open so the user's first pinyin
+// keystroke does not pay for loading it. It has to be idempotent (the app calls
+// it at startup and the tests call it again) and must not disturb normal
+// sessions.
+- (void)testWarmUpSessionIsIdempotentAndLeavesSessionsUsable {
+    [self.engine warmUpSession];
+    [self.engine warmUpSession];
+
+    RimeSessionId session = [self.engine createSession];
+    XCTAssertNotEqual(session, 0U);
+    XCTAssertTrue([self.engine processKey:session keycode:KeySymForChar('n') mask:0]);
+    XCTAssertTrue([self.engine processKey:session keycode:KeySymForChar('i') mask:0]);
+    NSArray<RimeCandidateItem *> *candidates = [self.engine candidates:session];
+    XCTAssertGreaterThan(candidates.count, 0U);
+    [self.engine destroySession:session];
+}
+
 @end

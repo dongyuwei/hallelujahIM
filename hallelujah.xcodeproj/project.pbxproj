@@ -48,6 +48,8 @@
 		A11122233303 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
 		A11122233304 /* TestCandidatePanelState.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233403 /* TestCandidatePanelState.mm */; };
 		A11122233305 /* TestCandidatePanelLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233406 /* TestCandidatePanelLayout.mm */; };
+		A11122233306 /* MarkedTextState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233408 /* MarkedTextState.m */; };
+		A11122233307 /* TestMarkedTextState.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233409 /* TestMarkedTextState.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +115,9 @@
 		A11122233404 /* CandidatePanelState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanelState.h; path = src/CandidatePanelState.h; sourceTree = "<group>"; };
 		A11122233405 /* CandidatePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanel.h; path = src/CandidatePanel.h; sourceTree = "<group>"; };
 		A11122233406 /* TestCandidatePanelLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCandidatePanelLayout.mm; sourceTree = "<group>"; };
+		A11122233407 /* MarkedTextState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarkedTextState.h; path = src/MarkedTextState.h; sourceTree = "<group>"; };
+		A11122233408 /* MarkedTextState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarkedTextState.m; path = src/MarkedTextState.m; sourceTree = "<group>"; };
+		A11122233409 /* TestMarkedTextState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestMarkedTextState.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +191,8 @@
 				A11122233401 /* CandidatePanelState.m */,
 				A11122233405 /* CandidatePanel.h */,
 				A11122233402 /* CandidatePanel.m */,
+				A11122233407 /* MarkedTextState.h */,
+				A11122233408 /* MarkedTextState.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -270,6 +277,7 @@
 				7A1E00000000000000000015 /* TestRimeEngine.mm */,
 				A11122233403 /* TestCandidatePanelState.mm */,
 				A11122233406 /* TestCandidatePanelLayout.mm */,
+				A11122233409 /* TestMarkedTextState.mm */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -496,6 +504,7 @@
 				7A1E00000000000000000005 /* RimeKeymap.mm in Sources */,
 				A11122233304 /* TestCandidatePanelState.mm in Sources */,
 				A11122233305 /* TestCandidatePanelLayout.mm in Sources */,
+				A11122233307 /* TestMarkedTextState.mm in Sources */,
 				A11122233303 /* CandidatePanelState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,6 +516,7 @@
 				F102C5AA1F4882C80005B03F /* main.mm in Sources */,
 				A11122233301 /* CandidatePanelState.m in Sources */,
 				A11122233302 /* CandidatePanel.m in Sources */,
+				A11122233306 /* MarkedTextState.m in Sources */,
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,

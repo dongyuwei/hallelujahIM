@@ -3,6 +3,8 @@
 
 #import "ConversionEngine.h"
 
+@class MarkedTextState;
+
 // The three input modes the right-Command key cycles through, in cycle order
 // (each value one step further than the previous): intelligent English ->
 // pinyin -> traditional English.
@@ -24,12 +26,8 @@ typedef NS_ENUM(NSInteger, InputMode) {
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];
-    // Marked text last handed to the client. One keystroke updates it from
-    // several places (buffer append, then highlight sync) with the same
-    // content; remembering it lets the redundant IMK call be skipped.
-    __weak id _lastMarkedClient;
-    NSString *_lastMarkedText;
-    NSRange _lastMarkedSelection;
+    // Marked text last handed to the client; see MarkedTextState.
+    MarkedTextState *_markedText;
 }
 
 - (NSMutableString *)composedBuffer;

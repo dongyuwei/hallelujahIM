@@ -4,6 +4,7 @@
 #import "CandidatePanel.h"
 #import "InputApplicationDelegate.h"
 #import "InputController.h"
+#import "MarkedTextState.h"
 #import "NSScreen+PointConversion.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
@@ -19,14 +20,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 @interface InputController () <CandidatePanelDelegate>
 
-// Marked-text bookkeeping. One keystroke updates the client's marked text from
-// several places (buffer append, then highlight sync) with the same content;
-// these remember what the client was last told so the identical update - and
-// the markForStyle: lookup that builds it - can be skipped. The recorded state
-// is dropped after a commit, cancel or client switch so that a later update is
-// always delivered.
-- (BOOL)isMarkedTextCurrentForString:(NSString *)string selectionRange:(NSRange)selectionRange;
-- (void)recordMarkedTextForString:(NSString *)string selectionRange:(NSRange)selectionRange;
+// Marked-text bookkeeping. One keystroke hands the client the same string twice
+// (buffer append, then highlight sync); MarkedTextState owns the skip rules and
+// is unit-tested, so the checks here stay one-liners.
+- (MarkedTextState *)markedText;
 - (void)setMarkedTextIfChanged:(NSAttributedString *)attrString
                 selectionRange:(NSRange)selectionRange
               replacementRange:(NSRange)replacementRange;
@@ -601,47 +598,40 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if ([input.lowercaseString hasPrefix:originalBuff.lowercaseString]) {
         display = [NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]];
     }
-    if ([self isMarkedTextCurrentForString:display selectionRange:selectionRange]) {
+    MarkedTextState *markedText = [self markedText];
+    if ([markedText isCurrentForString:display selectionRange:selectionRange client:_currentClient]) {
         return; // the client already shows this, so skip the style lookup too
     }
 
     NSDictionary *attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, input.length)];
-    [self recordMarkedTextForString:display selectionRange:selectionRange];
+    [markedText recordString:display selectionRange:selectionRange client:_currentClient];
     [_currentClient setMarkedText:[[NSAttributedString alloc] initWithString:display attributes:attrs]
                    selectionRange:selectionRange
                  replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
-// True when the client is already showing exactly this marked string and
-// selection for the same client.
-- (BOOL)isMarkedTextCurrentForString:(NSString *)string selectionRange:(NSRange)selectionRange {
-    id client = _currentClient;
-    return client != nil && client == _lastMarkedClient && NSEqualRanges(_lastMarkedSelection, selectionRange) &&
-           [_lastMarkedText isEqualToString:string];
-}
-
-- (void)recordMarkedTextForString:(NSString *)string selectionRange:(NSRange)selectionRange {
-    _lastMarkedClient = _currentClient;
-    _lastMarkedText = [string copy];
-    _lastMarkedSelection = selectionRange;
+- (MarkedTextState *)markedText {
+    if (_markedText == nil) {
+        _markedText = [[MarkedTextState alloc] init];
+    }
+    return _markedText;
 }
 
 - (void)setMarkedTextIfChanged:(NSAttributedString *)attrString
                 selectionRange:(NSRange)selectionRange
               replacementRange:(NSRange)replacementRange {
-    if ([self isMarkedTextCurrentForString:attrString.string selectionRange:selectionRange]) {
+    MarkedTextState *markedText = [self markedText];
+    if ([markedText isCurrentForString:attrString.string selectionRange:selectionRange client:_currentClient]) {
         return;
     }
-    [self recordMarkedTextForString:attrString.string selectionRange:selectionRange];
+    [markedText recordString:attrString.string selectionRange:selectionRange client:_currentClient];
     [_currentClient setMarkedText:attrString selectionRange:selectionRange replacementRange:replacementRange];
 }
 
 // The client's composition was committed or cancelled; whatever it showed can
 // no longer be assumed to still be there.
 - (void)forgetMarkedText {
-    _lastMarkedClient = nil;
-    _lastMarkedText = nil;
-    _lastMarkedSelection = NSMakeRange(NSNotFound, 0);
+    [[self markedText] forget];
 }
 
 - (void)originalBufferAppend:(NSString *)input client:(id)sender {

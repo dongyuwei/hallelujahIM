@@ -176,4 +176,82 @@
     XCTAssertGreaterThan(encodedWords.count, 0U);
 }
 
+// The phonex dictionary is preloaded on a background queue, so the properties
+// are nil until -waitForPreparedData returns; the lookups that use them have to
+// work afterwards.
+- (void)testPreparedDataLoadsThePhonexDictionary {
+    [self.engine waitForPreparedData];
+    XCTAssertNotNil(self.engine.phonexEncoded);
+    XCTAssertGreaterThan(self.engine.phonexEncoded.count, 0U);
+    XCTAssertNotNil(self.engine.phonexEncoder);
+}
+
+// The wrapper around the JavaScriptCore function, including its nil guard.
+- (void)testPhonexEncodeWrapper {
+    [self.engine waitForPreparedData];
+    XCTAssertEqualObjects([self.engine phonexEncode:@"test"], @"T23");
+    XCTAssertEqualObjects([self.engine phonexEncode:@"courage"], [self.engine phonexEncode:@"cerrage"]);
+}
+
+#pragma mark - Bundled database and migration
+
+// CI runs on a clean runner, so Application Support starts empty and
+// initDatabase: always takes the "copy the bundled database" branch. A schema
+// version that disagrees with the code is therefore invisible to CI while
+// breaking every existing install: the copy is replaced on every launch, or -
+// after a table rename that forgot to bump the version - the pinyin rows
+// silently disappear for users who already had a copy. These tests pin the
+// contract that dictionary/build-sqlite.py and ConversionEngine must keep.
+- (NSString *)bundledDatabasePath {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"words_with_frequency_and_translation_and_ipa" ofType:@"sqlite3"];
+    XCTAssertNotNil(path, @"the app bundle must ship the words database");
+    return path;
+}
+
+- (void)testBundledDatabaseSchemaVersionMatchesTheAppsExpectation {
+    XCTAssertEqual([ConversionEngine schemaVersionOfDatabaseAtPath:[self bundledDatabasePath]],
+                   [ConversionEngine expectedDatabaseSchemaVersion]);
+}
+
+- (void)testBundledDatabaseHasCedictPinyinAndNoDeadSchema {
+    FMDatabase *db = [FMDatabase databaseWithPath:[self bundledDatabasePath]];
+    XCTAssertTrue([db open]);
+    XCTAssertTrue([db tableExists:@"words"]);
+    XCTAssertTrue([db tableExists:@"cedict_pinyin"]);
+    XCTAssertFalse([db tableExists:@"ngrams"], @"the unused ngrams table is not referenced by src/");
+    XCTAssertFalse([db tableExists:@"pinyin"], @"the pre-rename name of cedict_pinyin must not ship");
+    XCTAssertEqual([db intForQuery:@"SELECT count(*) FROM sqlite_master WHERE type='index' AND name='idx_word'"], 0,
+                   @"idx_word duplicates the PRIMARY KEY's implicit index");
+    [db close];
+}
+
+// The probe once opened read-only, which fails on a WAL database (SQLite has to
+// create the -shm file). The failure is indistinguishable from an unset
+// version, so it reported 0 for a migrated database and made the app re-copy it
+// on every launch. Both journal modes have to read back correctly.
+- (void)testSchemaVersionProbeHandlesEveryJournalMode {
+    for (NSString *mode in @[ @"DELETE", @"WAL" ]) {
+        NSString *path =
+            [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"schema-probe-%@.sqlite3", mode]];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager removeItemAtPath:path error:nil];
+        [fileManager removeItemAtPath:[path stringByAppendingString:@"-wal"] error:nil];
+        [fileManager removeItemAtPath:[path stringByAppendingString:@"-shm"] error:nil];
+
+        FMDatabase *db = [FMDatabase databaseWithPath:path];
+        XCTAssertTrue([db open]);
+        NSString *appliedMode = [db stringForQuery:[NSString stringWithFormat:@"PRAGMA journal_mode = %@", mode]];
+        XCTAssertEqualObjects(appliedMode.uppercaseString, mode);
+        [db executeUpdate:@"PRAGMA user_version = 7"];
+        XCTAssertEqual([db intForQuery:@"PRAGMA user_version"], 7);
+        [db close];
+
+        XCTAssertEqual([ConversionEngine schemaVersionOfDatabaseAtPath:path], 7, @"journal mode %@", mode);
+    }
+}
+
+- (void)testSchemaVersionProbeReportsUnreadableDatabase {
+    XCTAssertEqual([ConversionEngine schemaVersionOfDatabaseAtPath:@"/nonexistent-hallelujah-test/nope.sqlite3"], -1);
+}
+
 @end

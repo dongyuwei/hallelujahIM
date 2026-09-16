@@ -63,6 +63,14 @@ NSDictionary *deserializeJSON(NSString *path) {
     return sharedInstance;
 }
 
++ (NSInteger)expectedDatabaseSchemaVersion {
+    return kWordsDatabaseSchemaVersion;
+}
+
++ (NSInteger)schemaVersionOfDatabaseAtPath:(NSString *)path {
+    return wordsDatabaseSchemaVersionAtPath(path);
+}
+
 - (void)loadPreparedData {
     [self initDatabase];
     [self initSubstitutionDatabase];
