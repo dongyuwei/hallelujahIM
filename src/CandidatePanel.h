@@ -27,6 +27,13 @@
 @property(nonatomic) NSInteger gridColumns;
 
 - (void)updateCandidates:(NSArray<NSString *> *)candidates;
+
+// Replaces "updateCandidates: + setAnnotation: + showAtClient:" with a single
+// measure/resize/reposition pass, so one keystroke lays the panel out once
+// instead of three times. `annotation` may be nil to leave the current gloss
+// in place (pinyin mode shows none).
+- (void)updateCandidates:(NSArray<NSString *> *)candidates annotation:(NSString *)annotation atClient:(id<IMKTextInput>)client;
+
 - (void)showAtClient:(id<IMKTextInput>)client;
 - (void)hide;
 - (void)setGridLayout:(BOOL)useGrid;

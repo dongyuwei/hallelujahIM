@@ -11,6 +11,9 @@
 
 - (void)setUp {
     self.engine = [ConversionEngine sharedEngine];
+    // The dictionaries are preloaded on a background queue at startup; wait so
+    // the assertions below see them.
+    [self.engine waitForPreparedData];
 }
 
 - (void)testWordsStartsWith {
@@ -165,12 +168,6 @@
             @"xhs;新华社;Xinhua News Agency;西红柿;tomato;CL:隻|只;循环赛;round-robin tournament;新化市;Xinhua city in Hunan;新会市;Xinhui "
             @"city in Guangdong;消火栓;fire hydrant;猩红色;scarlet (color);兴化市;Xinghua county level city in Taizhou 泰州;蟹黄水;crab "
             @"roe;crab spawn;(used for crab meat in general);血红素;hemoglobin;须后水;aftershave"]);
-}
-
-- (void)testGetPinyinDataLoadsCedictJSON {
-    NSDictionary *pinyinData = [self.engine getPinyinData];
-    XCTAssertNotNil(pinyinData);
-    XCTAssertGreaterThan(pinyinData.count, 0U);
 }
 
 - (void)testGetPhonexEncodedWordsLoadsJSON {

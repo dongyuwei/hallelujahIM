@@ -21,6 +21,13 @@
 
 - (void)shutdown;
 
+// Creates and keeps a session open so the schema and its dictionaries are
+// already loaded. Creating the first session costs ~30 ms (measured); because
+// sessions are reference counted, destroying the last one unloads the data
+// again, so this holds one for the process lifetime. Call it once after
+// startup, off the first pinyin keystroke.
+- (void)warmUpSession;
+
 - (RimeSessionId)createSession;
 - (void)destroySession:(RimeSessionId)session;
 - (BOOL)sessionAlive:(RimeSessionId)session;

@@ -52,15 +52,108 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // bottom row. Empty string renders no footer (panel collapses back).
 @property(nonatomic, copy) NSString *annotation;
 
+// Derived measurements and the text attributes they are built from. A single
+// keystroke used to measure the same cells several times (preferredSize,
+// drawRect, mouseDown), and the vertical layout measured every row once per
+// row - O(N^2) - so the results are cached here. Everything cached is derived
+// from (state, annotation, bounds width); -invalidateLayoutCache drops it and
+// the state/annotation setters call it automatically. Bounds width is folded
+// into the footer height cache separately because the panel is resized from
+// the footer height it just measured.
+@property(nonatomic) BOOL layoutCacheValid;
+@property(nonatomic, strong) NSArray<NSNumber *> *cachedGridColumnWidths;
+@property(nonatomic) CGFloat cachedVerticalCandidateWidth;
+@property(nonatomic) CGFloat cachedVerticalDetailWidth;
+@property(nonatomic) CGFloat cachedVerticalDetailHeight;
+@property(nonatomic) CGFloat cachedFooterHeight;
+@property(nonatomic) CGFloat cachedFooterHeightWidth;
+@property(nonatomic, copy) NSString *cachedAnnotationText;
+@property(nonatomic) BOOL cachedAnnotationTextValid;
+@property(nonatomic, strong) NSDictionary *wordAttrs;
+@property(nonatomic, strong) NSDictionary *wordAttrsActive;
+@property(nonatomic, strong) NSDictionary *numberAttrs;
+@property(nonatomic, strong) NSDictionary *numberAttrsActive;
+@property(nonatomic, strong) NSDictionary *gapAttrs;
+@property(nonatomic, strong) NSDictionary *gapAttrsActive;
+@property(nonatomic, strong) NSDictionary *detailAttrs;
+
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active;
 - (NSArray<NSNumber *> *)gridColumnWidths;
 - (CGFloat)maxGridCellWidthForColumns:(NSInteger)columns;
 - (CGFloat)footerHeight;
 - (NSString *)annotationText;
+- (void)invalidateLayoutCache;
 
 @end
 
 @implementation CandidatePanelContent
+
+- (instancetype)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        [self buildTextAttributes];
+    }
+    return self;
+}
+
+// Fonts and colors never change, so the attribute runs are built once instead
+// of once per cell per measurement.
+- (void)buildTextAttributes {
+    _wordAttrs = @{
+        NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xFC, 0xFC, 0xFC, 1),
+    };
+    _wordAttrsActive = @{
+        NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xFF, 0xFF, 0xFF, 1),
+    };
+    _numberAttrs = @{
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
+    };
+    _numberAttrsActive = @{
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xFF, 0xCC, 0x80, 1),
+    };
+    _gapAttrs = @{
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
+    };
+    _gapAttrsActive = @{
+        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
+        NSForegroundColorAttributeName : PanelColor(0xFF, 0xCC, 0x80, 1),
+    };
+    _detailAttrs = @{
+        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
+        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
+    };
+}
+
+// Drops every derived measurement; they are recomputed together on next use.
+- (void)invalidateLayoutCache {
+    _layoutCacheValid = NO;
+    _cachedGridColumnWidths = nil;
+    _cachedVerticalCandidateWidth = 0;
+    _cachedVerticalDetailWidth = 0;
+    _cachedVerticalDetailHeight = 0;
+    _cachedFooterHeight = 0;
+    _cachedFooterHeightWidth = 0;
+}
+
+- (void)setState:(CandidatePanelState *)state {
+    _state = state;
+    [self invalidateLayoutCache];
+}
+
+- (void)setAnnotation:(NSString *)annotation {
+    if (_annotation == annotation || [_annotation isEqualToString:annotation]) {
+        return;
+    }
+    _annotation = [annotation copy];
+    _cachedAnnotationText = nil;
+    _cachedAnnotationTextValid = NO;
+    [self invalidateLayoutCache];
+}
 
 - (BOOL)isFlipped {
     return YES; // top-left origin makes row math straightforward
@@ -127,13 +220,16 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (void)drawVerticalCellsForState:(CandidatePanelState *)state {
     NSInteger rowCount = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
     NSInteger rowOffset = state.verticalTopVisibleLine;
+    // Measure once for the whole loop. Measuring inside it re-measured every
+    // visible cell once per row, i.e. O(N^2) cell measurements per drawRect.
+    CGFloat columnWidth = [self verticalCandidateColumnWidth];
     for (NSInteger row = 0; row < rowCount; row++) {
         NSInteger index = rowOffset + row;
         if (index >= (NSInteger)state.candidates.count) {
             break;
         }
         BOOL active = index == state.selectedIndex;
-        NSRect cellRect = NSMakeRect(0, kPadding + row * kRowHeight, [self verticalCandidateColumnWidth], kRowHeight);
+        NSRect cellRect = NSMakeRect(0, kPadding + row * kRowHeight, columnWidth, kRowHeight);
         [self drawCellWithAttributedText:[self cellText:state.candidates[index] number:row + 1 active:active]
                                   active:active
                                   inRect:cellRect];
@@ -142,6 +238,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 // Left column: widest candidate cell. Independent of the annotation.
 - (CGFloat)verticalCandidateColumnWidth {
+    [self ensureLayoutCache];
+    return self.cachedVerticalCandidateWidth;
+}
+
+- (CGFloat)measureVerticalCandidateColumnWidth {
     CandidatePanelState *state = self.state;
     NSInteger count = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
     CGFloat widest = 0;
@@ -156,22 +257,41 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     return widest + kCellInset;
 }
 
+// Fills every layout-dependent measurement in one pass. The flag is set before
+// measuring so that a nested accessor reads what is already cached instead of
+// recursing.
+- (void)ensureLayoutCache {
+    if (self.layoutCacheValid) {
+        return;
+    }
+    self.layoutCacheValid = YES;
+    CandidatePanelState *state = self.state;
+    if (state.layout == CandidatePanelLayoutGrid) {
+        self.cachedGridColumnWidths = [self measureGridColumnWidths];
+        return;
+    }
+    self.cachedVerticalCandidateWidth = [self measureVerticalCandidateColumnWidth];
+    self.cachedVerticalDetailWidth = [self measureVerticalDetailColumnWidth];
+    self.cachedVerticalDetailHeight = [self measureVerticalDetailHeightForWidth:self.cachedVerticalDetailWidth];
+}
+
 // Right column: hugs the annotation's longest line so the gloss doesn't
 // leave a big empty gutter, but never exceeds kMaxDetailColumnWidth (a
 // single overlong translation then wraps instead of ballooning). 0 when the
 // annotation is hidden.
 - (CGFloat)verticalDetailColumnWidth {
+    [self ensureLayoutCache];
+    return self.cachedVerticalDetailWidth;
+}
+
+- (CGFloat)measureVerticalDetailColumnWidth {
     if (self.annotation.length == 0) {
         return 0;
     }
-    NSDictionary *attrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
-    };
     CGFloat widest = 0;
     NSArray *lines = [self.annotation componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
-        CGFloat w = [line sizeWithAttributes:attrs].width;
+        CGFloat w = [line sizeWithAttributes:self.detailAttrs].width;
         widest = MAX(widest, w);
     }
     return MIN(widest + kCellInset, kMaxDetailColumnWidth);
@@ -191,31 +311,28 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     if (text.length == 0 || NSEqualRects(detailRect, NSZeroRect)) {
         return;
     }
-    NSDictionary *attrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
-    };
     NSRect box = detailRect;
     box.origin.x += kCellPadding;
     box.origin.y += kSelectionGap;
     box.size.width -= kCellPadding * 2;
     box.size.height -= kSelectionGap * 2;
-    [text drawWithRect:box options:NSStringDrawingUsesLineFragmentOrigin attributes:attrs context:nil];
+    [text drawWithRect:box options:NSStringDrawingUsesLineFragmentOrigin attributes:self.detailAttrs context:nil];
 }
 
 // Height the annotation needs once wrapped into its column, 0 when hidden.
 - (CGFloat)verticalDetailHeightCost {
+    [self ensureLayoutCache];
+    return self.cachedVerticalDetailHeight;
+}
+
+- (CGFloat)measureVerticalDetailHeightForWidth:(CGFloat)columnWidth {
     if (self.annotation.length == 0) {
         return 0;
     }
-    NSDictionary *attrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
-    };
-    CGFloat width = [self verticalDetailColumnWidth] - kCellPadding * 2;
+    CGFloat width = columnWidth - kCellPadding * 2;
     NSRect textRect = [self.annotation boundingRectWithSize:NSMakeSize(width, CGFLOAT_MAX)
                                                     options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:attrs
+                                                 attributes:self.detailAttrs
                                                     context:nil];
     return ceil(textRect.size.height);
 }
@@ -229,6 +346,10 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     if (self.annotation.length == 0) {
         return nil;
     }
+    if (self.cachedAnnotationTextValid) {
+        return self.cachedAnnotationText;
+    }
+    self.cachedAnnotationTextValid = YES;
     NSArray *lines = [self.annotation componentsSeparatedByString:@"\n"];
     NSMutableArray *trimmed = [NSMutableArray arrayWithCapacity:lines.count];
     for (NSString *line in lines) {
@@ -237,10 +358,8 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
             [trimmed addObject:t];
         }
     }
-    if (trimmed.count == 0) {
-        return nil;
-    }
-    return [trimmed componentsJoinedByString:@" · "];
+    self.cachedAnnotationText = trimmed.count > 0 ? [trimmed componentsJoinedByString:@" · "] : nil;
+    return self.cachedAnnotationText;
 }
 
 // Footer sits below every candidate row, stretched across the panel width.
@@ -251,10 +370,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     if (text == nil || NSEqualRects(footerRect, NSZeroRect)) {
         return;
     }
-    NSDictionary *attrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
-    };
+    NSDictionary *attrs = self.detailAttrs;
     // One wrap pass to get the height for a laid-out line; drawing the same
     // string again guarantees the glyphs sit inside the box.
     NSRect box = footerRect;
@@ -286,22 +402,26 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     return NSMakeRect(kPadding, bounds.size.height - height - kPadding, bounds.size.width - kPadding * 2, height);
 }
 
-// Padded box height for the footer, or 0 when hidden.
+// Padded box height for the footer, or 0 when hidden. The wrap depends on the
+// panel width, so the cached value remembers the width it was measured for and
+// is recomputed once the panel is resized.
 - (CGFloat)footerHeight {
     NSString *text = [self annotationText];
     if (text == nil) {
         return 0;
     }
-    NSDictionary *attrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
-    };
-    CGFloat width = self.bounds.size.width - kPadding * 2 - kCellPadding * 2;
-    NSRect textRect = [text boundingRectWithSize:NSMakeSize(width, CGFLOAT_MAX)
+    CGFloat width = self.bounds.size.width;
+    if (self.cachedFooterHeight > 0 && self.cachedFooterHeightWidth == width) {
+        return self.cachedFooterHeight;
+    }
+    CGFloat wrapWidth = width - kPadding * 2 - kCellPadding * 2;
+    NSRect textRect = [text boundingRectWithSize:NSMakeSize(wrapWidth, CGFLOAT_MAX)
                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                      attributes:attrs
+                                      attributes:self.detailAttrs
                                          context:nil];
-    return ceil(textRect.size.height) + kFooterGap + kSelectionGap * 2;
+    self.cachedFooterHeight = ceil(textRect.size.height) + kFooterGap + kSelectionGap * 2;
+    self.cachedFooterHeightWidth = width;
+    return self.cachedFooterHeight;
 }
 
 // Per-cell width cap for a grid of `columns` columns. kMaxCellWidth keeps a
@@ -329,6 +449,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // floating HUD that must not sprawl, and re-fitting on scroll is the same
 // behaviour the list had before the grid existed.
 - (NSArray<NSNumber *> *)gridColumnWidths {
+    [self ensureLayoutCache];
+    return self.cachedGridColumnWidths ?: @[];
+}
+
+- (NSArray<NSNumber *> *)measureGridColumnWidths {
     CandidatePanelState *state = self.state;
     NSInteger columns = state.gridColumns;
     CGFloat widths[kCandidateGridMaxColumns] = {0};
@@ -369,18 +494,9 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // Colors cloned from SwiftType's default theme: word #FCFCFC (highlight
 // #FFFFFF on the #533566 pill), number #A0796A (#FFCC80 when highlighted).
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
-    NSDictionary *wordAttrs = @{
-        NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0xFF, 0xFF, 1) : PanelColor(0xFC, 0xFC, 0xFC, 1),
-    };
-    NSDictionary *numberAttrs = @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : active ? PanelColor(0xFF, 0xCC, 0x80, 1) : PanelColor(0xA0, 0x79, 0x6A, 1),
-    };
-    NSDictionary *gapAttrs = @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : numberAttrs[NSForegroundColorAttributeName],
-    };
+    NSDictionary *wordAttrs = active ? self.wordAttrsActive : self.wordAttrs;
+    NSDictionary *numberAttrs = active ? self.numberAttrsActive : self.numberAttrs;
+    NSDictionary *gapAttrs = active ? self.gapAttrsActive : self.gapAttrs;
     NSString *numberText =
         (number > 0 && number <= kCandidateGridMaxColumns) ? [NSString stringWithFormat:@"%ld", (long)number] : @"\u00A0";
     NSMutableAttributedString *cell = [[NSMutableAttributedString alloc] init];
@@ -516,14 +632,39 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     return self.state.selectedIndex;
 }
 
-- (void)updateCandidates:(NSArray<NSString *> *)candidates {
+- (void)applyCandidates:(NSArray<NSString *> *)candidates {
     BOOL grid = self.state.layout == CandidatePanelLayoutGrid;
     self.state = [[CandidatePanelState alloc] initWithCandidates:candidates
                                                           layout:grid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical
                                                          columns:self.gridColumns];
     self.content.state = self.state;
+}
+
+- (void)updateCandidates:(NSArray<NSString *> *)candidates {
+    [self applyCandidates:candidates];
     [self resizeToFit];
     [self reposition];
+}
+
+// One keystroke used to call updateCandidates:, showAtClient: and
+// setAnnotation: in turn, and each of the three measured, resized, repositioned
+// and marked the panel dirty on its own. This applies all of it and lays the
+// panel out once. A nil annotation leaves the current gloss in place (pinyin
+// mode shows none).
+- (void)updateCandidates:(NSArray<NSString *> *)candidates annotation:(NSString *)annotation atClient:(id<IMKTextInput>)client {
+    [self applyCandidates:candidates];
+    if (annotation != nil) {
+        self.content.annotation = annotation;
+    }
+    if (self.state.candidates.count == 0) {
+        [self hide];
+        return;
+    }
+    self.lastCursorRect = [self resolveCursorRectFromClient:client];
+    [self.content setNeedsDisplay:YES];
+    [self resizeToFit];
+    [self reposition];
+    [self.panel orderFront:nil];
 }
 
 - (void)setGridLayout:(BOOL)useGrid {
@@ -607,6 +748,9 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 #pragma mark - Private
 
 - (void)contentDidChangeWithReframe:(BOOL)reframe {
+    // navigation mutates the state in place, so the measurements derived from
+    // it have to be dropped
+    [self.content invalidateLayoutCache];
     [self.content setNeedsDisplay:YES];
     if (reframe) {
         [self resizeToFit];
@@ -658,8 +802,13 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         return;
     }
     NSRect frame = self.panel.frame;
-    frame.size = size;
-    [self.panel setFrame:frame display:YES];
+    // A redundant resize still triggers AppKit layout (and, with display:YES,
+    // an immediate redraw), so only touch the frame when the size really
+    // changed. The panel is resized several times per keystroke.
+    if (!NSEqualSizes(frame.size, size)) {
+        frame.size = size;
+        [self.panel setFrame:frame display:YES];
+    }
     // keep the content view in lockstep with the panel in case a resize
     // happened while the content was not yet in the window
     [self.content setFrame:self.panel.contentView.bounds];
@@ -678,6 +827,9 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         if (origin.y < visible.origin.y) {
             origin.y = cursor.origin.y + cursor.size.height + kSelectionGap;
         }
+    }
+    if (NSEqualPoints(self.panel.frame.origin, origin)) {
+        return;
     }
     [self.panel setFrameOrigin:origin];
 }

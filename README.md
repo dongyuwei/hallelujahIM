@@ -125,10 +125,12 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 本输入法使用两个 SQLite 数据库，基于 FMDB (SQLite wrapper) 进行查询：
 
-1. **英文词库数据库**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
-   - 包含约 140,402 个英文单词的词频、中文释义和国际音标
-   - 安装时从 app bundle 自动复制到用户目录
-   - 通过前缀匹配查询候选词：走 `idx_word` 的 B-tree 范围查询（`word >= 前缀 AND word < 前缀 + U+10FFFF`，并限制返回条数）；刻意不用 `LIKE 'prefix%'`——索引是 BINARY 排序规则，用不上，会对 14 万行做全表扫描
+1. **英文与拼音词库数据库**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
+   - `words` 表：约 140,402 个英文单词的词频、中文释义和国际音标
+   - `cedict_pinyin` 表：拼音到候选词的映射（中文词条与英文释义），英文模式下输入拼音时按需查询
+   - 安装时从 app bundle 复制到用户目录。库内记有 `PRAGMA user_version`：当用户目录里的副本版本与 app bundle 内的不一致时（例如升级后新增了表），启动时会自动重新复制一份，并清理旧的 `-wal`/`-shm`
+   - 英文前缀匹配走 `word` 主键的 B-tree 范围查询（`word >= 前缀 AND word < 前缀 + U+10FFFF`，并限制返回条数）；`word` 是 `PRIMARY KEY`，其隐式索引 `sqlite_autoindex_words_1` 已经够用，因此不再额外建 `idx_word`。刻意不用 `LIKE 'prefix%'`——索引是 BINARY 排序规则，用不上，会对 14 万行做全表扫描
+   - 拼音候选同样只走 `cedict_pinyin` 主键的一次索引查询，且每个拼音最多存放 50 条（与候选面板上限一致），只物化真正能显示的字符串。这替代了早期把 17 MB 的 `cedict.json` 全部解析成 Objective-C 对象（实测约 49 MB 常驻内存）的做法
 
    表结构：
 
@@ -140,8 +142,17 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
        translation TEXT,
        ipa TEXT
    );
-   CREATE INDEX idx_word ON words(word);
+
+   -- 拼音表：拼音 -> 候选词（换行分隔，每个拼音最多 50 条）
+   CREATE TABLE cedict_pinyin (
+       pinyin TEXT PRIMARY KEY,
+       words TEXT
+   );
    ```
+
+   数据库由 `python3 dictionary/build-sqlite.py` 生成：它从 `dictionary/cedict.json` 构建 `cedict_pinyin` 表，并删除不再使用的表和索引。`cedict.json` 只作为该脚本的输入，不再打进 app bundle。
+
+   改动数据库结构或数据后，请同时提升 `dictionary/build-sqlite.py` 的 `SCHEMA_VERSION` 与 `src/ConversionEngine.mm` 的 `kWordsDatabaseSchemaVersion`，并重新生成数据库：两者必须相等，否则已有用户不会替换旧库，针对新表/新数据的查询会静默返回空结果。
 
 2. **拼音引擎（librime）**: 拼音输入模式由 [librime](https://github.com/rime/librime) 驱动
    - 使用「朙月拼音」(luna_pinyin) 方案，默认输出简体中文（OpenCC t2s 转换）
@@ -167,7 +178,7 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 ## 感谢以下开源项目:
 
 1. [FMDB](https://github.com/ccgus/fmdb)，SQLite 数据库封装库，用于高效的前缀匹配查询。
-2. dictionary/cedict.json is transformed from [cc-cedict](https://cc-cedict.org/wiki/)，拼音-英语词库。
+2. [cc-cedict](https://cc-cedict.org/wiki/)：`dictionary/cedict.json` 由它转换而来，是拼音-英语词库，用于生成数据库中的 `cedict_pinyin` 表。
 3. [librime](https://github.com/rime/librime)，中州韵输入法引擎，拼音输入模式的核心；配套的 [rime-prelude](https://github.com/rime/rime-prelude)、[rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin)（朙月拼音方案与词典）、[rime-stroke](https://github.com/rime/rime-stroke)（笔画反查）、[rime-essay](https://github.com/rime/rime-essay)（八股文词频）与 [OpenCC](https://github.com/BYVoid/OpenCC)（简繁转换）一同构成了拼音模式的完整数据。
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA， 国际音标。
 5. [GCDWebServer](https://github.com/swisspol/GCDWebServer)，用于用户使用偏好配置。

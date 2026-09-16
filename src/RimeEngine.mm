@@ -8,6 +8,9 @@
 @implementation RimeEngine {
     RimeApi *_api;
     BOOL _started;
+    // Kept open so the loaded schema and dictionaries stay resident; see
+    // -warmUpSession.
+    RimeSessionId _warmUpSession;
 }
 
 // Counts UTF-16 units in the first `byteLength` bytes of a UTF-8 string.
@@ -65,9 +68,25 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
     if (!_started) {
         return;
     }
+    if (_warmUpSession) {
+        _api->destroy_session(_warmUpSession);
+        _warmUpSession = 0;
+    }
     _api->cleanup_all_sessions();
     _api->finalize();
     _started = NO;
+}
+
+// Creating the first session loads the schema and its dictionaries (~30 ms
+// measured for luna_pinyin). Sessions are reference counted and the data is
+// unloaded again once the last one is destroyed, so hold one open for the
+// process lifetime. Called after startup so the first pinyin keystroke does not
+// pay for the load.
+- (void)warmUpSession {
+    if (!_started || _warmUpSession) {
+        return;
+    }
+    _warmUpSession = _api->create_session();
 }
 
 - (RimeSessionId)createSession {

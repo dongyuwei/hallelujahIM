@@ -101,6 +101,13 @@ int main(int argc, char *argv[]) {
     NSString *userDataDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/hallelujah/rime"];
     [rimeEngine startWithSharedDataDir:sharedDataDir userDataDir:userDataDir];
 
+    // Loading the schema costs ~30 ms on the first session, which otherwise
+    // lands on the user's first pinyin keystroke. Queue it for the moment the
+    // run loop starts: no input is being handled yet, so the cost is invisible.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [rimeEngine warmUpSession];
+    });
+
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
 
     [[WebServer sharedServer] start];

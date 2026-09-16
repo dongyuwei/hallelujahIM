@@ -24,6 +24,12 @@ typedef NS_ENUM(NSInteger, InputMode) {
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];
+    // Marked text last handed to the client. One keystroke updates it from
+    // several places (buffer append, then highlight sync) with the same
+    // content; remembering it lets the redundant IMK call be skipped.
+    __weak id _lastMarkedClient;
+    NSString *_lastMarkedText;
+    NSRange _lastMarkedSelection;
 }
 
 - (NSMutableString *)composedBuffer;

@@ -19,7 +19,6 @@
 		3833665322DC8160004BA2D1 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3802CD8B22CF43BD00A7E2F9 /* JavaScriptCore.framework */; };
 		3833665922DD6F45004BA2D1 /* TestConversionEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3833665822DD6F45004BA2D1 /* TestConversionEngine.mm */; };
 		386E1C0022DC5E9C000C6DCF /* ConversionEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 386E1BFF22DC5E9B000C6DCF /* ConversionEngine.mm */; };
-		38788DC9231EA73C0005685A /* cedict.json in Resources */ = {isa = PBXBuildFile; fileRef = 38788DC8231EA73B0005685A /* cedict.json */; };
 		389468CB1F56A34A00EF1F5E /* web in Resources */ = {isa = PBXBuildFile; fileRef = 389468CA1F56A34A00EF1F5E /* web */; };
 		389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 389468D51F57C8CE00EF1F5E /* InputApplicationDelegate.m */; };
 		38A9EAC722CB424F003CCF52 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A9EAC622CB424F003CCF52 /* Carbon.framework */; };
@@ -48,6 +47,7 @@
 		A11122233302 /* CandidatePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233402 /* CandidatePanel.m */; };
 		A11122233303 /* CandidatePanelState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233401 /* CandidatePanelState.m */; };
 		A11122233304 /* TestCandidatePanelState.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233403 /* TestCandidatePanelState.mm */; };
+		A11122233305 /* TestCandidatePanelLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233406 /* TestCandidatePanelLayout.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +112,7 @@
 		A11122233403 /* TestCandidatePanelState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCandidatePanelState.mm; sourceTree = "<group>"; };
 		A11122233404 /* CandidatePanelState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanelState.h; path = src/CandidatePanelState.h; sourceTree = "<group>"; };
 		A11122233405 /* CandidatePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidatePanel.h; path = src/CandidatePanel.h; sourceTree = "<group>"; };
+		A11122233406 /* TestCandidatePanelLayout.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCandidatePanelLayout.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +269,7 @@
 				3833665822DD6F45004BA2D1 /* TestConversionEngine.mm */,
 				7A1E00000000000000000015 /* TestRimeEngine.mm */,
 				A11122233403 /* TestCandidatePanelState.mm */,
+				A11122233406 /* TestCandidatePanelLayout.mm */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -386,7 +388,6 @@
 			files = (
 				0DE74BFE1978EC6A00040F3C /* him.png in Resources */,
 				3802CD9A22CF591100A7E2F9 /* phonex_encoded_words.json in Resources */,
-				38788DC9231EA73C0005685A /* cedict.json in Resources */,
 				3817857B22D0E2240091268E /* phonex.js in Resources */,
 				389468CB1F56A34A00EF1F5E /* web in Resources */,
 				F102C5A61F487DE80005B03F /* words_with_frequency_and_translation_and_ipa.sqlite3 in Resources */,
@@ -494,6 +495,7 @@
 				7A1E00000000000000000004 /* RimeEngine.mm in Sources */,
 				7A1E00000000000000000005 /* RimeKeymap.mm in Sources */,
 				A11122233304 /* TestCandidatePanelState.mm in Sources */,
+				A11122233305 /* TestCandidatePanelLayout.mm in Sources */,
 				A11122233303 /* CandidatePanelState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -19,6 +19,19 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 @interface InputController () <CandidatePanelDelegate>
 
+// Marked-text bookkeeping. One keystroke updates the client's marked text from
+// several places (buffer append, then highlight sync) with the same content;
+// these remember what the client was last told so the identical update - and
+// the markForStyle: lookup that builds it - can be skipped. The recorded state
+// is dropped after a commit, cancel or client switch so that a later update is
+// always delivered.
+- (BOOL)isMarkedTextCurrentForString:(NSString *)string selectionRange:(NSRange)selectionRange;
+- (void)recordMarkedTextForString:(NSString *)string selectionRange:(NSRange)selectionRange;
+- (void)setMarkedTextIfChanged:(NSAttributedString *)attrString
+                selectionRange:(NSRange)selectionRange
+              replacementRange:(NSRange)replacementRange;
+- (void)forgetMarkedText;
+
 @end
 
 @implementation InputController
@@ -256,9 +269,25 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 // Mirrors the panel's highlight into the composition state so space, enter
 // and digits commit what the user sees (English mode commits _composedBuffer;
-// pinyin commits straight from _panelHighlight).
+// pinyin commits straight from _panelHighlight). Used by the navigation paths,
+// which only move the highlight.
 - (void)syncHighlightFromPanel {
     _panelHighlight = sharedCandidates.selectedIndex;
+    [self applyHighlightToComposition];
+
+    // The old IMKCandidates drove the translation popup through the
+    // candidateSelectionChanged: delegate callback, which the custom panel
+    // never fires; show the annotation for the highlighted word directly.
+    NSString *annotation = [self annotationForHighlightedCandidate];
+    if (annotation != nil) {
+        [sharedCandidates setAnnotation:annotation];
+    }
+}
+
+// Buffer and inline preedit for the highlighted candidate. Split out of
+// syncHighlightFromPanel because the per-keystroke path passes the gloss to the
+// panel as part of a single update instead of triggering a second one.
+- (void)applyHighlightToComposition {
     if (_inputMode == InputModePinyin || _panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
         return;
     }
@@ -266,14 +295,19 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setComposedBuffer:word];
     [self showPreeditString:word];
     _insertionIndex = word.length;
+}
 
-    // The old IMKCandidates drove the translation popup through the
-    // candidateSelectionChanged: delegate callback, which the custom panel
-    // never fires; show the annotation for the highlighted word directly.
-    BOOL showTranslation = [preference boolForKey:@"showTranslation"];
-    if (showTranslation) {
-        [self showAnnotation:[[NSAttributedString alloc] initWithString:word]];
+// Gloss for the highlighted candidate, or nil when there is nothing to change:
+// pinyin mode shows none, and with the translation preference off the panel
+// keeps whatever it had (the pre-existing behaviour).
+- (NSString *)annotationForHighlightedCandidate {
+    if (_inputMode == InputModePinyin || ![preference boolForKey:@"showTranslation"]) {
+        return nil;
     }
+    if (_panelHighlight < 0 || _panelHighlight >= (NSInteger)_candidates.count) {
+        return @"";
+    }
+    return [engine getAnnotation:_candidates[_panelHighlight]] ?: @"";
 }
 
 // Commits the candidate shown on the given panel row by its Rime page index
@@ -293,6 +327,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
         [sender insertText:commitText replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+        // The client's composition is gone; a later composition may legitimately
+        // repeat this string, so it must be delivered again.
+        [self forgetMarkedText];
     }
 
     NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
@@ -306,11 +343,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (preedit.length == 0) {
         [sharedCandidates hide];
         _panelHighlight = 0;
+        [self forgetMarkedText];
         return;
     }
 
-    [sharedCandidates updateCandidates:_candidates];
-    [sharedCandidates showAtClient:_currentClient];
+    // One panel update for the whole keystroke. Pinyin shows no gloss, so the
+    // annotation is left as it is.
+    [sharedCandidates updateCandidates:_candidates annotation:nil atClient:_currentClient];
     // selection state is owned by the input method; a fresh page starts at row 0
     _panelHighlight = 0;
 
@@ -320,7 +359,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (selLength > 0) {
         [attrString setAttributes:convertedAttrs range:NSMakeRange(selStart, selLength)];
     }
-    [_currentClient setMarkedText:attrString selectionRange:NSMakeRange(caretPos, 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    [self setMarkedTextIfChanged:attrString selectionRange:NSMakeRange(caretPos, 0) replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
 }
 
 - (BOOL)onKeyEvent:(NSEvent *)event client:(id)sender {
@@ -370,9 +409,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         // candidates: callback on updateCandidates; the custom panel never
         // does, so request them here.
         [self candidates:sender];
-        [sharedCandidates updateCandidates:_candidates];
-        [sharedCandidates showAtClient:_currentClient];
-        [self syncHighlightFromPanel];
+        // A fresh page starts at row 0, and the gloss for that row goes in with
+        // the same panel update, so the panel is laid out once per keystroke
+        // instead of three times.
+        _panelHighlight = 0;
+        [sharedCandidates updateCandidates:_candidates annotation:[self annotationForHighlightedCandidate] atClient:_currentClient];
+        [self applyHighlightToComposition];
         return YES;
     }
 
@@ -454,9 +496,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
         if (convertedString && convertedString.length > 0) {
             [self candidates:sender]; // custom panel does not pull candidates itself
-            [sharedCandidates updateCandidates:_candidates];
-            [sharedCandidates showAtClient:_currentClient];
-            [self syncHighlightFromPanel];
+            _panelHighlight = 0;
+            [sharedCandidates updateCandidates:_candidates annotation:[self annotationForHighlightedCandidate] atClient:_currentClient];
+            [self applyHighlightToComposition];
         } else {
             [self reset];
         }
@@ -516,6 +558,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)reset {
+    [self forgetMarkedText];
     [self setComposedBuffer:@""];
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
@@ -552,21 +595,53 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)showPreeditString:(NSString *)input {
-    NSDictionary *attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, input.length)];
-    NSAttributedString *attrString;
-
-    NSString *originalBuff = [NSString stringWithString:[self originalBuffer]];
+    NSRange selectionRange = NSMakeRange(input.length, 0);
+    NSString *originalBuff = [self originalBuffer];
+    NSString *display = input;
     if ([input.lowercaseString hasPrefix:originalBuff.lowercaseString]) {
-        attrString = [[NSAttributedString alloc]
-            initWithString:[NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]]
-                attributes:attrs];
-    } else {
-        attrString = [[NSAttributedString alloc] initWithString:input attributes:attrs];
+        display = [NSString stringWithFormat:@"%@%@", originalBuff, [input substringFromIndex:originalBuff.length]];
+    }
+    if ([self isMarkedTextCurrentForString:display selectionRange:selectionRange]) {
+        return; // the client already shows this, so skip the style lookup too
     }
 
-    [_currentClient setMarkedText:attrString
-                   selectionRange:NSMakeRange(input.length, 0)
+    NSDictionary *attrs = [self markForStyle:kTSMHiliteSelectedRawText atRange:NSMakeRange(0, input.length)];
+    [self recordMarkedTextForString:display selectionRange:selectionRange];
+    [_currentClient setMarkedText:[[NSAttributedString alloc] initWithString:display attributes:attrs]
+                   selectionRange:selectionRange
                  replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+}
+
+// True when the client is already showing exactly this marked string and
+// selection for the same client.
+- (BOOL)isMarkedTextCurrentForString:(NSString *)string selectionRange:(NSRange)selectionRange {
+    id client = _currentClient;
+    return client != nil && client == _lastMarkedClient && NSEqualRanges(_lastMarkedSelection, selectionRange) &&
+           [_lastMarkedText isEqualToString:string];
+}
+
+- (void)recordMarkedTextForString:(NSString *)string selectionRange:(NSRange)selectionRange {
+    _lastMarkedClient = _currentClient;
+    _lastMarkedText = [string copy];
+    _lastMarkedSelection = selectionRange;
+}
+
+- (void)setMarkedTextIfChanged:(NSAttributedString *)attrString
+                selectionRange:(NSRange)selectionRange
+              replacementRange:(NSRange)replacementRange {
+    if ([self isMarkedTextCurrentForString:attrString.string selectionRange:selectionRange]) {
+        return;
+    }
+    [self recordMarkedTextForString:attrString.string selectionRange:selectionRange];
+    [_currentClient setMarkedText:attrString selectionRange:selectionRange replacementRange:replacementRange];
+}
+
+// The client's composition was committed or cancelled; whatever it showed can
+// no longer be assumed to still be there.
+- (void)forgetMarkedText {
+    _lastMarkedClient = nil;
+    _lastMarkedText = nil;
+    _lastMarkedSelection = NSMakeRange(NSNotFound, 0);
 }
 
 - (void)originalBufferAppend:(NSString *)input client:(id)sender {
@@ -637,6 +712,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 - (void)activateServer:(id)sender {
     [sender overrideKeyboardWithKeyboardNamed:@"com.apple.keylayout.US"];
 
+    // A freshly activated client shows no marked text from us.
+    [self forgetMarkedText];
     sharedCandidates.delegate = self;
     _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
