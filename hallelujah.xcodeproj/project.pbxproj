@@ -337,6 +337,7 @@
 				7A1E00000000000000000021 /* Copy rime data */,
 				7A1E00000000000000000022 /* Embed Frameworks */,
 				8564A7C414FB3688218ABA3D /* [CP] Embed Pods Frameworks */,
+				7A1E00000000000000000023 /* Inject build version */,
 			);
 			buildRules = (
 			);
@@ -489,6 +490,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7A1E00000000000000000023 /* Inject build version */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Inject build version";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nPB=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nBUILD_VERSION=\"build-unknown\"\nBUILD_EPOCH=\"$(date +%s)\"\nif BUILD_SHA=\"$(git -C \"${SRCROOT}\" rev-parse --short HEAD 2>/dev/null)\"; then\n    # Mark local builds that carry uncommitted changes, but never CI: there\n    # `pod install` rewrites tracked Pods files and would stamp every release\n    # as dirty, breaking the match with the `build-<sha>` release tag.\n    if [ -z \"${GITHUB_ACTIONS:-}\" ] && [ -n \"$(git -C \"${SRCROOT}\" status --porcelain 2>/dev/null)\" ]; then\n        BUILD_SHA=\"${BUILD_SHA}-dirty\"\n    fi\n    BUILD_VERSION=\"build-${BUILD_SHA}\"\nfi\n/usr/libexec/PlistBuddy -c \"Delete :HallelujahBuildVersion\" \"${PB}\" >/dev/null 2>&1 || true\n/usr/libexec/PlistBuddy -c \"Add :HallelujahBuildVersion string ${BUILD_VERSION}\" \"${PB}\"\n/usr/libexec/PlistBuddy -c \"Delete :HallelujahBuildEpoch\" \"${PB}\" >/dev/null 2>&1 || true\n/usr/libexec/PlistBuddy -c \"Add :HallelujahBuildEpoch string ${BUILD_EPOCH}\" \"${PB}\"\nBUILD_LOCAL=\"$(date -r \"${BUILD_EPOCH}\" '+%Y-%m-%d %H:%M %z')\"\necho \"note: Hallelujah build version ${BUILD_VERSION} built at ${BUILD_LOCAL}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

@@ -1,5 +1,6 @@
 #import "CandidatePanel.h"
 #import "ConversionEngine.h"
+#import "InputApplicationDelegate.h"
 #import "RimeEngine.h"
 #import "WebServer.h"
 #import <Carbon/Carbon.h>
@@ -71,6 +72,10 @@ void initPreference() {
 }
 
 int main(int argc, char *argv[]) {
+    // Printed on every launch, including --install/--deactivate, so the exact
+    // build can be read back from Console.app when a user reports a problem.
+    NSLog(@"[Hallelujah] version %@ built %@", [InputApplicationDelegate buildVersion], [InputApplicationDelegate buildDate] ?: @"unknown");
+
     if (argc > 1 && !strcmp("--deactivate", argv[1])) {
         deactivateInputSource();
         return 0;
