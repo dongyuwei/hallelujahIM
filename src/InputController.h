@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, InputMode) {
     NSMutableArray *_candidates;
     InputMode _inputMode;
     NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet
-    NSInteger _panelHighlight; // candidate row mirrored from Rime's highlight
+    NSInteger _panelHighlight; // highlighted candidate row; in pinyin mode row 0 is the raw input
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];

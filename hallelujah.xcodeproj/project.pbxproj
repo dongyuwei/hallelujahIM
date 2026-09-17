@@ -50,6 +50,9 @@
 		A11122233305 /* TestCandidatePanelLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233406 /* TestCandidatePanelLayout.mm */; };
 		A11122233306 /* MarkedTextState.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233408 /* MarkedTextState.m */; };
 		A11122233307 /* TestMarkedTextState.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233409 /* TestMarkedTextState.mm */; };
+		A11122233310 /* PinyinCandidateRows.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233411 /* PinyinCandidateRows.m */; };
+		A11122233311 /* PinyinCandidateRows.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233411 /* PinyinCandidateRows.m */; };
+		A11122233312 /* TestPinyinCandidateRows.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233412 /* TestPinyinCandidateRows.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +121,9 @@
 		A11122233407 /* MarkedTextState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarkedTextState.h; path = src/MarkedTextState.h; sourceTree = "<group>"; };
 		A11122233408 /* MarkedTextState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarkedTextState.m; path = src/MarkedTextState.m; sourceTree = "<group>"; };
 		A11122233409 /* TestMarkedTextState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestMarkedTextState.mm; sourceTree = "<group>"; };
+		A11122233410 /* PinyinCandidateRows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PinyinCandidateRows.h; path = src/PinyinCandidateRows.h; sourceTree = "<group>"; };
+		A11122233411 /* PinyinCandidateRows.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PinyinCandidateRows.m; path = src/PinyinCandidateRows.m; sourceTree = "<group>"; };
+		A11122233412 /* TestPinyinCandidateRows.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestPinyinCandidateRows.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +199,8 @@
 				A11122233402 /* CandidatePanel.m */,
 				A11122233407 /* MarkedTextState.h */,
 				A11122233408 /* MarkedTextState.m */,
+				A11122233410 /* PinyinCandidateRows.h */,
+				A11122233411 /* PinyinCandidateRows.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -278,6 +286,7 @@
 				A11122233403 /* TestCandidatePanelState.mm */,
 				A11122233406 /* TestCandidatePanelLayout.mm */,
 				A11122233409 /* TestMarkedTextState.mm */,
+				A11122233412 /* TestPinyinCandidateRows.mm */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -523,6 +532,8 @@
 				A11122233305 /* TestCandidatePanelLayout.mm in Sources */,
 				A11122233307 /* TestMarkedTextState.mm in Sources */,
 				A11122233303 /* CandidatePanelState.m in Sources */,
+				A11122233311 /* PinyinCandidateRows.m in Sources */,
+				A11122233312 /* TestPinyinCandidateRows.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +545,7 @@
 				A11122233301 /* CandidatePanelState.m in Sources */,
 				A11122233302 /* CandidatePanel.m in Sources */,
 				A11122233306 /* MarkedTextState.m in Sources */,
+				A11122233310 /* PinyinCandidateRows.m in Sources */,
 				3804D23720F2FC2A00CF1BD9 /* NSScreen+PointConversion.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,

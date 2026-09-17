@@ -6,6 +6,7 @@
 #import "InputController.h"
 #import "MarkedTextState.h"
 #import "NSScreen+PointConversion.h"
+#import "PinyinCandidateRows.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
 
@@ -132,8 +133,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     // Candidate selection and up/down navigation are owned by the input
     // method, not Rime: digits pick a row, space commits the highlighted row,
-    // arrows move the highlight. Rime only builds the composition; the
-    // Chinese rows commit through selectCandidateOnCurrentPage.
+    // arrows move the highlight. Rime only builds the composition; row 0 is
+    // the raw input and the Chinese rows below it commit through
+    // selectCandidateOnCurrentPage.
     NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
 
     if (rawInput.length > 0) {
@@ -207,8 +209,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 // Space commits the highlighted row (with the trailing-space preference);
-// Enter commits it without a trailing space. With no candidates left, hand
-// the key back to Rime (e.g. to commit the raw input).
+// Enter commits it without a trailing space. A fresh page highlights row 0,
+// which in pinyin mode is the raw input. With no candidates left, hand the
+// key back to Rime.
 - (BOOL)commitHighlightedCandidateWithSpace:(BOOL)withSpace sender:(id)sender {
     if (_candidates.count == 0) {
         return NO;
@@ -307,19 +310,50 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return [engine getAnnotation:_candidates[_panelHighlight]] ?: @"";
 }
 
-// Commits the candidate shown on the given panel row by its Rime page index
-// (pinyin) or the English commit path (English mode).
+// Commits the candidate shown on the given panel row. In pinyin mode row 0 is
+// the raw input (committed as plain text) and the rows below select Rime
+// candidates one row up; the mapping lives in PinyinCandidateRows.
 - (void)commitSelectedRow:(NSInteger)row withSpace:(BOOL)withSpace sender:(id)sender {
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         return;
     }
-    [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:row];
+    if (_inputMode == InputModePinyin) {
+        if ([PinyinCandidateRows rowIsRawInput:row]) {
+            [self commitRimeRawInput:withSpace sender:sender];
+            return;
+        }
+        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[PinyinCandidateRows rimeIndexForRow:row]];
+    } else {
+        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:row];
+    }
     [self rimeUpdate:sender];
 }
 
+// Commits the raw pinyin input as plain text - pinyin panel row 0, selected
+// with space, enter or 1. Mirrors the English commit: the commitWordWithSpace
+// preference decides the trailing space, and input ending with the pinyin
+// syllable separator gets none, like the English apostrophe rule.
+- (void)commitRimeRawInput:(BOOL)withSpace sender:(id)sender {
+    NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+    [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+    if (rawInput.length > 0) {
+        NSString *text = rawInput;
+        if (withSpace && [preference boolForKey:@"commitWordWithSpace"]) {
+            unichar firstChar = [text characterAtIndex:0];
+            unichar lastChar = [text characterAtIndex:text.length - 1];
+            if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
+                text = [NSString stringWithFormat:@"%@ ", text];
+            }
+        }
+        [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    }
+    [self reset];
+}
+
 // Single refresh point after every processed key: deliver pending commit,
-// mirror Rime's preedit into inline marked text, and feed the candidate panel
-// with the current page of candidates.
+// mirror Rime's preedit into inline marked text, and feed the candidate panel.
+// The panel rows come from PinyinCandidateRows: the raw input first (space,
+// enter and 1 commit it as plain text), then Rime's current page one row down.
 - (void)rimeUpdate:(id)sender {
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
@@ -329,11 +363,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         [self forgetMarkedText];
     }
 
-    NSArray<RimeCandidateItem *> *rimeCandidates = [rimeEngine candidates:(RimeSessionId)_rimeSession];
-    _candidates = [NSMutableArray array];
-    for (RimeCandidateItem *candidate in rimeCandidates) {
-        [_candidates addObject:candidate.text];
+    NSMutableArray *rimeTexts = [NSMutableArray array];
+    for (RimeCandidateItem *candidate in [rimeEngine candidates:(RimeSessionId)_rimeSession]) {
+        [rimeTexts addObject:candidate.text];
     }
+    _candidates = [[PinyinCandidateRows rowsForRawInput:[rimeEngine rawInput:(RimeSessionId)_rimeSession]
+                                         rimeCandidates:rimeTexts] mutableCopy];
 
     NSInteger selStart = 0, selLength = 0, caretPos = 0;
     NSString *preedit = [rimeEngine preedit:(RimeSessionId)_rimeSession selStart:&selStart selLength:&selLength caretPos:&caretPos];
