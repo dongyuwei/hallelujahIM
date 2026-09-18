@@ -4,10 +4,12 @@
 #import "ConversionEngine.h"
 
 @class MarkedTextState;
+@class PinyinCandidateRows;
 
 // The three input modes the right-Command key cycles through, in cycle order
 // (each value one step further than the previous): intelligent English ->
-// pinyin -> traditional English.
+// pinyin (skipped unless the enablePinyinInput preference is on) ->
+// traditional English.
 typedef NS_ENUM(NSInteger, InputMode) {
     InputModeHallelujahEnglish = 0, // intelligent English candidates
     InputModePinyin = 1,            // Rime-driven Chinese composition
@@ -22,7 +24,10 @@ typedef NS_ENUM(NSInteger, InputMode) {
     NSMutableArray *_candidates;
     InputMode _inputMode;
     NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet
-    NSInteger _panelHighlight; // highlighted candidate row; in pinyin mode row 0 is the raw input
+    NSInteger _panelHighlight; // highlighted candidate row
+    // Row model the pinyin panel rows came from; nil outside pinyin mode. Its
+    // rows are _candidates; it owns where the raw-input row sits.
+    PinyinCandidateRows *_pinyinRows;
     id _currentClient;
     NSUInteger _lastModifiers[2];
     NSEventType _lastEventTypes[2];

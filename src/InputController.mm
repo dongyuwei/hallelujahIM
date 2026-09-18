@@ -91,8 +91,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 // Right Command cycles: hallelujah-english -> pinyin -> raw-english -> back.
-// Switching away from a composing mode flushes what was typed so nothing is
-// lost: hallelujah-english commits its buffered word, pinyin flushes Rime's
+// Pinyin is skipped unless the enablePinyinInput preference is on. Switching
+// away from a composing mode flushes what was typed so nothing is lost:
+// hallelujah-english commits its buffered word, pinyin flushes Rime's
 // unconverted input as plain text.
 - (void)cycleInputMode:(id)sender {
     switch (_inputMode) {
@@ -115,12 +116,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         break;
     }
     }
-    _inputMode = (InputMode)((_inputMode + 1) % 3);
+    InputMode next = (InputMode)((_inputMode + 1) % 3);
+    if (next == InputModePinyin && ![preference boolForKey:@"enablePinyinInput"]) {
+        next = InputModeRawEnglish;
+    }
+    _inputMode = next;
     [self reset];
 }
 
 // Pinyin mode: Rime drives the composition; the candidate panel mirrors each
-// page of Chinese candidates.
+// page of Chinese candidates with the raw input spliced in at the configured
+// candidate position (PinyinCandidateRows owns the row model).
 - (BOOL)onRimeKeyEvent:(NSEvent *)event client:(id)sender {
     _currentClient = sender;
 
@@ -133,9 +139,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
     // Candidate selection and up/down navigation are owned by the input
     // method, not Rime: digits pick a row, space commits the highlighted row,
-    // arrows move the highlight. Rime only builds the composition; row 0 is
-    // the raw input and the Chinese rows below it commit through
-    // selectCandidateOnCurrentPage.
+    // arrows move the highlight. Rime only builds the composition; the row at
+    // the configured raw-input position commits the typed input, and the
+    // Chinese rows commit through selectCandidateOnCurrentPage.
     NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
 
     if (rawInput.length > 0) {
@@ -210,8 +216,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 // Space commits the highlighted row (with the trailing-space preference);
 // Enter commits it without a trailing space. A fresh page highlights row 0,
-// which in pinyin mode is the raw input. With no candidates left, hand the
-// key back to Rime.
+// which is the raw input only when it is configured as the first candidate.
+// With no candidates left, hand the key back to Rime.
 - (BOOL)commitHighlightedCandidateWithSpace:(BOOL)withSpace sender:(id)sender {
     if (_candidates.count == 0) {
         return NO;
@@ -310,19 +316,20 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     return [engine getAnnotation:_candidates[_panelHighlight]] ?: @"";
 }
 
-// Commits the candidate shown on the given panel row. In pinyin mode row 0 is
-// the raw input (committed as plain text) and the rows below select Rime
-// candidates one row up; the mapping lives in PinyinCandidateRows.
+// Commits the candidate shown on the given panel row. In pinyin mode the row
+// at the configured raw-input position commits the raw input as plain text,
+// and the other rows select Rime candidates through the row mapping owned by
+// _pinyinRows.
 - (void)commitSelectedRow:(NSInteger)row withSpace:(BOOL)withSpace sender:(id)sender {
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         return;
     }
     if (_inputMode == InputModePinyin) {
-        if ([PinyinCandidateRows rowIsRawInput:row]) {
+        if ([_pinyinRows rowIsRawInput:row]) {
             [self commitRimeRawInput:withSpace sender:sender];
             return;
         }
-        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[PinyinCandidateRows rimeIndexForRow:row]];
+        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[_pinyinRows rimeIndexForRow:row]];
     } else {
         [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:row];
     }
@@ -352,8 +359,9 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 // Single refresh point after every processed key: deliver pending commit,
 // mirror Rime's preedit into inline marked text, and feed the candidate panel.
-// The panel rows come from PinyinCandidateRows: the raw input first (space,
-// enter and 1 commit it as plain text), then Rime's current page one row down.
+// The panel rows come from PinyinCandidateRows: Rime's current page with the
+// raw input spliced in at the configured candidate position, so the digit
+// matching that position commits what was typed.
 - (void)rimeUpdate:(id)sender {
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
@@ -367,8 +375,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     for (RimeCandidateItem *candidate in [rimeEngine candidates:(RimeSessionId)_rimeSession]) {
         [rimeTexts addObject:candidate.text];
     }
-    _candidates = [[PinyinCandidateRows rowsForRawInput:[rimeEngine rawInput:(RimeSessionId)_rimeSession]
-                                         rimeCandidates:rimeTexts] mutableCopy];
+    _pinyinRows = [[PinyinCandidateRows alloc] initWithRawInput:[rimeEngine rawInput:(RimeSessionId)_rimeSession]
+                                                 rimeCandidates:rimeTexts
+                                              preferredPosition:[preference integerForKey:@"pinyinRawInputCandidatePosition"]];
+    _candidates = [_pinyinRows.rows mutableCopy];
 
     NSInteger selStart = 0, selLength = 0, caretPos = 0;
     NSString *preedit = [rimeEngine preedit:(RimeSessionId)_rimeSession selStart:&selStart selLength:&selLength caretPos:&caretPos];
@@ -598,6 +608,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [sharedCandidates hide];
     [sharedCandidates updateCandidates:@[]];
     _candidates = [[NSMutableArray alloc] init];
+    _pinyinRows = nil;
     _panelHighlight = 0;
     [sharedCandidates setAnnotation:@""];
 }

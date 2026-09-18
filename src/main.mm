@@ -65,10 +65,29 @@ void initPreference() {
     NSDictionary *defaultPrefs = @{
         @"commitWordWithSpace" : @YES,
         @"showTranslation" : @YES,
-        @"useGridCandidatePanel" : @NO,
-        @"gridCandidateColumns" : @(kCandidateGridDefaultColumns)
+        @"useGridCandidatePanel" : @YES,
+        @"gridCandidateColumns" : @(kCandidateGridDefaultColumns),
+        @"enablePinyinInput" : @NO,
+        @"pinyinRawInputCandidatePosition" : @(2)
     };
     [preference registerDefaults:defaultPrefs];
+}
+
+// Starts librime when the pinyin preference is on; called at launch and again
+// from the preference page when pinyin input is turned on later (both paths
+// run on the main queue, and every step is idempotent, so they cannot
+// interleave or double-start). Defined with C linkage for WebServer.m.
+extern "C" void startRimeEngine() {
+    if (![preference boolForKey:@"enablePinyinInput"]) {
+        return;
+    }
+    NSString *sharedDataDir = [[[NSBundle mainBundle] sharedSupportPath] stringByAppendingPathComponent:@"rime-data"];
+    NSString *userDataDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/hallelujah/rime"];
+    [rimeEngine startWithSharedDataDir:sharedDataDir userDataDir:userDataDir];
+
+    // Loading the schema costs ~30 ms on the first session, which otherwise
+    // lands on the user's first pinyin keystroke.
+    [rimeEngine warmUpSession];
 }
 
 int main(int argc, char *argv[]) {
@@ -102,15 +121,11 @@ int main(int argc, char *argv[]) {
     engine = [ConversionEngine sharedEngine];
 
     rimeEngine = [RimeEngine sharedEngine];
-    NSString *sharedDataDir = [[[NSBundle mainBundle] sharedSupportPath] stringByAppendingPathComponent:@"rime-data"];
-    NSString *userDataDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/hallelujah/rime"];
-    [rimeEngine startWithSharedDataDir:sharedDataDir userDataDir:userDataDir];
-
-    // Loading the schema costs ~30 ms on the first session, which otherwise
-    // lands on the user's first pinyin keystroke. Queue it for the moment the
-    // run loop starts: no input is being handled yet, so the cost is invisible.
+    // Pinyin input is opt-in, so librime is only started when its preference
+    // is on. Queued for the moment the run loop starts: no input is being
+    // handled yet, so the start cost is invisible.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [rimeEngine warmUpSession];
+        startRimeEngine();
     });
 
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];

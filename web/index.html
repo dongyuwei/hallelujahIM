@@ -27,6 +27,16 @@
             <option v-for="n in 5" :key="n + 4" :value="n + 4">{{ n + 4 }}</option>
           </select>
         </label>
+        <label>
+          Enable pinyin (Rime) input:
+          <input type="checkbox" v-model="preference.enablePinyinInput" />
+        </label>
+        <label>
+          Pinyin raw input candidate position (1-5):
+          <select v-model.number="preference.pinyinRawInputCandidatePosition">
+            <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+          </select>
+        </label>
         <button :disabled="loading">
           {{ loading ? "loading..." : "Save" }}
         </button>
