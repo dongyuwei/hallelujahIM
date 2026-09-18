@@ -70,112 +70,19 @@
 点击输入法的 `Preferences` 或者直接访问本地 HTTP 服务: http://localhost:62718/index.html
 ![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
-<img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/93fa771f-e896-4afc-bb66-50858a596830" />
+![web-preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/web-preference.png)
 
 - **Enable pinyin (Rime) input（拼音输入）**：默认关闭。开启后按 `右Command` 循环切换时会经过拼音模式，输入拼音即可打出中文；关闭时切换直接在智能英语和传统英语之间往返。
 - **Pinyin raw input candidate position（拼音原始输入候选位置）**：默认第 2 个。拼音模式下用户当前输入的拼音固定占据该候选位置（可配置为第 1~5 个），按对应数字键即可原样上屏；设为第 1 个时空格/回车提交的就是原始输入本身。
 - **Use grid candidate panel（网格候选面板）**：默认开启。开启后候选以网格显示，列数可在偏好设置里配置（5–9 列，默认 5 列；数字键只能选到 9，故上限为 9，少于 5 列不如用竖排列表）。列宽按「当前屏幕上的行」自适应：收起时只按首行排版（保持紧凑），展开时按可见的那几行排版（不会为滚出屏幕的词预留宽度）；因此展开/收起是一次有意的重排，滚动到下一屏时列宽会重新适配，而同一屏内导航列不会移动；每列都预留等宽的数字槽位，所以有数字的行和没数字的行单词左边缘对齐（首次按 `↓` 展开全部行列，之后方向键导航，`←`/`→` 在行内循环，行首再按 `↑` 收起，空格/回车/数字键提交高亮候选）；关闭时改用竖排候选列表。两种布局均由输入法自绘；无论哪种布局，高亮词的音标与翻译都直接显示在候选面板内（竖排在右侧按最宽释义动态展开一列，网格在底部显示一行释义），无翻译时自动隐藏。
 
-## 候选面板实现
+# 开发指南
 
-候选面板为自绘实现，不再使用系统 `IMKCandidates`：
-
-- `src/CandidatePanelState`：纯导航状态机（无 AppKit），竖排 9 行浮动窗口、网格展开/收起、列循环、行窗口滚动等逻辑全部可单测覆盖；
-- `src/CandidatePanel`：`NSPanel` 封装 + `drawRect` 渲染，负责定位（光标下方、屏幕内钳制）、高亮、鼠标点击提交，并将高亮词的音标/翻译（`ConversionEngine` 的 `getAnnotation`）绘制为内置的释义列或底部释义行。
-
-网格布局的导航语义（首次按下展开、上下左右导航、行内循环）参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv) 的优秀工作！
-
-
-## 编译本输入法
-
-1. `open hallelujah.xcworkspace` 使用 Xcode 打开 `hallelujah.xcworkspace` 工程，注意不是打开 `hallelujah.xcodeproj`。
-2. `command + b` 构建.
-3. 构建编译后的输入法可以拷贝到 `/Library/Input\ Methods/` 目录内测试。
-
-## 如何调试输入法？
-
-1. 使用 `NSLog()` 在关键或可疑处打 log 日志。
-2. 没有 log 输出时，可以查看崩溃日志，位置可通过 `ls -l ~/Library/Logs/DiagnosticReports/ | grep hallelujah` 命令来查找。
-3. 深思熟虑。
-4. 使用 debug 版 build，在 Xcode 中 `Debug` -> `Attach to Process By PID or Name...` 。这个流程可以 work，但 Xcode 反应会较慢，需要在合适的地方加断点。大杀器，不得已而用之。
-5. 自动化测试（后续重构目标就是可测试性要加强）。
-
-## 格式化代码
-
-- `sh format-code.sh`
-
-## CI build
-
-`sh build.sh`
-
-## local dev script
-
-`sh dev.sh`
-
-## 构建安装包 pkg
-
-`bash package/build-package.bash`
-
-## DeepWiki
-https://www.deepwiki.com/dongyuwei/hallelujahIM
+构建、调试、测试、打包、数据存储与内部实现等开发相关内容，见 [dev-guide.md](dev-guide.md)（英文）。
 
 ## 开源协议
 
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
-
-## 数据存储
-
-本输入法使用两个 SQLite 数据库，基于 FMDB (SQLite wrapper) 进行查询：
-
-1. **英文与拼音词库数据库**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
-   - `words` 表：约 140,402 个英文单词的词频、中文释义和国际音标
-   - `cedict_pinyin` 表：拼音到候选词的映射（中文词条与英文释义），英文模式下输入拼音时按需查询
-   - 安装时从 app bundle 复制到用户目录。库内记有 `PRAGMA user_version`：当用户目录里的副本版本与 app bundle 内的不一致时（例如升级后新增了表），启动时会自动重新复制一份，并清理旧的 `-wal`/`-shm`
-   - 英文前缀匹配走 `word` 主键的 B-tree 范围查询（`word >= 前缀 AND word < 前缀 + U+10FFFF`，并限制返回条数）；`word` 是 `PRIMARY KEY`，其隐式索引 `sqlite_autoindex_words_1` 已经够用，因此不再额外建 `idx_word`。刻意不用 `LIKE 'prefix%'`——索引是 BINARY 排序规则，用不上，会对 14 万行做全表扫描
-   - 拼音候选同样只走 `cedict_pinyin` 主键的一次索引查询，且每个拼音最多存放 50 条（与候选面板上限一致），只物化真正能显示的字符串。这替代了早期把 17 MB 的 `cedict.json` 全部解析成 Objective-C 对象（实测约 49 MB 常驻内存）的做法
-
-   表结构：
-
-   ```sql
-   -- 单词表：存储英文单词、词频、中文释义、国际音标
-   CREATE TABLE words (
-       word TEXT PRIMARY KEY,
-       frequency INT,
-       translation TEXT,
-       ipa TEXT
-   );
-
-   -- 拼音表：拼音 -> 候选词（换行分隔，每个拼音最多 50 条）
-   CREATE TABLE cedict_pinyin (
-       pinyin TEXT PRIMARY KEY,
-       words TEXT
-   );
-   ```
-
-   数据库由 `python3 dictionary/build-sqlite.py` 生成：它从 `dictionary/cedict.json` 构建 `cedict_pinyin` 表，并删除不再使用的表和索引。`cedict.json` 只作为该脚本的输入，不再打进 app bundle。
-
-   改动数据库结构或数据后，请同时提升 `dictionary/build-sqlite.py` 的 `SCHEMA_VERSION` 与 `src/ConversionEngine.mm` 的 `kWordsDatabaseSchemaVersion`，并重新生成数据库：两者必须相等，否则已有用户不会替换旧库，针对新表/新数据的查询会静默返回空结果。
-
-2. **拼音引擎（librime）**: 拼音输入模式由 [librime](https://github.com/rime/librime) 驱动
-   - 使用「朙月拼音」(luna_pinyin) 方案，默认输出简体中文（OpenCC t2s 转换）
-   - 通过右 Command 键循环到拼音输入模式
-   - 方案与词典数据位于 app bundle 内 `Contents/SharedSupport/rime-data/`
-   - 首次启动时自动部署（编译产物写入 `~/Library/Application Support/hallelujah/rime/`）
-   - librime 为预编译 universal 库，通过 `scripts/get-librime.sh` 下载并嵌入 app bundle
-
-3. **自定义替换数据库**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
-   - 存储用户自定义的 Text-Expander 替换规则
-   - 可在偏好设置页面 (http://localhost:62718) 中添加/删除
-   - 安装和更新时保留（不会被覆盖）
-
-   表结构：
-
-   ```sql
-   CREATE TABLE substitutions (
-       key TEXT PRIMARY KEY,
-       value TEXT
-   );
-   ```
 
 ## 感谢以下开源项目:
 
@@ -188,15 +95,6 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 7. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein)，配合 talisman 的 phonex 算法，在音似词中按 Damerau Levenshtein 编辑距离筛选最接近的候选词。
 8. [鼠鬚管 squirrel 输入法](https://github.com/rime/squirrel) 哈利路亚输入法安装包 pkg 的制作 copy/参考了 squirrel 的实现。
 9. [SwiftType](https://github.com/mgxv/SwiftType/)，网格候选面板的导航语义（首次按下展开、四向导航、行内循环）参考了其 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv)！
-
-## 贡献代码
-
-提交 PR 之前请执行 `sh format-code.sh` 格式化代码。
-
-## 数据库性能对比
-[benchmarks目录](benchmarks/)
-
-1. [LMDB VS SQLite 性能对比](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
 
 ## 问题反馈，意见和建议
 

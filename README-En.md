@@ -59,85 +59,19 @@ Inspired by [hallelujah_autocompletion](https://daringfireball.net/2006/10/halle
 click `Preferences...` or visit web ui: http://localhost:62718/index.html
 ![preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/preference.png)
 
-preferences config:<br/>
-<img width="724" height="496" alt="image" src="https://github.com/user-attachments/assets/74e9f7a3-3287-43e5-92f2-08105dc1b461" />
+![web-preference](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/web-preference.png)
 
 - **Enable pinyin (Rime) input**: off by default. When on, the right-`Command` cycle passes through the Pinyin mode, where typing pinyin yields Chinese hanzi candidates; when off, the cycle alternates between intelligent English and traditional English only.
 - **Pinyin raw input candidate position**: the 2nd by default. The typed pinyin always occupies this candidate position in the panel (configurable 1st–5th); pressing its digit commits the typed input as-is. Set it to the 1st and space/Enter commit the raw input.
 - **Use grid candidate panel**: on by default. Shows candidates as a grid of 5–9 columns (default 5; the column count is set in the web Preferences page). Column widths fit the rows that are on screen — the first row while collapsed (so the bar stays compact), the visible rows once expanded (never reserving room for words scrolled out of view). Opening or closing the grid is therefore a deliberate re-fit, and scrolling to another screenful re-fits again, but navigating within a screenful never moves a column. Every cell reserves the same number gutter, so words line up whether or not their row shows selection keys. The first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. Off keeps the vertical list. Both layouts are custom-drawn; in either layout the highlighted word's phonetic and gloss are drawn inside the panel (a right column sized to the widest gloss line in vertical mode, a bottom gloss row in grid mode) and auto-hide when there's no translation.
 
-## Candidate panel implementation
+## Development
 
-The candidate panel is drawn by the input method itself instead of the system `IMKCandidates`:
-
-- `src/CandidatePanelState`: a pure navigation state machine with no AppKit dependency — vertical 9-row window scrolling, grid expand/collapse, column cycling, row-window scrolling — fully covered by unit tests;
-- `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, mouse-click commit, and the annotation (via `ConversionEngine`'s `getAnnotation`) drawn as a built-in gloss column or bottom gloss row.
-
-The grid navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv) for the great work!
-
-## Build project
-
-1. `open hallelujah.xcworkspace`
-2. build the project.
+Building, debugging, testing, packaging, data storage and implementation notes live in [dev-guide.md](dev-guide.md). Run `sh format-code.sh` before submitting a PR.
 
 ## License
 
 GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
-
-## Data Storage
-
-This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
-
-1. **English and pinyin dictionary**: `~/Library/Application Support/hallelujah/words_with_frequency_and_translation_and_ipa.sqlite3`
-   - `words`: ~140,402 English words with frequency, Chinese translation, and IPA
-   - `cedict_pinyin`: pinyin to candidate words (Chinese entries and English glosses), looked up on demand when pinyin is typed in English mode
-   - Copied from the app bundle on first launch. The database carries a `PRAGMA user_version`; when the copy in the user directory does not match the bundled one (for example after an upgrade adds a table) it is replaced on startup, stale `-wal`/`-shm` files included
-   - English prefix matching is a B-tree range scan over the `word` primary key (`word >= prefix AND word < prefix + U+10FFFF`) with a row limit. `word` is the `PRIMARY KEY`, whose implicit `sqlite_autoindex_words_1` already serves that query, so no extra `idx_word` index is created. `LIKE 'prefix%'` is deliberately avoided: the index is BINARY, so SQLite's LIKE optimization cannot use it and it scanned all ~140k rows.
-   - Pinyin candidates are likewise one indexed lookup on `cedict_pinyin`, which stores at most 50 entries per pinyin (the panel's candidate limit), so only strings that can actually be displayed are materialised. This replaces parsing the whole 17 MB `cedict.json` into Objective-C objects (~49 MB resident, measured).
-
-   Schema:
-
-   ```sql
-   -- Words table: stores English words, frequency, Chinese translation, and IPA
-   CREATE TABLE words (
-       word TEXT PRIMARY KEY,
-       frequency INT,
-       translation TEXT,
-       ipa TEXT
-   );
-
-   -- Pinyin table: pinyin -> candidates (newline separated, at most 50 each)
-   CREATE TABLE cedict_pinyin (
-       pinyin TEXT PRIMARY KEY,
-       words TEXT
-   );
-   ```
-
-   The database is generated by `python3 dictionary/build-sqlite.py`: it builds `cedict_pinyin` from `dictionary/cedict.json` and drops the tables and indexes nothing uses. `cedict.json` is only an input to that script and is no longer bundled with the app.
-
-   After changing the database's schema or data, bump both `SCHEMA_VERSION` in `dictionary/build-sqlite.py` and `kWordsDatabaseSchemaVersion` in `src/ConversionEngine.mm`, then regenerate the database. The two must match: otherwise an existing install keeps its old copy and queries against the new tables or data silently return nothing.
-
-2. **Pinyin engine (librime)**: the pinyin input mode is powered by [librime](https://github.com/rime/librime)
-   - Uses the luna_pinyin (朙月拼音) schema, Simplified Chinese output by default (OpenCC t2s)
-   - Cycle into pinyin mode via right Command key
-   - Schema and dictionary data live in the app bundle at `Contents/SharedSupport/rime-data/`
-   - Deployment runs automatically on first launch (artifacts go to `~/Library/Application Support/hallelujah/rime/`)
-   - librime is a prebuilt universal library, downloaded and embedded via `scripts/get-librime.sh`
-
-3. **Substitutions database**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
-   - Stores user-defined Text-Expander substitution rules
-   - Manage via the preference page at http://localhost:62718
-   - Preserved across installs/updates (not overwritten)
-
-   Schema:
-
-   ```sql
-   CREATE TABLE substitutions (
-       key TEXT PRIMARY KEY,
-       value TEXT
-   );
-   ```
-
 
 ### Thanks to the following projects:
 
@@ -151,11 +85,6 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 8. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
 9. [SwiftType](https://github.com/mgxv/SwiftType/), the grid candidate panel's navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by its Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv)!
 
-### Database performance comparison
-[benchmarks](benchmarks/)
-
-1. [LMDB vs SQLite](benchmarks/lmdb_vs_sqlite/indexed_sqlite_range_query/)
-   
 ### snapshots
 
 #### New UI
