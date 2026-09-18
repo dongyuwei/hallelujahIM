@@ -460,50 +460,48 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         return YES;
     }
 
-    if ([self isMojaveAndLaterSystem]) {
-        BOOL isCandidatesVisible = [sharedCandidates isVisible];
-        if (isCandidatesVisible) {
-            if (keyCode == KEY_ARROW_DOWN || keyCode == KEY_ARROW_UP || keyCode == KEY_ARROW_LEFT || keyCode == KEY_ARROW_RIGHT) {
-                if ([self navigateGridPanelWithKeyCode:keyCode sender:sender]) {
-                    return YES;
-                }
-            }
-
-            if (keyCode == KEY_ARROW_DOWN) {
-                [sharedCandidates moveSelectionDown];
-                _currentCandidateIndex++;
-                [self syncHighlightFromPanel];
-                return YES;
-            }
-
-            if (keyCode == KEY_ARROW_UP) {
-                [sharedCandidates moveSelectionUp];
-                _currentCandidateIndex--;
-                [self syncHighlightFromPanel];
+    BOOL isCandidatesVisible = [sharedCandidates isVisible];
+    if (isCandidatesVisible) {
+        if (keyCode == KEY_ARROW_DOWN || keyCode == KEY_ARROW_UP || keyCode == KEY_ARROW_LEFT || keyCode == KEY_ARROW_RIGHT) {
+            if ([self navigateGridPanelWithKeyCode:keyCode sender:sender]) {
                 return YES;
             }
         }
 
-        if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
-            if (!hasBufferedText) {
-                [self appendToComposedBuffer:characters];
-                [self commitCompositionWithoutSpace:sender];
-                return YES;
-            }
+        if (keyCode == KEY_ARROW_DOWN) {
+            [sharedCandidates moveSelectionDown];
+            _currentCandidateIndex++;
+            [self syncHighlightFromPanel];
+            return YES;
+        }
 
-            if (isCandidatesVisible) { // digits are selection keys
-                int pressedNumber = characters.intValue;
-                NSInteger index = [sharedCandidates indexForDigit:pressedNumber];
-                if (index == NSNotFound || index >= (NSInteger)_candidates.count) {
-                    return NO;
-                }
-                NSString *candidate = _candidates[index];
-                [self cancelComposition];
-                [self setComposedBuffer:candidate];
-                [self setOriginalBuffer:candidate];
-                [self commitComposition:sender];
-                return YES;
+        if (keyCode == KEY_ARROW_UP) {
+            [sharedCandidates moveSelectionUp];
+            _currentCandidateIndex--;
+            [self syncHighlightFromPanel];
+            return YES;
+        }
+    }
+
+    if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
+        if (!hasBufferedText) {
+            [self appendToComposedBuffer:characters];
+            [self commitCompositionWithoutSpace:sender];
+            return YES;
+        }
+
+        if (isCandidatesVisible) { // digits are selection keys
+            int pressedNumber = characters.intValue;
+            NSInteger index = [sharedCandidates indexForDigit:pressedNumber];
+            if (index == NSNotFound || index >= (NSInteger)_candidates.count) {
+                return NO;
             }
+            NSString *candidate = _candidates[index];
+            [self cancelComposition];
+            [self setComposedBuffer:candidate];
+            [self setOriginalBuffer:candidate];
+            [self commitComposition:sender];
+            return YES;
         }
     }
 
@@ -516,11 +514,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     }
 
     return NO;
-}
-
-- (BOOL)isMojaveAndLaterSystem {
-    NSOperatingSystemVersion version = [NSProcessInfo processInfo].operatingSystemVersion;
-    return (version.majorVersion == 10 && version.minorVersion > 13) || version.majorVersion > 10;
 }
 
 - (BOOL)deleteBackward:(id)sender {
