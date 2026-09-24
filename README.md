@@ -20,7 +20,7 @@
 7. 按键盘右侧`Command` 键可在 **智能英语**、**拼音**、**传统英语** 三种输入模式间循环切换（智能英语 → 拼音 → 传统英语 → 智能英语）。传统英语模式下按键直接透传给系统；智能英语模式提供英文候选与翻译；拼音模式下输入拼音即可打出中文。拼音模式默认关闭（在偏好设置中开启 `Enable pinyin (Rime) input`），关闭时循环切换会跳过拼音模式。
 8. 选词方式：数字键 1~9 及 `Enter` 回车键和 `Space` 空格键均可选词提交。`Space` 空格键选词默认会自动附加一个空格在单词后面，可以在配置页面关闭自动附加空格功能。`Enter` 回车键选词则不会附加空格。
 9. **拼音输入中文(Pinyin to Chinese)**：按`右Command` 键循环到拼音输入模式，输入拼音即可打出中文汉字，`空格` 或数字键提交高亮候选，`Enter` 回车键提交高亮候选（不附加空格）。用户当前输入的拼音会固定出现在候选列表的靠前位置（默认第 2 个，可在偏好设置中配置为第 1~5 个），按对应的数字键即可原样上屏（空格提交时同样遵循「自动附加空格」偏好）。再次按`右Command` 循环到智能英语模式。
-10. **自绘网格候选面板**：候选面板由输入法自身实现（`CandidatePanel` + `CandidatePanelState`），候选以网格显示，列数可配置（5–9 列，默认 5 列）。网格布局参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现：方向键导航，首次按 `↓` 展开网格，之后上下左右均可导航，在第一行再按 `↑` 收起；`←`/`→` 在当前行内循环移动；空格/回车/数字键提交高亮候选。
+10. **自绘网格候选面板**：候选面板由输入法自身实现（`CandidatePanel` + `CandidatePanelState`），候选以网格显示，列数可配置（5–9 列，默认 7 列）。网格布局参考了 [SwiftType](https://github.com/mgxv/SwiftType/) 输入法的 Grid Panel 实现：方向键导航，首次按 `↓` 展开网格，之后上下左右均可导航，在第一行再按 `↑` 收起；`←`/`→` 在当前行内循环移动；空格/回车/数字键提交高亮候选。
 11. **翻译集成到候选面板（取代独立翻译窗口）**：高亮词的音标与翻译直接绘制在候选面板底部一行（无翻译时自动隐藏），不再使用独立的悬浮窗口。选中不同候选即时刷新。
 
 # 下载与安装
@@ -74,7 +74,7 @@
 
 - **Enable pinyin (Rime) input（拼音输入）**：默认关闭。开启后按 `右Command` 循环切换时会经过拼音模式，输入拼音即可打出中文；关闭时切换直接在智能英语和传统英语之间往返。
 - **Pinyin raw input candidate position（拼音原始输入候选位置）**：默认第 2 个。拼音模式下用户当前输入的拼音固定占据该候选位置（可配置为第 1~5 个），按对应数字键即可原样上屏；设为第 1 个时空格/回车提交的就是原始输入本身。
-- **Grid columns（网格列数）**：候选面板以网格显示，列数可配置（5–9 列，默认 5 列；数字键只能选到 9，故上限为 9，少于 5 列就没有网格的意义）。列宽按「当前屏幕上的行」自适应：收起时只按首行排版（保持紧凑），展开时按可见的那几行排版（不会为滚出屏幕的词预留宽度）；因此展开/收起是一次有意的重排，滚动到下一屏时列宽会重新适配，而同一屏内导航列不会移动；每列都预留等宽的数字槽位，所以有数字的行和没数字的行单词左边缘对齐。首次按 `↓` 展开全部行列，之后方向键导航（`←`/`→` 在行内循环，行首再按 `↑` 收起），空格/回车/数字键提交高亮候选。高亮词的音标与翻译显示在面板底部一行，无翻译时自动隐藏。
+- **Grid columns（网格列数）**：候选面板以网格显示，列数可配置（5–9 列，默认 7 列；数字键只能选到 9，故上限为 9，少于 5 列就没有网格的意义）。列宽按「当前屏幕上的行」自适应：收起时只按首行排版（保持紧凑），展开时按可见的那几行排版（不会为滚出屏幕的词预留宽度）；因此展开/收起是一次有意的重排，滚动到下一屏时列宽会重新适配，而同一屏内导航列不会移动；每列都预留等宽的数字槽位，所以有数字的行和没数字的行单词左边缘对齐。首次按 `↓` 展开全部行列，之后方向键导航（`←`/`→` 在行内循环，行首再按 `↑` 收起），空格/回车/数字键提交高亮候选。高亮词的音标与翻译显示在面板底部一行，无翻译时自动隐藏。
 
 # 开发指南
 
@@ -107,44 +107,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 - 微信: dongyuwei
 - gmail: newdongyuwei
 
-### 一些截图
-
-#### New UI
+## 一些截图
 
 ![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h-closed.png)
 ![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
-![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
 ![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
-![pinyin-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-v.png)
-
-#### Old UI
-
-auto suggestion from local dictionary:<br/>
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
-
-Text Expander: <br/>
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
-
-translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/What%27s-uim%3F)):<br/>
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
-
-spell check:<br/>
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
-
-pinyin in, English out: <br/>
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
 
 ## Star History
 

@@ -16,7 +16,7 @@ hallelujahIM is an english input method with auto-suggestions and spell check fe
 6. Fuzzy phonetic match is another feature. For example, you can input `cerrage` or `kerrage` to get `courage`, and `aosome` or `ausome` to get `awesome`.
 7. The right **Command** key cycles through three input modes: intelligent English → Pinyin → traditional English (raw, keys pass straight through to the app) → back to intelligent English. Pinyin is skipped while it is disabled in Preferences (it is off by default).
 8. **Pinyin to Chinese**: Press the right `Command` key to cycle into Pinyin input mode (enable `Enable pinyin (Rime) input` in Preferences first). Type Chinese pinyin and get Chinese hanzi candidates; `space` or a digit key commits the highlighted candidate, `Enter` commits it without a trailing space. The raw pinyin always occupies a configurable candidate position (the 2nd by default, configurable 1st–5th in Preferences); pressing its digit commits the typed input as-is (space follows the commit-word-with-space preference). Press right `Command` again to cycle back to intelligent English input mode.
-9. **Custom grid candidate panel**: the candidate panel is drawn by the input method itself (`CandidatePanel` + `CandidatePanelState`): a grid of 5–9 columns (default 5; 9 is the ceiling because digits 1-9 are the selection keys), configurable in Preferences. The grid layout follows [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel design: arrow-key navigation, the first `↓` expands the grid, afterwards all four arrows navigate (another `↑` at the first row collapses it), `←`/`→` cycle within the active row, and space/Enter/digit keys commit the highlighted candidate.
+9. **Custom grid candidate panel**: the candidate panel is drawn by the input method itself (`CandidatePanel` + `CandidatePanelState`): a grid of 5–9 columns (default 7; 9 is the ceiling because digits 1-9 are the selection keys), configurable in Preferences. The grid layout follows [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel design: arrow-key navigation, the first `↓` expands the grid, afterwards all four arrows navigate (another `↑` at the first row collapses it), `←`/`→` cycle within the active row, and space/Enter/digit keys commit the highlighted candidate.
 10. **Translation drawn inside the candidate panel (replaces the separate annotation window)**: the highlighted word's phonetic symbol and gloss are drawn as a compact row at the bottom of the panel (auto-hidden when there's no translation) instead of a floating window. Refreshes as you move the highlight.
 
 # download and install
@@ -63,7 +63,7 @@ click `Preferences...` or visit web ui: http://localhost:62718/index.html
 
 - **Enable pinyin (Rime) input**: off by default. When on, the right-`Command` cycle passes through the Pinyin mode, where typing pinyin yields Chinese hanzi candidates; when off, the cycle alternates between intelligent English and traditional English only.
 - **Pinyin raw input candidate position**: the 2nd by default. The typed pinyin always occupies this candidate position in the panel (configurable 1st–5th); pressing its digit commits the typed input as-is. Set it to the 1st and space/Enter commit the raw input.
-- **Grid columns (5-9)**: 5 by default (9 is the ceiling because digits 1-9 are the selection keys; below 5 there is no reason to have a grid at all). Column widths fit the rows that are on screen — the first row while collapsed (so the bar stays compact), the visible rows once expanded (never reserving room for words scrolled out of view). Opening or closing the grid is therefore a deliberate re-fit, and scrolling to another screenful re-fits again, but navigating within a screenful never moves a column. Every cell reserves the same number gutter, so words line up whether or not their row shows selection keys. The first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. The highlighted word's phonetic and gloss are drawn as a bottom row inside the panel and auto-hide when there's no translation.
+- **Grid columns (5-9)**: 7 by default (9 is the ceiling because digits 1-9 are the selection keys; below 5 there is no reason to have a grid at all). Column widths fit the rows that are on screen — the first row while collapsed (so the bar stays compact), the visible rows once expanded (never reserving room for words scrolled out of view). Opening or closing the grid is therefore a deliberate re-fit, and scrolling to another screenful re-fits again, but navigating within a screenful never moves a column. Every cell reserves the same number gutter, so words line up whether or not their row shows selection keys. The first `↓` press expands the panel to all rows, afterwards all four arrow keys navigate (`←`/`→` cycle within the active row, `↑` again at the first row collapses), and space/Enter/digits commit the highlighted candidate. The highlighted word's phonetic and gloss are drawn as a bottom row inside the panel and auto-hide when there's no translation.
 
 ## Development
 
@@ -87,44 +87,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ### snapshots
 
-#### New UI
-
 ![english-grid-h-closed](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h-closed.png)
 ![english-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-h.png)
-![english-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/english-grid-v.png)
 ![pinyin-grid-h](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-h.png)
-![pinyin-grid-v](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/pinyin-grid-v.png)
 
-#### Old UI
-
-auto suggestion from local dictionary:<br/>
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions2.png)
-![auto-suggestion](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/suggestions3.png)
-
-Text Expander: <br/>
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander1.png)
-![Text Expander](https://github.com/dongyuwei/hallelujahIM/blob/textExpander/snapshots/text_expander2.png)
-
-translation(inspired by [MacUIM](https://github.com/uim/uim/wiki/What%27s-uim%3F)):<br/>
-![translation](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/translation.png)
-
-spell check:<br/>
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check2.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check3.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check4.png)
-![spell-check](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/check5.png)
-
-pinyin in, English out: <br/>
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/gaoji.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/binmayong.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/kexikehe.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/laozi.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/roujiamo.png)
-![pinyin](https://github.com/dongyuwei/hallelujahIM/blob/master/snapshots/xiangbudao.png)
-
-## Paid Support
+### Paid Support
 
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.
 

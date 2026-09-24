@@ -8,7 +8,7 @@ var app = new Vue({
     preference: {
       showTranslation: true,
       commitWordWithSpace: true,
-      gridCandidateColumns: 5,
+      gridCandidateColumns: 7,
       enablePinyinInput: false,
       pinyinRawInputCandidatePosition: 2
     },

@@ -6,7 +6,7 @@
 enum {
     kCandidateGridMinColumns = 5,
     kCandidateGridMaxColumns = 9,
-    kCandidateGridDefaultColumns = 5,
+    kCandidateGridDefaultColumns = 7,
 };
 
 // Pure navigation state for the grid candidate panel: no AppKit, fully

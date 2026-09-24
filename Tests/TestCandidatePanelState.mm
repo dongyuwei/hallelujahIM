@@ -22,8 +22,10 @@
     return [[CandidatePanelState alloc] initWithCandidates:c columns:columns];
 }
 
+// Navigation tests below pin columns:5 explicitly - they assert arithmetic
+// written for a 5-column grid and must not move when the default changes.
 - (void)testGridFirstDownPressExpandsWithoutMoving {
-    CandidatePanelState *s = [self gridWithCount:20];
+    CandidatePanelState *s = [self gridWithCount:20 columns:5];
     XCTAssertFalse(s.gridIsExpanded);
     [s gridMoveDown];
     XCTAssertTrue(s.gridIsExpanded);
@@ -31,7 +33,7 @@
 }
 
 - (void)testGridSecondDownPressMovesToNextRow {
-    CandidatePanelState *s = [self gridWithCount:20];
+    CandidatePanelState *s = [self gridWithCount:20 columns:5];
     [s gridMoveDown];
     [s gridMoveDown];
     XCTAssertEqual(s.gridActiveRow, 1);
@@ -39,7 +41,7 @@
 }
 
 - (void)testGridDownClampsAtLastRow {
-    CandidatePanelState *s = [self gridWithCount:12]; // 3 rows
+    CandidatePanelState *s = [self gridWithCount:12 columns:5]; // 3 rows
     [s gridMoveDown];
     [s gridMoveDown];
     [s gridMoveDown];
@@ -49,7 +51,7 @@
 }
 
 - (void)testGridUpCollapsesAtRowZero {
-    CandidatePanelState *s = [self gridWithCount:20];
+    CandidatePanelState *s = [self gridWithCount:20 columns:5];
     [s gridMoveDown];
     [s gridMoveDown]; // row 1
     [s gridMoveUp];   // back to row 0
@@ -61,7 +63,7 @@
 }
 
 - (void)testGridColumnCyclesWithinRow {
-    CandidatePanelState *s = [self gridWithCount:7];
+    CandidatePanelState *s = [self gridWithCount:7 columns:5];
     XCTAssertEqual(s.selectedIndex, 0);
     [s gridMoveRight];
     XCTAssertEqual(s.selectedIndex, 1);
@@ -78,7 +80,7 @@
 }
 
 - (void)testGridVisibleWindowScrolls {
-    CandidatePanelState *s = [self gridWithCount:50];
+    CandidatePanelState *s = [self gridWithCount:50 columns:5];
     XCTAssertEqual(s.gridRenderedRowCount, 1);
     [s gridMoveDown]; // expand
     XCTAssertEqual(s.gridRenderedRowCount, MIN(s.gridTotalRows, 5));
@@ -93,7 +95,7 @@
 }
 
 - (void)testGridLastRowHasFewerColumns {
-    CandidatePanelState *s = [self gridWithCount:12];
+    CandidatePanelState *s = [self gridWithCount:12 columns:5];
     [s gridMoveDown]; // expand
     [s gridMoveDown]; // row 1
     [s gridMoveDown]; // row 2, only 2 cells
@@ -105,7 +107,7 @@
 }
 
 - (void)testGridDigitsMapToActiveRowColumns {
-    CandidatePanelState *s = [self gridWithCount:15];
+    CandidatePanelState *s = [self gridWithCount:15 columns:5];
     XCTAssertEqual([s indexForDigit:1], 0);
     XCTAssertEqual([s indexForDigit:5], 4);
     XCTAssertEqual([s indexForDigit:6], NSNotFound); // beyond the 5-column row
@@ -120,9 +122,9 @@
 
 #pragma mark - Grid column count
 
-- (void)testGridColumnsDefaultToFive {
+- (void)testGridColumnsDefaultToSeven {
     CandidatePanelState *s = [self gridWithCount:15];
-    XCTAssertEqual(s.gridColumns, 5);
+    XCTAssertEqual(s.gridColumns, 7);
     XCTAssertEqual(s.gridTotalRows, 3);
 }
 
