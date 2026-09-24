@@ -32,7 +32,7 @@ static const CGFloat kNumberGapFontSize = 5; // gap between a digit and its word
 static const CGFloat kFallbackLineHeight = 20;
 static const CGFloat kFooterGap = 5;              // space above the translation footer
 static const CGFloat kDetailGap = 3;              // vertical: gap between candidate and detail columns
-static const CGFloat kMaxDetailColumnWidth = 240; // vertical: widest the detail column grows before wrapping
+static const CGFloat kMaxDetailColumnWidth = 240; // widest the vertical detail column or grid footer grows before wrapping
 
 static NSColor *PanelColor(int r, int g, int b, CGFloat alpha) {
     return [NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:alpha];
@@ -67,6 +67,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 @property(nonatomic) CGFloat cachedVerticalDetailHeight;
 @property(nonatomic) CGFloat cachedFooterHeight;
 @property(nonatomic) CGFloat cachedFooterHeightWidth;
+@property(nonatomic) CGFloat cachedFooterTextWidth;
 @property(nonatomic, copy) NSString *cachedAnnotationText;
 @property(nonatomic) BOOL cachedAnnotationTextValid;
 @property(nonatomic, strong) NSDictionary *wordAttrs;
@@ -81,6 +82,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (NSArray<NSNumber *> *)gridColumnWidths;
 - (CGFloat)maxGridCellWidthForColumns:(NSInteger)columns;
 - (CGFloat)footerHeight;
+- (CGFloat)footerTextWidth;
 - (NSString *)annotationText;
 - (void)invalidateLayoutCache;
 
@@ -138,6 +140,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     _cachedVerticalDetailHeight = 0;
     _cachedFooterHeight = 0;
     _cachedFooterHeightWidth = 0;
+    _cachedFooterTextWidth = 0;
 }
 
 - (void)setState:(CandidatePanelState *)state {
@@ -268,6 +271,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     CandidatePanelState *state = self.state;
     if (state.layout == CandidatePanelLayoutGrid) {
         self.cachedGridColumnWidths = [self measureGridColumnWidths];
+        self.cachedFooterTextWidth = [self measureFooterTextWidth];
         return;
     }
     self.cachedVerticalCandidateWidth = [self measureVerticalCandidateColumnWidth];
@@ -406,11 +410,17 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // panel width, so the cached value remembers the width it was measured for and
 // is recomputed once the panel is resized.
 - (CGFloat)footerHeight {
+    return [self footerHeightForWidth:self.bounds.size.width];
+}
+
+// preferredSize passes the width it is about to resize to, so a footer-driven
+// widening lands on the one-line height in the same pass instead of a
+// keystroke later.
+- (CGFloat)footerHeightForWidth:(CGFloat)width {
     NSString *text = [self annotationText];
     if (text == nil) {
         return 0;
     }
-    CGFloat width = self.bounds.size.width;
     if (self.cachedFooterHeight > 0 && self.cachedFooterHeightWidth == width) {
         return self.cachedFooterHeight;
     }
@@ -422,6 +432,23 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     self.cachedFooterHeight = ceil(textRect.size.height) + kFooterGap + kSelectionGap * 2;
     self.cachedFooterHeightWidth = width;
     return self.cachedFooterHeight;
+}
+
+// One-line width of the footer text plus its padding, 0 when hidden. This is
+// the grid panel's content-driven minimum width: the columns alone are only as
+// wide as the visible words, which wrapped the gloss under a one-candidate
+// grid.
+- (CGFloat)footerTextWidth {
+    [self ensureLayoutCache];
+    return self.cachedFooterTextWidth;
+}
+
+- (CGFloat)measureFooterTextWidth {
+    NSString *text = [self annotationText];
+    if (text == nil) {
+        return 0;
+    }
+    return [text sizeWithAttributes:self.detailAttrs].width + kPadding * 2 + kCellPadding * 2;
 }
 
 // Per-cell width cap for a grid of `columns` columns. kMaxCellWidth keeps a
@@ -782,8 +809,12 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         for (NSNumber *w in widths) {
             panelWidth += w.doubleValue;
         }
-        return NSMakeSize(MAX(kMinPanelWidth, panelWidth),
-                          state.gridRenderedRowCount * kRowHeight + [self.content footerHeight] + kPadding * 2);
+        // The gloss reads as one line: the panel is at least as wide as the
+        // footer needs (capped like the vertical detail column, so a long
+        // translation wraps instead of sprawling the HUD).
+        CGFloat footerMinWidth = MIN([self.content footerTextWidth], kMaxDetailColumnWidth);
+        CGFloat width = MAX(MAX(kMinPanelWidth, panelWidth), footerMinWidth);
+        return NSMakeSize(width, state.gridRenderedRowCount * kRowHeight + [self.content footerHeightForWidth:width] + kPadding * 2);
     }
 
     NSInteger count = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
@@ -792,7 +823,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     BOOL hasDetail = detailWidth > 0;
     CGFloat width =
         hasDetail ? candidateWidth + kDetailGap + detailWidth + kPadding * 2 : MAX(kMinPanelWidth, candidateWidth + kPadding * 2);
-    CGFloat height = MAX(count * kRowHeight, hasDetail ? [self.content verticalDetailHeightCost] : 0) + kPadding * 2;
+    // The detail draw insets its box by kSelectionGap on top and bottom, so
+    // the panel must reserve cost + those gaps - a 2-line gloss measured 30pt
+    // tall drew into a 26pt box, and Text Kit dropped the line that no longer
+    // fit, silently hiding the translation row.
+    CGFloat height = MAX(count * kRowHeight, hasDetail ? [self.content verticalDetailHeightCost] + kSelectionGap * 2 : 0) + kPadding * 2;
     return NSMakeSize(width, height);
 }
 

@@ -72,6 +72,65 @@ static NSArray<NSString *> *Candidates(NSUInteger count) {
     XCTAssertEqualWithAccuracy(self.panel.candidateFrame.size.width, withoutAnnotation, 0.5);
 }
 
+// The gloss column's draw insets its box by kSelectionGap on top and bottom,
+// and Text Kit drops a line that does not fully fit its box - a panel that
+// reserved exactly the measured gloss height drew a two-line gloss in a box
+// 4pt shorter and silently hid the translation row. The panel must reserve the
+// gloss height PLUS those insets. 12pt lines are at least 12pt each, so two
+// gloss lines need 24pt, plus 4pt of insets, plus the panel padding mirrored
+// from CandidatePanel.m.
+- (void)testVerticalAnnotationReservesHeightForEveryGlossLine {
+    [self.panel updateCandidates:@[ @"connectivity" ]];
+    [self.panel setAnnotation:kAnnotation];
+    XCTAssertGreaterThanOrEqual(self.panel.candidateFrame.size.height, 2 * 12 + 4 + 2 * kPadding);
+}
+
+// Clearing the gloss collapses the panel back to pure row arithmetic: one
+// candidate, one row, no leftover gloss space.
+- (void)testVerticalAnnotationCollapseRestoresRowHeight {
+    [self.panel updateCandidates:@[ @"connectivity" ]];
+    [self.panel setAnnotation:kAnnotation];
+    XCTAssertGreaterThan(self.panel.candidateFrame.size.height, kRowHeight + 2 * kPadding);
+
+    [self.panel setAnnotation:@""];
+    XCTAssertEqualWithAccuracy(self.panel.candidateFrame.size.height, kRowHeight + 2 * kPadding, 0.5);
+}
+
+// Every extra gloss line must grow the panel: the height budget covers the
+// box that is actually drawn, so a longer gloss can never clip into
+// invisibility.
+- (void)testVerticalAnnotationMoreLinesGrowPanel {
+    [self.panel updateCandidates:@[ @"connectivity" ]];
+    [self.panel setAnnotation:kAnnotation];
+    CGFloat twoLines = self.panel.candidateFrame.size.height;
+
+    [self.panel setAnnotation:@"[tɛst]\nn. 考验；试验；测试\nadj. 试验性的"];
+    XCTAssertGreaterThan(self.panel.candidateFrame.size.height, twoLines);
+}
+
+// A gloss without newlines wraps inside the detail column's cap, and the
+// wrapped lines grow the panel exactly like explicit ones.
+- (void)testVerticalWrappedAnnotationGrowsPanel {
+    [self.panel updateCandidates:@[ @"connectivity" ]];
+    [self.panel setAnnotation:kAnnotation];
+    CGFloat shortGloss = self.panel.candidateFrame.size.height;
+
+    NSMutableString *longLine = [NSMutableString string];
+    for (NSUInteger i = 0; i < 60; i++) {
+        [longLine appendString:@"测"];
+    }
+    [self.panel setAnnotation:longLine];
+    XCTAssertGreaterThan(self.panel.candidateFrame.size.height, shortGloss);
+}
+
+// With a full page of candidates the rows are the taller side: a short gloss
+// rides along inside the row window instead of adding height on top of it.
+- (void)testVerticalFullPageHeightDominatesShortGloss {
+    [self.panel updateCandidates:Candidates(9)];
+    [self.panel setAnnotation:kAnnotation];
+    XCTAssertEqualWithAccuracy(self.panel.candidateFrame.size.height, 9 * kRowHeight + 2 * kPadding, 0.5);
+}
+
 - (void)testWiderCandidateWidensPanel {
     [self.panel updateCandidates:@[ @"ab" ]];
     CGFloat narrow = self.panel.candidateFrame.size.width;
@@ -97,6 +156,24 @@ static NSArray<NSString *> *Candidates(NSUInteger count) {
 
     [self.panel setAnnotation:kAnnotation];
     XCTAssertGreaterThan(self.panel.candidateFrame.size.height, withoutAnnotation);
+}
+
+// The footer's one-line width is the grid's content-driven minimum width: a
+// one-candidate grid is only as wide as its word, which used to wrap the gloss
+// under the cells. The panel must widen to fit the gloss on one line (glosses
+// longer than the cap still wrap, like the vertical detail column).
+//
+// Asserted against a conservative floor instead of measured text (the test
+// target does not link AppKit): the gloss holds 9 CJK glyphs, which alone
+// outnumber a one-word column at any plausible font metric.
+- (void)testGridAnnotationWidensNarrowPanelToFitFooter {
+    [self.panel setGridLayout:YES];
+    [self.panel updateCandidates:@[ @"ab" ]];
+    CGFloat narrow = self.panel.candidateFrame.size.width;
+
+    [self.panel setAnnotation:kAnnotation];
+    XCTAssertGreaterThan(self.panel.candidateFrame.size.width, narrow);
+    XCTAssertGreaterThanOrEqual(self.panel.candidateFrame.size.width, 120);
 }
 
 - (void)testGridColumnsAreClampedToRange {
@@ -216,6 +293,19 @@ static NSArray<NSString *> *Candidates(NSUInteger count) {
     XCTAssertTrue(self.panel.isVisible);
     [self.panel updateCandidates:@[] annotation:kAnnotation atClient:nil];
     XCTAssertFalse(self.panel.isVisible);
+}
+
+#pragma mark - TEMP diagnostic
+
+- (void)testZZTempDiagnosticVerticalDetail {
+    [self.panel updateCandidates:@[ @"connectivity" ]];
+    NSLog(@"ZZZ step1 (no annotation): %@", NSStringFromRect(self.panel.candidateFrame));
+    [self.panel setAnnotation:@"[kənəkˈtɪvɪti]\nn. [计] 连通性"];
+    NSLog(@"ZZZ step2 (annotation set): %@", NSStringFromRect(self.panel.candidateFrame));
+    [self.panel showAtClient:nil];
+    NSLog(@"ZZZ step3 (showAtClient): %@", NSStringFromRect(self.panel.candidateFrame));
+    [self.panel updateCandidates:@[ @"connectivity" ] annotation:@"[kənəkˈtɪvɪti]\nn. [计] 连通性" atClient:nil];
+    NSLog(@"ZZZ step4 (batched): %@", NSStringFromRect(self.panel.candidateFrame));
 }
 
 @end
