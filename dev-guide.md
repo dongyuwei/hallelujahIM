@@ -34,8 +34,8 @@ Other build entry points:
 
 The candidate panel is drawn by the input method itself instead of the system `IMKCandidates`:
 
-- `src/CandidatePanelState`: a pure navigation state machine with no AppKit dependency — vertical 9-row window scrolling, grid expand/collapse, column cycling, row-window scrolling — fully covered by unit tests;
-- `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, mouse-click commit, and the annotation (via `ConversionEngine`'s `getAnnotation`) drawn as a built-in gloss column or bottom gloss row.
+- `src/CandidatePanelState`: a pure navigation state machine with no AppKit dependency — grid expand/collapse, column cycling, row-window scrolling — fully covered by unit tests;
+- `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, mouse-click commit, and the annotation (via `ConversionEngine`'s `getAnnotation`) drawn as a built-in bottom gloss row.
 
 The grid navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv) for the great work!
 

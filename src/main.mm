@@ -65,7 +65,6 @@ void initPreference() {
     NSDictionary *defaultPrefs = @{
         @"commitWordWithSpace" : @YES,
         @"showTranslation" : @YES,
-        @"useGridCandidatePanel" : @YES,
         @"gridCandidateColumns" : @(kCandidateGridDefaultColumns),
         @"enablePinyinInput" : @NO,
         @"pinyinRawInputCandidatePosition" : @(2)
@@ -116,7 +115,6 @@ int main(int argc, char *argv[]) {
     initPreference();
     sharedCandidates = [[CandidatePanel alloc] init];
     [sharedCandidates setGridColumns:[preference integerForKey:@"gridCandidateColumns"]];
-    [sharedCandidates setGridLayout:[preference boolForKey:@"useGridCandidatePanel"]];
 
     engine = [ConversionEngine sharedEngine];
 

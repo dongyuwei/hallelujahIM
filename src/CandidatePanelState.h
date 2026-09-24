@@ -1,25 +1,18 @@
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, CandidatePanelLayout) {
-    CandidatePanelLayoutVertical = 0,
-    CandidatePanelLayoutGrid = 1,
-};
-
 // Grid columns are clamped to this range: digits 1-9 are the selection keys, so
 // a row wider than 9 columns would hold cells that no key can reach, and below 5
-// there is no reason to leave the vertical list.
+// there is no reason to have a grid at all.
 enum {
     kCandidateGridMinColumns = 5,
     kCandidateGridMaxColumns = 9,
     kCandidateGridDefaultColumns = 5,
 };
 
-// Pure navigation state for the candidate panel: no AppKit, fully testable.
+// Pure navigation state for the grid candidate panel: no AppKit, fully
+// testable.
 //
-// Vertical layout: a flat list; `activeIndex` is the highlighted row and
-// `verticalTopVisibleLine` is the first row of the visible window.
-//
-// Grid layout: candidates are laid out `gridColumns` per row.
+// Candidates are laid out `gridColumns` per row.
 // - Left/Right cycle `gridActiveColumn` within the active row (wraps).
 // - Down expands the grid on the first press (without moving); on
 //   subsequent presses it moves the active row down one, scrolling the
@@ -31,21 +24,14 @@ enum {
 @interface CandidatePanelState : NSObject
 
 @property(nonatomic, readonly) NSArray<NSString *> *candidates;
-@property(nonatomic, readonly) CandidatePanelLayout layout;
-@property(nonatomic, readonly) NSInteger gridColumns;         // grid: cells per row, 1-9
-@property(nonatomic, readonly) NSInteger verticalVisibleRows; // vertical: rows in window
-@property(nonatomic, readonly) NSInteger gridVisibleRows;     // grid: rows in window
+@property(nonatomic, readonly) NSInteger gridColumns;     // grid: cells per row, 5-9
+@property(nonatomic, readonly) NSInteger gridVisibleRows; // grid: rows in window
 
-- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout;
+- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates;
 
 // Designated initializer. `columns` is clamped to
-// kCandidateGridMinColumns...kCandidateGridMaxColumns and only affects the grid
-// layout.
-- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates layout:(CandidatePanelLayout)layout columns:(NSInteger)columns;
-
-// Vertical navigation.
-- (void)moveDown;
-- (void)moveUp;
+// kCandidateGridMinColumns...kCandidateGridMaxColumns.
+- (instancetype)initWithCandidates:(NSArray<NSString *> *)candidates columns:(NSInteger)columns;
 
 // Grid navigation.
 - (void)gridMoveDown;  // expands when collapsed, otherwise moves down a row
@@ -53,13 +39,11 @@ enum {
 - (void)gridMoveRight; // cycles within the active row
 - (void)gridMoveLeft;
 
-// 1-based selection key: the vertical offset within the window, or the
-// column within the active grid row. NSNotFound when no candidate is
-// reachable at that position.
+// 1-based selection key: the column within the active grid row. NSNotFound
+// when no candidate is reachable at that position.
 - (NSInteger)indexForDigit:(NSInteger)digit;
 
 @property(nonatomic, readonly) NSInteger selectedIndex; // absolute index of the highlight, 0 when empty
-@property(nonatomic, readonly) NSInteger verticalTopVisibleLine;
 @property(nonatomic, readonly) BOOL gridIsExpanded;
 @property(nonatomic, readonly) NSInteger gridActiveRow;
 @property(nonatomic, readonly) NSInteger gridActiveColumn;

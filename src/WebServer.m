@@ -14,7 +14,6 @@ extern void startRimeEngine(void);
 
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
-NSString *GRID_CANDIDATE_PANEL_KEY = @"useGridCandidatePanel";
 NSString *GRID_CANDIDATE_COLUMNS_KEY = @"gridCandidateColumns";
 NSString *PINYIN_INPUT_ENABLED_KEY = @"enablePinyinInput";
 NSString *PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY = @"pinyinRawInputCandidatePosition";
@@ -60,7 +59,6 @@ static int port = 62718;
                    return [GCDWebServerDataResponse responseWithJSONObject:@{
                        TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                        COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
-                       GRID_CANDIDATE_PANEL_KEY : @([preference boolForKey:GRID_CANDIDATE_PANEL_KEY]),
                        GRID_CANDIDATE_COLUMNS_KEY : @([preference integerForKey:GRID_CANDIDATE_COLUMNS_KEY]),
                        PINYIN_INPUT_ENABLED_KEY : @([preference boolForKey:PINYIN_INPUT_ENABLED_KEY]),
                        PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY : @([preference integerForKey:PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY]),
@@ -78,9 +76,6 @@ static int port = 62718;
 
                           bool commitWordWithSpace = [data[COMMIT_WORD_WITH_SPACE_KEY] boolValue];
                           [preference setBool:commitWordWithSpace forKey:COMMIT_WORD_WITH_SPACE_KEY];
-
-                          bool useGridCandidatePanel = [data[GRID_CANDIDATE_PANEL_KEY] boolValue];
-                          [preference setBool:useGridCandidatePanel forKey:GRID_CANDIDATE_PANEL_KEY];
 
                           bool enablePinyinInput = [data[PINYIN_INPUT_ENABLED_KEY] boolValue];
                           [preference setBool:enablePinyinInput forKey:PINYIN_INPUT_ENABLED_KEY];
@@ -108,13 +103,12 @@ static int port = 62718;
                           if (data[GRID_CANDIDATE_COLUMNS_KEY] == nil) {
                               gridCandidateColumns = [preference integerForKey:GRID_CANDIDATE_COLUMNS_KEY];
                           }
-                          // The custom panel rebuilds its window when the layout or
-                          // the column count changes; window operations are
+                          // The custom panel rebuilds its window when the
+                          // column count changes; window operations are
                           // main-thread-only, and the web server handler runs on a
                           // GCD queue, so hop over first.
                           dispatch_async(dispatch_get_main_queue(), ^{
                               [sharedCandidates setGridColumns:gridCandidateColumns];
-                              [sharedCandidates setGridLayout:useGridCandidatePanel];
                               [preference setInteger:[sharedCandidates gridColumns] forKey:GRID_CANDIDATE_COLUMNS_KEY];
                           });
 

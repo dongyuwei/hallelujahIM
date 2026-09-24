@@ -6,20 +6,12 @@
 
 @implementation TestCandidatePanelState
 
-- (CandidatePanelState *)verticalWithCount:(NSInteger)count {
-    NSMutableArray *c = [NSMutableArray array];
-    for (NSInteger i = 0; i < count; i++) {
-        [c addObject:[NSString stringWithFormat:@"w%ld", (long)i]];
-    }
-    return [[CandidatePanelState alloc] initWithCandidates:c layout:CandidatePanelLayoutVertical];
-}
-
 - (CandidatePanelState *)gridWithCount:(NSInteger)count {
     NSMutableArray *c = [NSMutableArray array];
     for (NSInteger i = 0; i < count; i++) {
         [c addObject:[NSString stringWithFormat:@"w%ld", (long)i]];
     }
-    return [[CandidatePanelState alloc] initWithCandidates:c layout:CandidatePanelLayoutGrid];
+    return [[CandidatePanelState alloc] initWithCandidates:c];
 }
 
 - (CandidatePanelState *)gridWithCount:(NSInteger)count columns:(NSInteger)columns {
@@ -27,42 +19,8 @@
     for (NSInteger i = 0; i < count; i++) {
         [c addObject:[NSString stringWithFormat:@"w%ld", (long)i]];
     }
-    return [[CandidatePanelState alloc] initWithCandidates:c layout:CandidatePanelLayoutGrid columns:columns];
+    return [[CandidatePanelState alloc] initWithCandidates:c columns:columns];
 }
-
-#pragma mark - Vertical
-
-- (void)testVerticalMoveDownClampsAtEnd {
-    CandidatePanelState *s = [self verticalWithCount:3];
-    [s moveDown];
-    XCTAssertEqual(s.selectedIndex, 1);
-    [s moveDown];
-    XCTAssertEqual(s.selectedIndex, 2);
-    [s moveDown]; // clamped
-    XCTAssertEqual(s.selectedIndex, 2);
-}
-
-- (void)testVerticalMoveUpDoesNotGoBelowZero {
-    CandidatePanelState *s = [self verticalWithCount:3];
-    [s moveUp];
-    XCTAssertEqual(s.selectedIndex, 0);
-}
-
-- (void)testVerticalWindowScrollsAfterNineRows {
-    CandidatePanelState *s = [self verticalWithCount:20];
-    for (NSInteger i = 0; i < 10; i++) {
-        [s moveDown];
-    }
-    XCTAssertEqual(s.selectedIndex, 10);
-    XCTAssertEqual(s.verticalTopVisibleLine, 2); // keep highlight inside the 9-row window
-    for (NSInteger i = 0; i < 5; i++) {
-        [s moveUp];
-    }
-    XCTAssertEqual(s.selectedIndex, 5);
-    XCTAssertEqual(s.verticalTopVisibleLine, 2); // window only re-scrolls when the highlight passes its top edge
-}
-
-#pragma mark - Grid
 
 - (void)testGridFirstDownPressExpandsWithoutMoving {
     CandidatePanelState *s = [self gridWithCount:20];
@@ -160,18 +118,6 @@
     XCTAssertEqual([s indexForDigit:5], 14);
 }
 
-- (void)testVerticalDigitsMapToWindow {
-    CandidatePanelState *s = [self verticalWithCount:20];
-    XCTAssertEqual([s indexForDigit:1], 0);
-    XCTAssertEqual([s indexForDigit:9], 8);
-    for (NSInteger i = 0; i < 10; i++) {
-        [s moveDown];
-    }
-    // after scrolling, digits address the visible window (top = 2)
-    XCTAssertEqual([s indexForDigit:1], 2);
-    XCTAssertEqual([s indexForDigit:5], 6);
-}
-
 #pragma mark - Grid column count
 
 - (void)testGridColumnsDefaultToFive {
@@ -230,7 +176,7 @@
 }
 
 - (void)testEmptyCandidatesAreSafe {
-    CandidatePanelState *s = [[CandidatePanelState alloc] initWithCandidates:@[] layout:CandidatePanelLayoutGrid];
+    CandidatePanelState *s = [[CandidatePanelState alloc] initWithCandidates:@[]];
     [s gridMoveDown];
     [s gridMoveRight];
     XCTAssertEqual(s.selectedIndex, 0);

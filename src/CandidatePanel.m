@@ -30,9 +30,8 @@ static const CGFloat kMinCellWidth = 44;     // per-cell floor when the display 
 static const CGFloat kMaxCellWidth = 150;    // a single cell never grows wider than this
 static const CGFloat kNumberGapFontSize = 5; // gap between a digit and its word, in the key font
 static const CGFloat kFallbackLineHeight = 20;
-static const CGFloat kFooterGap = 5;              // space above the translation footer
-static const CGFloat kDetailGap = 3;              // vertical: gap between candidate and detail columns
-static const CGFloat kMaxDetailColumnWidth = 240; // widest the vertical detail column or grid footer grows before wrapping
+static const CGFloat kFooterGap = 5;        // space above the translation footer
+static const CGFloat kMaxFooterWidth = 240; // widest the footer grows before wrapping
 
 static NSColor *PanelColor(int r, int g, int b, CGFloat alpha) {
     return [NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:alpha];
@@ -42,7 +41,7 @@ static NSColor *PanelColor(int r, int g, int b, CGFloat alpha) {
 static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 // Renders the candidates described by CandidatePanelState. Single drawRect
-// pass: vertical rows or grid cells, with a pill behind the active candidate.
+// pass: grid cells, with a pill behind the active candidate.
 @interface CandidatePanelContent : NSView
 
 @property(nonatomic, strong) CandidatePanelState *state;
@@ -54,17 +53,13 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 // Derived measurements and the text attributes they are built from. A single
 // keystroke used to measure the same cells several times (preferredSize,
-// drawRect, mouseDown), and the vertical layout measured every row once per
-// row - O(N^2) - so the results are cached here. Everything cached is derived
-// from (state, annotation, bounds width); -invalidateLayoutCache drops it and
-// the state/annotation setters call it automatically. Bounds width is folded
-// into the footer height cache separately because the panel is resized from
-// the footer height it just measured.
+// drawRect, mouseDown), so the results are cached here. Everything cached is
+// derived from (state, annotation, bounds width); -invalidateLayoutCache drops
+// it and the state/annotation setters call it automatically. Bounds width is
+// folded into the footer height cache separately because the panel is resized
+// from the footer height it just measured.
 @property(nonatomic) BOOL layoutCacheValid;
 @property(nonatomic, strong) NSArray<NSNumber *> *cachedGridColumnWidths;
-@property(nonatomic) CGFloat cachedVerticalCandidateWidth;
-@property(nonatomic) CGFloat cachedVerticalDetailWidth;
-@property(nonatomic) CGFloat cachedVerticalDetailHeight;
 @property(nonatomic) CGFloat cachedFooterHeight;
 @property(nonatomic) CGFloat cachedFooterHeightWidth;
 @property(nonatomic) CGFloat cachedFooterTextWidth;
@@ -82,6 +77,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (NSArray<NSNumber *> *)gridColumnWidths;
 - (CGFloat)maxGridCellWidthForColumns:(NSInteger)columns;
 - (CGFloat)footerHeight;
+- (CGFloat)footerHeightForWidth:(CGFloat)width;
 - (CGFloat)footerTextWidth;
 - (NSString *)annotationText;
 - (void)invalidateLayoutCache;
@@ -135,9 +131,6 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (void)invalidateLayoutCache {
     _layoutCacheValid = NO;
     _cachedGridColumnWidths = nil;
-    _cachedVerticalCandidateWidth = 0;
-    _cachedVerticalDetailWidth = 0;
-    _cachedVerticalDetailHeight = 0;
     _cachedFooterHeight = 0;
     _cachedFooterHeightWidth = 0;
     _cachedFooterTextWidth = 0;
@@ -175,16 +168,8 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     [[PanelColor(0x1B, 0x1B, 0x1B, 1) colorWithAlphaComponent:0.85] setStroke];
     [bg stroke];
 
-    if (state.layout == CandidatePanelLayoutGrid) {
-        [self drawGridCellsForState:state];
-        [self drawFooterInRect:[self footerRect]];
-        return;
-    }
-
-    [self drawVerticalCellsForState:state];
-    if (self.annotation.length > 0) {
-        [self drawVerticalDetailInRect:[self verticalDetailRect]];
-    }
+    [self drawGridCellsForState:state];
+    [self drawFooterInRect:[self footerRect]];
 }
 
 // Grid: 5 columns per row, cells sized per column. Rendering/footer both
@@ -217,49 +202,6 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     }
 }
 
-// Vertical: 2 equal columns when the highlight has an annotation — candidates
-// on the left, ipa + translation wrapping on the right. Single column when
-// there's no annotation (panel collapses back to the list).
-- (void)drawVerticalCellsForState:(CandidatePanelState *)state {
-    NSInteger rowCount = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
-    NSInteger rowOffset = state.verticalTopVisibleLine;
-    // Measure once for the whole loop. Measuring inside it re-measured every
-    // visible cell once per row, i.e. O(N^2) cell measurements per drawRect.
-    CGFloat columnWidth = [self verticalCandidateColumnWidth];
-    for (NSInteger row = 0; row < rowCount; row++) {
-        NSInteger index = rowOffset + row;
-        if (index >= (NSInteger)state.candidates.count) {
-            break;
-        }
-        BOOL active = index == state.selectedIndex;
-        NSRect cellRect = NSMakeRect(0, kPadding + row * kRowHeight, columnWidth, kRowHeight);
-        [self drawCellWithAttributedText:[self cellText:state.candidates[index] number:row + 1 active:active]
-                                  active:active
-                                  inRect:cellRect];
-    }
-}
-
-// Left column: widest candidate cell. Independent of the annotation.
-- (CGFloat)verticalCandidateColumnWidth {
-    [self ensureLayoutCache];
-    return self.cachedVerticalCandidateWidth;
-}
-
-- (CGFloat)measureVerticalCandidateColumnWidth {
-    CandidatePanelState *state = self.state;
-    NSInteger count = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
-    CGFloat widest = 0;
-    for (NSInteger row = 0; row < count; row++) {
-        NSInteger index = state.verticalTopVisibleLine + row;
-        if (index >= (NSInteger)state.candidates.count) {
-            break;
-        }
-        NSAttributedString *cell = [self cellText:state.candidates[index] number:row + 1 active:NO];
-        widest = MAX(widest, cell.size.width);
-    }
-    return widest + kCellInset;
-}
-
 // Fills every layout-dependent measurement in one pass. The flag is set before
 // measuring so that a nested accessor reads what is already cached instead of
 // recursing.
@@ -268,77 +210,8 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         return;
     }
     self.layoutCacheValid = YES;
-    CandidatePanelState *state = self.state;
-    if (state.layout == CandidatePanelLayoutGrid) {
-        self.cachedGridColumnWidths = [self measureGridColumnWidths];
-        self.cachedFooterTextWidth = [self measureFooterTextWidth];
-        return;
-    }
-    self.cachedVerticalCandidateWidth = [self measureVerticalCandidateColumnWidth];
-    self.cachedVerticalDetailWidth = [self measureVerticalDetailColumnWidth];
-    self.cachedVerticalDetailHeight = [self measureVerticalDetailHeightForWidth:self.cachedVerticalDetailWidth];
-}
-
-// Right column: hugs the annotation's longest line so the gloss doesn't
-// leave a big empty gutter, but never exceeds kMaxDetailColumnWidth (a
-// single overlong translation then wraps instead of ballooning). 0 when the
-// annotation is hidden.
-- (CGFloat)verticalDetailColumnWidth {
-    [self ensureLayoutCache];
-    return self.cachedVerticalDetailWidth;
-}
-
-- (CGFloat)measureVerticalDetailColumnWidth {
-    if (self.annotation.length == 0) {
-        return 0;
-    }
-    CGFloat widest = 0;
-    NSArray *lines = [self.annotation componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines) {
-        CGFloat w = [line sizeWithAttributes:self.detailAttrs].width;
-        widest = MAX(widest, w);
-    }
-    return MIN(widest + kCellInset, kMaxDetailColumnWidth);
-}
-
-- (NSRect)verticalDetailRect {
-    CGFloat width = [self verticalDetailColumnWidth];
-    CGFloat x = [self verticalCandidateColumnWidth] + kDetailGap;
-    CGFloat height = self.bounds.size.height - kPadding * 2;
-    return NSMakeRect(x, kPadding, width, height);
-}
-
-// The annotation for the highlight, multi-line (ipa first, gloss lines below)
-// wrapped inside the right column. Reads lighter than the candidate text.
-- (void)drawVerticalDetailInRect:(NSRect)detailRect {
-    NSString *text = self.annotation;
-    if (text.length == 0 || NSEqualRects(detailRect, NSZeroRect)) {
-        return;
-    }
-    NSRect box = detailRect;
-    box.origin.x += kCellPadding;
-    box.origin.y += kSelectionGap;
-    box.size.width -= kCellPadding * 2;
-    box.size.height -= kSelectionGap * 2;
-    [text drawWithRect:box options:NSStringDrawingUsesLineFragmentOrigin attributes:self.detailAttrs context:nil];
-}
-
-// Height the annotation needs once wrapped into its column, 0 when hidden.
-- (CGFloat)verticalDetailHeightCost {
-    [self ensureLayoutCache];
-    return self.cachedVerticalDetailHeight;
-}
-
-- (CGFloat)measureVerticalDetailHeightForWidth:(CGFloat)columnWidth {
-    if (self.annotation.length == 0) {
-        return 0;
-    }
-    CGFloat width = columnWidth - kCellPadding * 2;
-    NSRect textRect = [self.annotation boundingRectWithSize:NSMakeSize(width, CGFLOAT_MAX)
-                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:self.detailAttrs
-                                                    context:nil];
-    return ceil(textRect.size.height);
+    self.cachedGridColumnWidths = [self measureGridColumnWidths];
+    self.cachedFooterTextWidth = [self measureFooterTextWidth];
 }
 
 // Translates the highlight's raw annotation (which the engine joins with \n:
@@ -565,31 +438,21 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
         return;
     }
     NSPoint p = [self convertPoint:event.locationInWindow fromView:nil];
-    BOOL grid = state.layout == CandidatePanelLayoutGrid;
-    NSInteger columns = grid ? state.gridColumns : 1;
-    NSArray<NSNumber *> *columnWidths = grid ? [self gridColumnWidths] : nil;
+    NSInteger columns = state.gridColumns;
+    NSArray<NSNumber *> *columnWidths = [self gridColumnWidths];
 
-    NSInteger row = MIN((NSInteger)((p.y - kPadding) / kRowHeight), (grid ? state.gridRenderedRowCount : state.verticalVisibleRows) - 1);
+    NSInteger row = MIN((NSInteger)((p.y - kPadding) / kRowHeight), state.gridRenderedRowCount - 1);
     NSInteger col = 0;
-    if (grid) {
-        CGFloat x = 0;
-        for (NSInteger c = 0; c < columns; c++) {
-            x += columnWidths[c].doubleValue;
-            if (p.x < x) {
-                col = c;
-                break;
-            }
+    CGFloat x = 0;
+    for (NSInteger c = 0; c < columns; c++) {
+        x += columnWidths[c].doubleValue;
+        if (p.x < x) {
             col = c;
+            break;
         }
-    } else if (self.annotation.length > 0 && p.x > [self verticalCandidateColumnWidth]) {
-        return; // tap on the detail column, not a candidate
+        col = c;
     }
-    NSInteger index = row * columns + col;
-    if (grid) {
-        index += state.gridVisibleRowOffset * columns;
-    } else {
-        index += state.verticalTopVisibleLine;
-    }
+    NSInteger index = row * columns + col + state.gridVisibleRowOffset * columns;
     if (index >= 0 && index < (NSInteger)state.candidates.count && self.clickHandler) {
         self.clickHandler(index);
     }
@@ -660,10 +523,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 }
 
 - (void)applyCandidates:(NSArray<NSString *> *)candidates {
-    BOOL grid = self.state.layout == CandidatePanelLayoutGrid;
-    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates
-                                                          layout:grid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical
-                                                         columns:self.gridColumns];
+    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates columns:self.gridColumns];
     self.content.state = self.state;
 }
 
@@ -694,23 +554,12 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     [self.panel orderFront:nil];
 }
 
-- (void)setGridLayout:(BOOL)useGrid {
-    CandidatePanelLayout layout = useGrid ? CandidatePanelLayoutGrid : CandidatePanelLayoutVertical;
-    NSArray *candidates = self.state.candidates;
-    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates layout:layout columns:self.gridColumns];
-    self.content.state = self.state;
-    [self.content setNeedsDisplay:YES];
-    [self resizeToFit];
-    [self reposition];
-}
-
-// The state clamps to 1...9 columns, so read the count back from it: a caller
+// The state clamps to 5...9 columns, so read the count back from it: a caller
 // asking for 20 columns gets a 9-column panel whose digits are all reachable.
 // Assigns the ivar directly - this *is* the property's setter.
 - (void)setGridColumns:(NSInteger)columns {
     NSArray *candidates = self.state.candidates;
-    CandidatePanelLayout layout = self.state.layout;
-    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates layout:layout columns:columns];
+    self.state = [[CandidatePanelState alloc] initWithCandidates:candidates columns:columns];
     _gridColumns = self.state.gridColumns;
     self.content.state = self.state;
     [self.content setNeedsDisplay:YES];
@@ -732,18 +581,6 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 - (void)hide {
     [self.panel orderOut:nil];
-}
-
-#pragma mark - Navigation (vertical)
-
-- (void)moveSelectionDown {
-    [self.state moveDown];
-    [self contentDidChangeWithReframe:YES];
-}
-
-- (void)moveSelectionUp {
-    [self.state moveUp];
-    [self contentDidChangeWithReframe:YES];
 }
 
 #pragma mark - Navigation (grid)
@@ -802,33 +639,17 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     if (state.candidates.count == 0) {
         return NSZeroSize;
     }
-    BOOL grid = state.layout == CandidatePanelLayoutGrid;
-    if (grid) {
-        NSArray<NSNumber *> *widths = [self.content gridColumnWidths];
-        CGFloat panelWidth = 0;
-        for (NSNumber *w in widths) {
-            panelWidth += w.doubleValue;
-        }
-        // The gloss reads as one line: the panel is at least as wide as the
-        // footer needs (capped like the vertical detail column, so a long
-        // translation wraps instead of sprawling the HUD).
-        CGFloat footerMinWidth = MIN([self.content footerTextWidth], kMaxDetailColumnWidth);
-        CGFloat width = MAX(MAX(kMinPanelWidth, panelWidth), footerMinWidth);
-        return NSMakeSize(width, state.gridRenderedRowCount * kRowHeight + [self.content footerHeightForWidth:width] + kPadding * 2);
+    NSArray<NSNumber *> *widths = [self.content gridColumnWidths];
+    CGFloat panelWidth = 0;
+    for (NSNumber *w in widths) {
+        panelWidth += w.doubleValue;
     }
-
-    NSInteger count = MIN((NSInteger)state.candidates.count, state.verticalVisibleRows);
-    CGFloat candidateWidth = [self.content verticalCandidateColumnWidth];
-    CGFloat detailWidth = [self.content verticalDetailColumnWidth];
-    BOOL hasDetail = detailWidth > 0;
-    CGFloat width =
-        hasDetail ? candidateWidth + kDetailGap + detailWidth + kPadding * 2 : MAX(kMinPanelWidth, candidateWidth + kPadding * 2);
-    // The detail draw insets its box by kSelectionGap on top and bottom, so
-    // the panel must reserve cost + those gaps - a 2-line gloss measured 30pt
-    // tall drew into a 26pt box, and Text Kit dropped the line that no longer
-    // fit, silently hiding the translation row.
-    CGFloat height = MAX(count * kRowHeight, hasDetail ? [self.content verticalDetailHeightCost] + kSelectionGap * 2 : 0) + kPadding * 2;
-    return NSMakeSize(width, height);
+    // The gloss reads as one line: the panel is at least as wide as the
+    // footer needs (capped, so a long translation wraps instead of sprawling
+    // the HUD).
+    CGFloat footerMinWidth = MIN([self.content footerTextWidth], kMaxFooterWidth);
+    CGFloat width = MAX(MAX(kMinPanelWidth, panelWidth), footerMinWidth);
+    return NSMakeSize(width, state.gridRenderedRowCount * kRowHeight + [self.content footerHeightForWidth:width] + kPadding * 2);
 }
 
 - (void)resizeToFit {

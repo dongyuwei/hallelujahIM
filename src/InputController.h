@@ -20,7 +20,6 @@ typedef NS_ENUM(NSInteger, InputMode) {
     NSMutableString *_composedBuffer;
     NSMutableString *_originalBuffer;
     NSInteger _insertionIndex;
-    NSInteger _currentCandidateIndex;
     NSMutableArray *_candidates;
     InputMode _inputMode;
     NSUInteger _rimeSession;   // RimeSessionId, 0 when no session yet

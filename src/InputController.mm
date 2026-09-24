@@ -163,12 +163,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             [self navigateGridPanelWithKeyCode:event.keyCode sender:sender]) {
             return YES;
         }
-        if (event.keyCode == KEY_ARROW_DOWN && [self moveCandidateSelection:YES sender:sender]) {
-            return YES;
-        }
-        if (event.keyCode == KEY_ARROW_UP && [self moveCandidateSelection:NO sender:sender]) {
-            return YES;
-        }
     }
 
     // Pick the character to translate: with only shift/caps held, punctuation
@@ -229,28 +223,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self commitSelectedRow:row withSpace:withSpace sender:sender];
     return YES;
 }
-- (BOOL)moveCandidateSelection:(BOOL)down sender:(id)sender {
-    if (_candidates.count == 0) {
-        return NO;
-    }
-    if (down) {
-        [sharedCandidates moveSelectionDown];
-    } else {
-        [sharedCandidates moveSelectionUp];
-    }
-    [self syncHighlightFromPanel];
-    return YES;
-}
-
 // Arrow-key navigation for the grid layout. The panel owns the geometry
 // (5 columns per row, first down press expands, up collapses at row 0,
-// left/right wrap within the active row). Arrow keys are always consumed in
-// grid mode so the event never falls through to the vertical path. Returns NO
-// only when the grid panel preference is off.
+// left/right wrap within the active row). Arrow keys are always consumed while
+// the panel is visible so the event never falls through to the client.
 - (BOOL)navigateGridPanelWithKeyCode:(NSInteger)keyCode sender:(id)sender {
-    if (![preference boolForKey:@"useGridCandidatePanel"]) {
-        return NO;
-    }
     if (_candidates.count == 0) {
         return NO;
     }
@@ -467,20 +444,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                 return YES;
             }
         }
-
-        if (keyCode == KEY_ARROW_DOWN) {
-            [sharedCandidates moveSelectionDown];
-            _currentCandidateIndex++;
-            [self syncHighlightFromPanel];
-            return YES;
-        }
-
-        if (keyCode == KEY_ARROW_UP) {
-            [sharedCandidates moveSelectionUp];
-            _currentCandidateIndex--;
-            [self syncHighlightFromPanel];
-            return YES;
-        }
     }
 
     if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:ch]) {
@@ -597,7 +560,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self setComposedBuffer:@""];
     [self setOriginalBuffer:@""];
     _insertionIndex = 0;
-    _currentCandidateIndex = 1;
     [sharedCandidates hide];
     [sharedCandidates updateCandidates:@[]];
     _candidates = [[NSMutableArray alloc] init];
@@ -744,7 +706,6 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     // A freshly activated client shows no marked text from us.
     [self forgetMarkedText];
     sharedCandidates.delegate = self;
-    _currentCandidateIndex = 1;
     _candidates = [[NSMutableArray alloc] init];
 }
 
@@ -787,9 +748,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 - (void)showAnnotation:(NSAttributedString *)candidateString {
     // The gloss lives inside the candidate panel now: it grows a footer row
-    // under the grid/list instead of opening a second window. Both vertical
-    // and grid layouts render it the same way, so the separate annotation
-    // window is retired.
+    // under the grid instead of opening a second window. The separate
+    // annotation window is retired.
     NSString *annotation = [engine getAnnotation:candidateString.string];
     [sharedCandidates setAnnotation:annotation ?: @""];
 }
