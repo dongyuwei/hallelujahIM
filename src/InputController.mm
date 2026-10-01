@@ -5,7 +5,6 @@
 #import "InputApplicationDelegate.h"
 #import "InputController.h"
 #import "MarkedTextState.h"
-#import "NSScreen+PointConversion.h"
 #import "PinyinCandidateRows.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
