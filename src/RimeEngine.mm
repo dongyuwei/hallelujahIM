@@ -169,9 +169,6 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
         if (context.menu.candidates[i].text) {
             candidate.text = [NSString stringWithUTF8String:context.menu.candidates[i].text];
         }
-        if (context.menu.candidates[i].comment) {
-            candidate.comment = [NSString stringWithUTF8String:context.menu.candidates[i].comment];
-        }
         [candidates addObject:candidate];
     }
     _api->free_context(&context);
@@ -190,10 +187,6 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
 
 - (BOOL)selectCandidateOnCurrentPage:(RimeSessionId)session index:(NSInteger)index {
     return _api->select_candidate_on_current_page(session, index);
-}
-
-- (BOOL)changePage:(RimeSessionId)session backward:(BOOL)backward {
-    return _api->change_page(session, backward ? True : False);
 }
 
 - (void)clearComposition:(RimeSessionId)session {

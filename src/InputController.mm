@@ -1,5 +1,4 @@
 #import <AppKit/NSSpellChecker.h>
-#import <CoreServices/CoreServices.h>
 
 #import "CandidatePanel.h"
 #import "InputApplicationDelegate.h"
@@ -28,6 +27,13 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
                 selectionRange:(NSRange)selectionRange
               replacementRange:(NSRange)replacementRange;
 - (void)forgetMarkedText;
+
+// Composition buffers; internal to InputController.
+- (NSMutableString *)composedBuffer;
+- (void)setComposedBuffer:(NSString *)string;
+- (NSMutableString *)originalBuffer;
+- (void)originalBufferAppend:(NSString *)string client:(id)sender;
+- (void)setOriginalBuffer:(NSString *)string;
 
 @end
 

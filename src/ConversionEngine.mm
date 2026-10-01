@@ -1,7 +1,5 @@
 #import "ConversionEngine.h"
 
-#import <sqlite3.h>
-
 // The candidate list the panel can show is capped here. The prefix query is
 // capped to the same number: without it a one-character prefix returns
 // thousands of words and pays for sorting every one of them (see

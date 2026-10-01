@@ -7,7 +7,6 @@
 @interface RimeCandidateItem : NSObject
 
 @property(nonatomic, copy) NSString *text;
-@property(nonatomic, copy) NSString *comment;
 
 @end
 
@@ -48,10 +47,9 @@
 // Candidates on the current page.
 - (NSArray<RimeCandidateItem *> *)candidates:(RimeSessionId)session;
 
-// Page and highlight state; both -1 when there is no composition.
+// Highlight state; -1 when there is no composition.
 - (NSInteger)highlightedIndex:(RimeSessionId)session;
 - (BOOL)selectCandidateOnCurrentPage:(RimeSessionId)session index:(NSInteger)index;
-- (BOOL)changePage:(RimeSessionId)session backward:(BOOL)backward;
 
 - (void)clearComposition:(RimeSessionId)session;
 

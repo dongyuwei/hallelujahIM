@@ -34,11 +34,6 @@ typedef NS_ENUM(NSInteger, InputMode) {
     MarkedTextState *_markedText;
 }
 
-- (NSMutableString *)composedBuffer;
-- (void)setComposedBuffer:(NSString *)string;
-- (NSMutableString *)originalBuffer;
-- (void)originalBufferAppend:(NSString *)string client:(id)sender;
-- (void)setOriginalBuffer:(NSString *)string;
 - (void)showIMEPreferences:(id)sender;
 - (void)clickAbout:(id)sender;
 - (void)clickUpgrade:(id)sender;
