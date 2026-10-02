@@ -1,5 +1,6 @@
 #import "WebServer.h"
 #import "CandidatePanel.h"
+#import "CandidateTheme.h"
 #import "ConversionEngine.h"
 #import "GCDWebServer.h"
 #import "GCDWebServerDataResponse.h"
@@ -15,6 +16,7 @@ extern void startRimeEngine(void);
 NSString *TRANSLATION_KEY = @"showTranslation";
 NSString *COMMIT_WORD_WITH_SPACE_KEY = @"commitWordWithSpace";
 NSString *GRID_CANDIDATE_COLUMNS_KEY = @"gridCandidateColumns";
+NSString *CANDIDATE_PANEL_SKIN_KEY = @"candidatePanelSkin";
 NSString *PINYIN_INPUT_ENABLED_KEY = @"enablePinyinInput";
 NSString *PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY = @"pinyinRawInputCandidatePosition";
 
@@ -60,6 +62,7 @@ static int port = 62718;
                        TRANSLATION_KEY : @([preference boolForKey:TRANSLATION_KEY]),
                        COMMIT_WORD_WITH_SPACE_KEY : @([preference boolForKey:COMMIT_WORD_WITH_SPACE_KEY]),
                        GRID_CANDIDATE_COLUMNS_KEY : @([preference integerForKey:GRID_CANDIDATE_COLUMNS_KEY]),
+                       CANDIDATE_PANEL_SKIN_KEY : [preference stringForKey:CANDIDATE_PANEL_SKIN_KEY] ?: [CandidateTheme defaultSkinID],
                        PINYIN_INPUT_ENABLED_KEY : @([preference boolForKey:PINYIN_INPUT_ENABLED_KEY]),
                        PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY : @([preference integerForKey:PINYIN_RAW_INPUT_CANDIDATE_POSITION_KEY]),
                    }];
@@ -70,6 +73,15 @@ static int port = 62718;
                       requestClass:[GCDWebServerURLEncodedFormRequest class]
                       processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                           NSDictionary *data = ((GCDWebServerDataRequest *)request).jsonObject;
+                          // An unparseable body (wrong content type, empty POST)
+                          // parses to nil; responding with it would throw inside
+                          // NSJSONSerialization and take the whole IM down.
+                          if (data == nil) {
+                              GCDWebServerDataResponse *badRequest =
+                                  [[GCDWebServerDataResponse alloc] initWithJSONObject:@{@"error" : @"unparseable body"}];
+                              badRequest.statusCode = 400;
+                              return badRequest;
+                          }
 
                           bool showTranslation = [data[TRANSLATION_KEY] boolValue];
                           [preference setBool:showTranslation forKey:TRANSLATION_KEY];
@@ -110,6 +122,18 @@ static int port = 62718;
                           dispatch_async(dispatch_get_main_queue(), ^{
                               [sharedCandidates setGridColumns:gridCandidateColumns];
                               [preference setInteger:[sharedCandidates gridColumns] forKey:GRID_CANDIDATE_COLUMNS_KEY];
+                          });
+
+                          // Missing or unknown skin keeps the stored value.
+                          NSString *candidatePanelSkin = data[CANDIDATE_PANEL_SKIN_KEY];
+                          if (candidatePanelSkin.length == 0 || ![[CandidateTheme allSkinIDs] containsObject:candidatePanelSkin]) {
+                              candidatePanelSkin = nil;
+                          }
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              if (candidatePanelSkin != nil) {
+                                  [sharedCandidates setSkin:candidatePanelSkin];
+                                  [preference setObject:candidatePanelSkin forKey:CANDIDATE_PANEL_SKIN_KEY];
+                              }
                           });
 
                           return [GCDWebServerDataResponse responseWithJSONObject:data];

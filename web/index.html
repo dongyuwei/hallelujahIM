@@ -24,6 +24,17 @@
           </select>
         </label>
         <label>
+          Skin:
+          <select v-model="preference.candidatePanelSkin">
+            <option value="matrix">Matrix 矩阵</option>
+            <option value="verdant">Verdant 青葱</option>
+            <option value="carbon">Carbon 碳黑</option>
+            <option value="graphite">Graphite 石墨</option>
+            <option value="tangerine">Tangerine 橘色</option>
+            <option value="classic">Classic 暗色</option>
+          </select>
+        </label>
+        <label>
           Enable pinyin (Rime) input:
           <input type="checkbox" v-model="preference.enablePinyinInput" />
         </label>

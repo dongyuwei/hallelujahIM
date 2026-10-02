@@ -1,19 +1,15 @@
 #import "CandidatePanel.h"
+#import "CandidateTheme.h"
 
-// SwiftType-style palette and metrics (cloned from its Theme):
-// background #1B1B1B, border #1B1B1B (2pt), corner radius 6,
-// text #FCFCFC, number #A0796A, highlight #533566.
-// Selection is carried by the opaque highlight pill plus a white candidate
-// (7.6:1 on the rendered pill); the number keycap keeps the theme's warm accent
-// but brightened to #FFCC80 (5.1:1), because the muted #A0796A it uses when
-// unselected would be 2.8:1 on the pill and effectively invisible.
+// Colors and corner radius come from CandidateTheme (six skins; the palette
+// slots are documented there). Selection is carried by the opaque highlight
+// pill; for each skin the active word color keeps enough contrast on it.
 static const CGFloat kRowHeight = 24;
 // kPadding + kCellPadding is also the horizontal gap between grid columns
 // (2 * (kPadding + kCellPadding) per cell, i.e. 8pt today). Keep them tight:
 // this is a HUD, and the panel is as wide as the sum of its columns.
 static const CGFloat kPadding = 2;
 static const CGFloat kCellPadding = 2;
-static const CGFloat kCornerRadius = 6;
 // Gap between the highlight pill and the row edge. The pill is therefore
 // kRowHeight - 2 * kSelectionGap = 20pt tall, only 3pt more than the 14pt
 // font's line box: at 3pt (18pt pill) the baseline sat low enough that a
@@ -37,6 +33,8 @@ static NSColor *PanelColor(int r, int g, int b, CGFloat alpha) {
     return [NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:alpha];
 }
 
+static NSColor *ThemeColor(NSUInteger hex) { return PanelColor((int)((hex >> 16) & 0xFF), (int)((hex >> 8) & 0xFF), (int)(hex & 0xFF), 1); }
+
 // Cell insets used by drawing (kPadding + kCellPadding on each side).
 static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
@@ -46,6 +44,9 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 
 @property(nonatomic, strong) CandidatePanelState *state;
 @property(nonatomic, copy) void (^clickHandler)(NSInteger index);
+
+// Skin ID; the setter rebuilds the palette and redraws.
+@property(nonatomic, copy) NSString *skin;
 
 // Translation/IPA summary for the highlighted candidate, drawn as a single
 // bottom row. Empty string renders no footer (panel collapses back).
@@ -59,6 +60,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // folded into the footer height cache separately because the panel is resized
 // from the footer height it just measured.
 @property(nonatomic) BOOL layoutCacheValid;
+@property(nonatomic, strong) CandidateTheme *theme;
 @property(nonatomic, strong) NSArray<NSNumber *> *cachedGridColumnWidths;
 @property(nonatomic) CGFloat cachedFooterHeight;
 @property(nonatomic) CGFloat cachedFooterHeightWidth;
@@ -89,41 +91,53 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 - (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
-        [self buildTextAttributes];
+        self.skin = [CandidateTheme defaultSkinID];
     }
     return self;
 }
 
-// Fonts and colors never change, so the attribute runs are built once instead
-// of once per cell per measurement.
+- (void)setSkin:(NSString *)skin {
+    if (_skin == skin || [_skin isEqualToString:skin]) {
+        return;
+    }
+    _skin = [skin copy];
+    _theme = [CandidateTheme themeForSkinID:_skin];
+    [self buildTextAttributes];
+    [self invalidateLayoutCache];
+    [self setNeedsDisplay:YES];
+}
+
+// Fonts and colors never change within a skin, so the attribute runs are built
+// once per skin instead of once per cell per measurement.
 - (void)buildTextAttributes {
+    CandidateTheme *theme = self.theme;
     _wordAttrs = @{
         NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xFC, 0xFC, 0xFC, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.wordColor),
     };
     _wordAttrsActive = @{
         NSFontAttributeName : [NSFont systemFontOfSize:14 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xFF, 0xFF, 0xFF, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.wordActiveColor),
     };
     _numberAttrs = @{
         NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.numberColor),
     };
     _numberAttrsActive = @{
         NSFontAttributeName : [NSFont monospacedSystemFontOfSize:11 weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xFF, 0xCC, 0x80, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.numberActiveColor),
     };
     _gapAttrs = @{
         NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xA0, 0x79, 0x6A, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.numberColor),
     };
     _gapAttrsActive = @{
         NSFontAttributeName : [NSFont monospacedSystemFontOfSize:kNumberGapFontSize weight:NSFontWeightMedium],
-        NSForegroundColorAttributeName : PanelColor(0xFF, 0xCC, 0x80, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.numberActiveColor),
     };
     _detailAttrs = @{
         NSFontAttributeName : [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
-        NSForegroundColorAttributeName : PanelColor(0xB8, 0xC4, 0xCD, 1),
+        NSForegroundColorAttributeName : ThemeColor(theme.wordColor),
     };
 }
 
@@ -162,10 +176,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     }
 
     NSRect bounds = self.bounds;
-    NSBezierPath *bg = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:kCornerRadius yRadius:kCornerRadius];
-    [PanelColor(0x1B, 0x1B, 0x1B, 1) setFill];
+    CandidateTheme *theme = self.theme;
+    NSBezierPath *bg = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:theme.cornerRadius yRadius:theme.cornerRadius];
+    [ThemeColor(theme.backgroundColor) setFill];
     [bg fill];
-    [[PanelColor(0x1B, 0x1B, 0x1B, 1) colorWithAlphaComponent:0.85] setStroke];
+    [ThemeColor(theme.borderColor) setStroke];
     [bg stroke];
 
     [self drawGridCellsForState:state];
@@ -391,8 +406,6 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
 // U+00A0 share the monospaced key font's advance at the same size - so a
 // numbered cell ("1" + gap) and a blank one (U+00A0 + gap) reserve exactly the
 // same width, which is what keeps the columns aligned.
-// Colors cloned from SwiftType's default theme: word #FCFCFC (highlight
-// #FFFFFF on the #533566 pill), number #A0796A (#FFCC80 when highlighted).
 - (NSAttributedString *)cellText:(NSString *)text number:(NSInteger)number active:(BOOL)active {
     NSDictionary *wordAttrs = active ? self.wordAttrsActive : self.wordAttrs;
     NSDictionary *numberAttrs = active ? self.numberAttrsActive : self.numberAttrs;
@@ -415,10 +428,11 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     NSRect pillRect =
         NSMakeRect(cellRect.origin.x + kPadding, cellRect.origin.y + kSelectionGap, pillWidth, cellRect.size.height - kSelectionGap * 2);
     if (active) {
-        NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:kCornerRadius - 2 yRadius:kCornerRadius - 2];
+        CGFloat pillRadius = MAX(0, self.theme.cornerRadius - 2);
+        NSBezierPath *pill = [NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:pillRadius yRadius:pillRadius];
         // Opaque, so the highlight's lightness (and therefore the candidate
         // text contrast) does not depend on what is painted behind it.
-        [PanelColor(0x53, 0x35, 0x66, 1) setFill];
+        [ThemeColor(self.theme.pillColor) setFill];
         [pill fill];
     }
 
@@ -475,6 +489,7 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     self = [super init];
     if (self) {
         _gridColumns = kCandidateGridDefaultColumns;
+        _skin = [CandidateTheme defaultSkinID];
         _panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, 300, 30)
                                             styleMask:(NSWindowStyleMaskBorderless | NSWindowStyleMaskNonactivatingPanel)
                                               backing:NSBackingStoreBuffered
@@ -508,6 +523,14 @@ static const CGFloat kCellInset = (kPadding + kCellPadding) * 2;
     [self.content setNeedsDisplay:YES];
     [self resizeToFit];
     [self reposition];
+}
+
+- (void)setSkin:(NSString *)skin {
+    if (_skin == skin || [_skin isEqualToString:skin]) {
+        return;
+    }
+    _skin = [skin copy];
+    self.content.skin = _skin;
 }
 
 - (BOOL)isVisible {

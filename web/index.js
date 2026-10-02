@@ -9,6 +9,7 @@ var app = new Vue({
       showTranslation: true,
       commitWordWithSpace: true,
       gridCandidateColumns: 7,
+      candidatePanelSkin: "matrix",
       enablePinyinInput: false,
       pinyinRawInputCandidatePosition: 2
     },

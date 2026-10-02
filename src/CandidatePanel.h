@@ -26,6 +26,10 @@
 // immediately (the panel is rebuilt in place, so a live change is safe).
 @property(nonatomic) NSInteger gridColumns;
 
+// Skin ID from CandidateTheme.allSkinIDs (unknown IDs fall back to the
+// default). Applied to the panel in place.
+@property(nonatomic, copy) NSString *skin;
+
 - (void)updateCandidates:(NSArray<NSString *> *)candidates;
 
 // Replaces "updateCandidates: + setAnnotation: + showAtClient:" with a single

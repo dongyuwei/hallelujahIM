@@ -66,6 +66,7 @@ void initPreference() {
         @"commitWordWithSpace" : @YES,
         @"showTranslation" : @YES,
         @"gridCandidateColumns" : @(kCandidateGridDefaultColumns),
+        @"candidatePanelSkin" : @"matrix",
         @"enablePinyinInput" : @NO,
         @"pinyinRawInputCandidatePosition" : @(2)
     };
@@ -115,6 +116,7 @@ int main(int argc, char *argv[]) {
     initPreference();
     sharedCandidates = [[CandidatePanel alloc] init];
     [sharedCandidates setGridColumns:[preference integerForKey:@"gridCandidateColumns"]];
+    [sharedCandidates setSkin:[preference stringForKey:@"candidatePanelSkin"]];
 
     engine = [ConversionEngine sharedEngine];
 

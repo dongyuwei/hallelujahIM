@@ -52,6 +52,9 @@
 		A11122233310 /* PinyinCandidateRows.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233411 /* PinyinCandidateRows.m */; };
 		A11122233311 /* PinyinCandidateRows.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233411 /* PinyinCandidateRows.m */; };
 		A11122233312 /* TestPinyinCandidateRows.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233412 /* TestPinyinCandidateRows.mm */; };
+		A11122233313 /* CandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233413 /* CandidateTheme.m */; };
+		A11122233314 /* CandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233413 /* CandidateTheme.m */; };
+		A11122233315 /* TestCandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233414 /* TestCandidateTheme.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +124,9 @@
 		A11122233410 /* PinyinCandidateRows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PinyinCandidateRows.h; path = src/PinyinCandidateRows.h; sourceTree = "<group>"; };
 		A11122233411 /* PinyinCandidateRows.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PinyinCandidateRows.m; path = src/PinyinCandidateRows.m; sourceTree = "<group>"; };
 		A11122233412 /* TestPinyinCandidateRows.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestPinyinCandidateRows.mm; sourceTree = "<group>"; };
+		A11122233413 /* CandidateTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandidateTheme.m; path = src/CandidateTheme.m; sourceTree = "<group>"; };
+		A11122233414 /* TestCandidateTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestCandidateTheme.m; sourceTree = "<group>"; };
+		A11122233416 /* CandidateTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidateTheme.h; path = src/CandidateTheme.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +202,8 @@
 				A11122233408 /* MarkedTextState.m */,
 				A11122233410 /* PinyinCandidateRows.h */,
 				A11122233411 /* PinyinCandidateRows.m */,
+				A11122233416 /* CandidateTheme.h */,
+				A11122233413 /* CandidateTheme.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -282,6 +290,7 @@
 				A11122233406 /* TestCandidatePanelLayout.mm */,
 				A11122233409 /* TestMarkedTextState.mm */,
 				A11122233412 /* TestPinyinCandidateRows.mm */,
+				A11122233414 /* TestCandidateTheme.m */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
 			path = Tests;
@@ -529,6 +538,8 @@
 				A11122233303 /* CandidatePanelState.m in Sources */,
 				A11122233311 /* PinyinCandidateRows.m in Sources */,
 				A11122233312 /* TestPinyinCandidateRows.mm in Sources */,
+				A11122233314 /* CandidateTheme.m in Sources */,
+				A11122233315 /* TestCandidateTheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +558,7 @@
 				386E1C0022DC5E9C000C6DCF /* ConversionEngine.mm in Sources */,
 				7A1E00000000000000000001 /* RimeEngine.mm in Sources */,
 				7A1E00000000000000000002 /* RimeKeymap.mm in Sources */,
+				A11122233313 /* CandidateTheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
