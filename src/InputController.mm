@@ -5,6 +5,7 @@
 #import "InputController.h"
 #import "MarkedTextState.h"
 #import "PinyinCandidateRows.h"
+#import "PreferencesWindowController.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
 
@@ -724,7 +725,7 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 }
 
 - (void)showIMEPreferences:(id)sender {
-    [self openUrl:@"http://localhost:62718/index.html"];
+    [PreferencesWindowController showPreferences];
 }
 
 - (void)clickAbout:(NSMenuItem *)sender {

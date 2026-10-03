@@ -13,15 +13,17 @@ bash build.sh
 All three must pass before committing.
 
 ## comments
-代码应该只保留必要的注释（应该尽可能精简，简明扼要），非必要的一律删除。
+Code should only keep necessary comments (should be as concise as possible, brief and to the point), and delete all non-essential ones.
 
 ## notification
 If any task of current session need user confirmation, call system cmd say: `say 'please confirm'`.
 
-Once all tasks of current session finished, call system cmd say: `say 'task finished'`.
+Once all tasks of current session finished, call system cmd say: `say 'task finished'`. 
+
+Remind the user that when testing manually, it is best to restart a new textEdit.app to test, because in the existing app the input method may not be activated correctly.
 
 ## commit message
-commit message 应该简明扼要，不要太啰嗦。
+commit message should be concise and to the point, not too wordy.
 
 ## db design
-db schema设计要充分考虑index，建好索引。
+db schema design should fully consider indexes, and build indexes well.

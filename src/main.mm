@@ -2,7 +2,6 @@
 #import "ConversionEngine.h"
 #import "InputApplicationDelegate.h"
 #import "RimeEngine.h"
-#import "WebServer.h"
 #import <Carbon/Carbon.h>
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
@@ -129,8 +128,6 @@ int main(int argc, char *argv[]) {
     });
 
     [[NSBundle mainBundle] loadNibNamed:@"PreferencesMenu" owner:[NSApplication sharedApplication] topLevelObjects:nil];
-
-    [[WebServer sharedServer] start];
 
     [[NSApplication sharedApplication] run];
     [rimeEngine shutdown];

@@ -81,7 +81,7 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
 
 3. **Substitutions database**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
    - Stores user-defined Text-Expander substitution rules
-   - Manage via the preference page at http://localhost:62718
+   - Manage via the native Preferences window (`src/PreferencesWindowController.m`)
    - Preserved across installs/updates (not overwritten)
 
    Schema:
