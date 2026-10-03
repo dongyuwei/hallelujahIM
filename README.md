@@ -92,12 +92,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 2. [cc-cedict](https://cc-cedict.org/wiki/)：`dictionary/cedict.json` 由它转换而来，是拼音-英语词库，用于生成数据库中的 `cedict_pinyin` 表。
 3. [librime](https://github.com/rime/librime)，中州韵输入法引擎，拼音输入模式的核心；配套的 [rime-prelude](https://github.com/rime/rime-prelude)、[rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin)（朙月拼音方案与词典）、[rime-stroke](https://github.com/rime/rime-stroke)（笔画反查）、[rime-essay](https://github.com/rime/rime-essay)（八股文词频）与 [OpenCC](https://github.com/BYVoid/OpenCC)（简繁转换）一同构成了拼音模式的完整数据。
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA， 国际音标。
-5. [GCDWebServer](https://github.com/swisspol/GCDWebServer)，用于用户使用偏好配置。
-6. [talisman](https://github.com/Yomguithereal/talisman)，使用其中的 phonex 算法，实现模糊近似音输入。
-7. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein)，配合 talisman 的 phonex 算法，在音似词中按 Damerau Levenshtein 编辑距离筛选最接近的候选词。
-8. [鼠鬚管 squirrel 输入法](https://github.com/rime/squirrel) 哈利路亚输入法安装包 pkg 的制作 copy/参考了 squirrel 的实现。
-9. [SwiftType](https://github.com/mgxv/SwiftType/)，网格候选面板的导航语义（首次按下展开、四向导航、行内循环）参考了其 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv)！
-10. [Sogou-Input-Skin](https://github.com/Remix-Design/Sogou-Input-Skin)，五套彩色候选面板皮肤（Matrix、Verdant、Carbon、Graphite、Tangerine）来自其开源设计效果图，感谢 [xiaochun](https://github.com/xiaochunjimmy)！
+5. [talisman](https://github.com/Yomguithereal/talisman)，使用其中的 phonex 算法，实现模糊近似音输入。
+6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein)，配合 talisman 的 phonex 算法，在音似词中按 Damerau Levenshtein 编辑距离筛选最接近的候选词。
+7. [鼠鬚管 squirrel 输入法](https://github.com/rime/squirrel) 哈利路亚输入法安装包 pkg 的制作 copy/参考了 squirrel 的实现。
+8. [SwiftType](https://github.com/mgxv/SwiftType/)，网格候选面板的导航语义（首次按下展开、四向导航、行内循环）参考了其 Grid Panel 实现，感谢 [mgxv](https://github.com/mgxv)！
+9.  [Sogou-Input-Skin](https://github.com/Remix-Design/Sogou-Input-Skin)，五套彩色候选面板皮肤（Matrix、Verdant、Carbon、Graphite、Tangerine）来自其开源设计效果图，感谢 [xiaochun](https://github.com/xiaochunjimmy)！
 
 ## 问题反馈，意见和建议
 

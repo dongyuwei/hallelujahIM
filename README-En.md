@@ -81,12 +81,11 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 2. [cc-cedict](https://cc-cedict.org/wiki/): `dictionary/cedict.json` is transformed from it and used to build the `cedict_pinyin` table.
 3. [librime](https://github.com/rime/librime), the Rime input method engine powering the pinyin mode, together with [rime-prelude](https://github.com/rime/rime-prelude), [rime-luna-pinyin](https://github.com/rime/rime-luna-pinyin) (schema and dictionary), [rime-stroke](https://github.com/rime/rime-stroke) (stroke reverse lookup), [rime-essay](https://github.com/rime/rime-essay) (word frequencies) and [OpenCC](https://github.com/BYVoid/OpenCC) (Chinese conversion).
 4. [cmudict](http://www.speech.cs.cmu.edu/cgi-bin/cmudict) and https://github.com/mphilli/English-to-IPA
-5. [GCDWebServer](https://github.com/swisspol/GCDWebServer)
-6. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
-7. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
-8. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
-9. [SwiftType](https://github.com/mgxv/SwiftType/), the grid candidate panel's navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by its Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv)!
-10. [Sogou-Input-Skin](https://github.com/Remix-Design/Sogou-Input-Skin) by [xiaochun](https://github.com/xiaochunjimmy), the five colorful candidate-panel skins (Matrix, Verdant, Carbon, Graphite, Tangerine) are cloned from its open-source design mockups.
+5. [talisman](https://github.com/Yomguithereal/talisman), using its phonex algorithm to implement fuzzy phonics match.
+6. [MDCDamerauLevenshtein](https://github.com/modocache/MDCDamerauLevenshtein), using it to calculate the edit distance.
+7. [squirrel](https://github.com/rime/squirrel), I shamelessly copied the script to install and build pkg App for Mac.
+8. [SwiftType](https://github.com/mgxv/SwiftType/), the grid candidate panel's navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by its Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv)!
+9. [Sogou-Input-Skin](https://github.com/Remix-Design/Sogou-Input-Skin) by [xiaochun](https://github.com/xiaochunjimmy), the five colorful candidate-panel skins (Matrix, Verdant, Carbon, Graphite, Tangerine) are cloned from its open-source design mockups.
 
 ### snapshots
 
