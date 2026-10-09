@@ -157,4 +157,31 @@ static int KeySymForChar(char c) {
     [self.engine destroySession:session];
 }
 
+// Pinyin is opt-in, so with the preference off librime is never started, yet
+// deactivateServer: calls clearComposition: in every input mode. Calling any
+// method on a never-started engine used to deref a NULL RimeApi and SIGSEGV.
+- (void)testAllMethodsAreSafeNoOpsBeforeStart {
+    RimeEngine *unstarted = [[RimeEngine alloc] init];
+
+    [unstarted clearComposition:0];
+    [unstarted clearComposition:123]; // stale session ids must be ignored too
+    XCTAssertFalse([unstarted sessionAlive:123]);
+    XCTAssertEqual([unstarted createSession], 0U);
+    [unstarted destroySession:123];
+    XCTAssertFalse([unstarted processKey:123 keycode:RimeXK_a mask:0]);
+    XCTAssertEqualObjects([unstarted commitText:123], @"");
+    XCTAssertEqualObjects([unstarted rawInput:123], @"");
+    XCTAssertEqualObjects([unstarted candidates:123], @[]);
+    XCTAssertEqual([unstarted highlightedIndex:123], -1);
+    XCTAssertFalse([unstarted selectCandidateOnCurrentPage:123 index:0]);
+    NSInteger selStart = -1, selLength = -1, caretPos = -1;
+    XCTAssertEqualObjects([unstarted preedit:123 selStart:&selStart selLength:&selLength caretPos:&caretPos], @"");
+    XCTAssertEqual(selStart, 0);
+    XCTAssertEqual(selLength, 0);
+    XCTAssertEqual(caretPos, 0);
+
+    [unstarted warmUpSession];
+    [unstarted shutdown];
+}
+
 @end

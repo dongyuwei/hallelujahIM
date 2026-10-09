@@ -93,21 +93,26 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
     return _started ? _api->create_session() : 0;
 }
 
+// Pinyin is opt-in, so librime may never be started; every method below must
+// be a safe no-op until then (IMK calls deactivateServer in English mode too).
 - (void)destroySession:(RimeSessionId)session {
-    if (session) {
+    if (_started && session) {
         _api->destroy_session(session);
     }
 }
 
 - (BOOL)sessionAlive:(RimeSessionId)session {
-    return session && _api->find_session(session);
+    return _started && session && _api->find_session(session);
 }
 
 - (BOOL)processKey:(RimeSessionId)session keycode:(int)keycode mask:(int)mask {
-    return _api->process_key(session, keycode, mask);
+    return _started && _api->process_key(session, keycode, mask);
 }
 
 - (NSString *)commitText:(RimeSessionId)session {
+    if (!_started) {
+        return @"";
+    }
     RIME_STRUCT(RimeCommit, commit);
     if (!_api->get_commit(session, &commit)) {
         return @"";
@@ -118,6 +123,9 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
 }
 
 - (NSString *)rawInput:(RimeSessionId)session {
+    if (!_started) {
+        return @"";
+    }
     const char *input = _api->get_input(session);
     return input ? [NSString stringWithUTF8String:input] : @"";
 }
@@ -134,6 +142,9 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
     }
     if (caretPos) {
         *caretPos = 0;
+    }
+    if (!_started) {
+        return @"";
     }
 
     RIME_STRUCT(RimeContext, context);
@@ -159,6 +170,9 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
 }
 
 - (NSArray<RimeCandidateItem *> *)candidates:(RimeSessionId)session {
+    if (!_started) {
+        return @[];
+    }
     RIME_STRUCT(RimeContext, context);
     if (!_api->get_context(session, &context)) {
         return @[];
@@ -176,6 +190,9 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
 }
 
 - (NSInteger)highlightedIndex:(RimeSessionId)session {
+    if (!_started) {
+        return -1;
+    }
     RIME_STRUCT(RimeContext, context);
     if (!_api->get_context(session, &context)) {
         return -1;
@@ -186,10 +203,13 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
 }
 
 - (BOOL)selectCandidateOnCurrentPage:(RimeSessionId)session index:(NSInteger)index {
-    return _api->select_candidate_on_current_page(session, index);
+    return _started && _api->select_candidate_on_current_page(session, index);
 }
 
 - (void)clearComposition:(RimeSessionId)session {
+    if (!_started) {
+        return;
+    }
     _api->clear_composition(session);
 }
 

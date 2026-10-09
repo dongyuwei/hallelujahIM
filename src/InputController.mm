@@ -314,7 +314,11 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
         }
         [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[_pinyinRows rimeIndexForRow:row]];
     } else {
-        [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:row];
+        // English mode never touches the rime session (librime may not even be
+        // started); commit the picked word like a digit selection.
+        [self setComposedBuffer:_candidates[row]];
+        [self commitEnglishComposition:sender];
+        return;
     }
     [self rimeUpdate:sender];
 }
