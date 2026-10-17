@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
     # Only the trailing release step needs to write, but permissions are set
     # per job, so this job carries it for every branch.
     permissions:
