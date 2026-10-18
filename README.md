@@ -117,4 +117,4 @@ GPL3(GNU GENERAL PUBLIC LICENSE Version 3)
 
 ## Star History
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=dongyuwei/hallelujahIM&type=Date)](https://star-history.dera.page/#dongyuwei/hallelujahIM&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=dongyuwei/hallelujahIM)](https://star-history.dera.page/dongyuwei/hallelujahIM)
