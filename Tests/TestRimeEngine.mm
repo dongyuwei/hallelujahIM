@@ -90,6 +90,19 @@ static int KeySymForChar(char c) {
     XCTAssertEqualObjects(preedit, @"ni hao", @"preedit includes the syllable delimiter");
 }
 
+// The pinyin panel only shows English rows on page 0, so the page number has
+// to follow candidate paging.
+- (void)testPageFollowsPaging {
+    [self type:@"nihao"];
+    XCTAssertEqual([self.engine page:self.session], 0);
+
+    XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_Page_Down mask:0]);
+    XCTAssertEqual([self.engine page:self.session], 1);
+
+    XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_Page_Up mask:0]);
+    XCTAssertEqual([self.engine page:self.session], 0);
+}
+
 - (void)testSpaceCommitsConvertedText {
     [self type:@"nihao "];
     XCTAssertEqualObjects([self.engine commitText:self.session], @"你好");

@@ -1,10 +1,15 @@
 #import "ConversionEngine.h"
 
+#import "PinyinSegmenter.h"
+
 // The candidate list the panel can show is capped here. The prefix query is
 // capped to the same number: without it a one-character prefix returns
 // thousands of words and pays for sorting every one of them (see
 // wordsStartsWith:).
 static const NSUInteger kMaxCandidates = 50;
+
+// English rows shown ahead of the Rime candidates in the pinyin panel.
+static const NSUInteger kEnglishCandidateLimit = 3;
 
 // U+10FFFF is the highest Unicode code point, so `prefix + kPrefixUpperBound` is
 // the exclusive end of the B-tree range holding every word that starts with
@@ -248,6 +253,10 @@ NSDictionary *deserializeJSON(NSString *path) {
 // matches what the panel can display, which keeps the ORDER BY sorter bounded
 // instead of sorting every match.
 - (NSMutableArray *)wordsStartsWith:(NSString *)prefix {
+    return [self wordsStartsWith:prefix limit:kMaxCandidates];
+}
+
+- (NSMutableArray *)wordsStartsWith:(NSString *)prefix limit:(NSUInteger)limit {
     if (!_dbQueue)
         return [[NSMutableArray alloc] init];
     NSString *lowerPrefix = [prefix lowercaseString];
@@ -256,12 +265,123 @@ NSDictionary *deserializeJSON(NSString *path) {
     [_dbQueue inDatabase:^(FMDatabase *db) {
         NSString *sql = @"SELECT word FROM words WHERE word >= ? AND word < ? "
                          "ORDER BY frequency DESC, word ASC LIMIT ?";
-        FMResultSet *resultSet = [db executeQuery:sql, lowerPrefix, upperBound, @(kMaxCandidates)];
+        FMResultSet *resultSet = [db executeQuery:sql, lowerPrefix, upperBound, @(limit)];
         while ([resultSet next]) {
             [filtered addObject:[resultSet stringForColumn:@"word"]];
         }
     }];
     return filtered;
+}
+
+// The lowercase input when it qualifies for English rows (>=4 letters,
+// letters only, not complete pinyin), else nil. Rime keeps the typed case
+// (Hello), so callers lowercase before matching and clone the typed case back.
+- (NSString *)lowercaseNonPinyinInput:(NSString *)input {
+    NSString *lower = input.lowercaseString;
+    if (lower.length < 4) {
+        return nil;
+    }
+    for (NSUInteger i = 0; i < lower.length; i++) {
+        unichar c = [lower characterAtIndex:i];
+        if (c < 'a' || c > 'z') {
+            return nil;
+        }
+    }
+    return [PinyinSegmenter canFullySegment:lower] ? nil : lower;
+}
+
+- (NSArray<NSString *> *)englishCandidatesForNonPinyinInput:(NSString *)input {
+    NSString *lower = [self lowercaseNonPinyinInput:input];
+    if (!lower) {
+        return @[];
+    }
+    // The typed word itself, when it is one, is offered first: without this,
+    // a more frequent longer completion takes row 0 (her -> here, con ->
+    // contact) and space commits a word the user never typed.
+    NSMutableArray *words = [[NSMutableArray alloc] init];
+    if ([self isDictionaryWord:lower]) {
+        [words addObject:lower];
+    }
+    for (NSString *word in [self wordsStartsWith:lower limit:kEnglishCandidateLimit]) {
+        if (![word isEqualToString:lower]) {
+            [words addObject:word];
+        }
+    }
+    return [self cloneTypedCase:input ontoWords:[self subarrayWithRang:words range:kEnglishCandidateLimit]];
+}
+
+- (BOOL)isDictionaryWord:(NSString *)word {
+    if (!_dbQueue) {
+        return NO;
+    }
+    __block BOOL found = NO;
+    [_dbQueue inDatabase:^(FMDatabase *db) {
+        found = [db boolForQuery:@"SELECT 1 FROM words WHERE word = ?", word];
+    }];
+    return found;
+}
+
+// Rime's abbreviations match almost any letters (conectivity included), so a
+// guess cannot wait for Rime to come up empty; five letters is the cut
+// instead. Most Chinese abbreviations are shorter (zme/dagn stay
+// Chinese-first) but long shorthands and dropped-letter typos (shenm,
+// weishenm) can still take English rows - a known trade-off.
+- (NSArray<NSString *> *)spellingSuggestionsForNonPinyinInput:(NSString *)input {
+    NSString *lower = [self lowercaseNonPinyinInput:input];
+    if (lower.length < 5) {
+        return @[];
+    }
+    return [self cloneTypedCase:input ontoWords:[self spellingSuggestionsForInput:lower]];
+}
+
+// Suffix-preserving case clone: the typed letters keep their case (Tes ->
+// Test, Testing), the completion keeps the dictionary's.
+- (NSArray<NSString *> *)cloneTypedCase:(NSString *)input ontoWords:(NSArray<NSString *> *)words {
+    if ([input isEqualToString:input.lowercaseString]) {
+        return words;
+    }
+    NSString *lower = input.lowercaseString;
+    NSMutableArray *cased = [NSMutableArray array];
+    for (NSString *word in words) {
+        if ([word hasPrefix:lower]) {
+            [cased addObject:[input stringByAppendingString:[word substringFromIndex:lower.length]]];
+        } else {
+            [cased addObject:word];
+        }
+    }
+    return cased;
+}
+
+// Fallback for typo'd input: no word starts with the letters, so rank
+// same-sounding dictionary words (conectivity -> connectivity) by edit
+// distance ahead of the system spell checker's guesses.
+- (NSArray<NSString *> *)spellingSuggestionsForInput:(NSString *)input {
+    NSMutableArray *result = [NSMutableArray array];
+    if (input.length > 3) {
+        NSArray *bucket = (self.phonexEncoded)[[self phonexEncode:input]];
+        for (NSString *word in [self sortByDamerauLevenshteinDistance:bucket inputText:input]) {
+            if (![word isEqualToString:input]) {
+                [result addObject:word];
+            }
+        }
+    }
+    if (result.count < kEnglishCandidateLimit) {
+        NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
+        NSArray *guesses = [checker guessesForWordRange:NSMakeRange(0, input.length)
+                                               inString:input
+                                               language:@"en"
+                                 inSpellDocumentWithTag:0];
+        for (NSString *guess in guesses) {
+            if ([guess isEqualToString:input] || [result containsObject:guess]) {
+                continue;
+            }
+            [result addObject:guess];
+            if (result.count == kEnglishCandidateLimit) {
+                break;
+            }
+        }
+    }
+    return [self subarrayWithRang:result range:kEnglishCandidateLimit];
 }
 
 - (NSString *)phonexEncode:(NSString *)word {

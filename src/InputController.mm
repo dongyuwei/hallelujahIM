@@ -301,8 +301,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 // Commits the candidate shown on the given panel row. In pinyin mode the row
 // at the configured raw-input position commits the raw input as plain text,
-// and the other rows select Rime candidates through the row mapping owned by
-// _pinyinRows.
+// English rows commit their word, and the other rows select Rime candidates
+// through the row mapping owned by _pinyinRows.
 - (void)commitSelectedRow:(NSInteger)row withSpace:(BOOL)withSpace sender:(id)sender {
     if (row < 0 || row >= (NSInteger)_candidates.count) {
         return;
@@ -310,6 +310,10 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (_inputMode == InputModePinyin) {
         if ([_pinyinRows rowIsRawInput:row]) {
             [self commitRimeRawInput:withSpace sender:sender];
+            return;
+        }
+        if ([_pinyinRows rowIsEnglish:row]) {
+            [self commitPinyinEnglishWord:_candidates[row] withSpace:withSpace sender:sender];
             return;
         }
         [rimeEngine selectCandidateOnCurrentPage:(RimeSessionId)_rimeSession index:[_pinyinRows rimeIndexForRow:row]];
@@ -323,32 +327,45 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     [self rimeUpdate:sender];
 }
 
-// Commits the raw pinyin input as plain text - pinyin panel row 0, selected
-// with space, enter or 1. Mirrors the English commit: the commitWordWithSpace
-// preference decides the trailing space, and input ending with the pinyin
-// syllable separator gets none, like the English apostrophe rule.
+// Plain-text commit shared by the raw-input and the English rows of the pinyin
+// panel. Mirrors the English commit: the commitWordWithSpace preference
+// decides the trailing space, and text ending with the pinyin syllable
+// separator gets none, like the English apostrophe rule.
+- (void)commitPinyinText:(NSString *)text withSpace:(BOOL)withSpace sender:(id)sender {
+    if (withSpace && [preference boolForKey:@"commitWordWithSpace"] && text.length > 0) {
+        unichar firstChar = [text characterAtIndex:0];
+        unichar lastChar = [text characterAtIndex:text.length - 1];
+        if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
+            text = [NSString stringWithFormat:@"%@ ", text];
+        }
+    }
+    [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    [self reset];
+}
+
+// Commits the raw pinyin input as plain text - the raw-input panel row.
 - (void)commitRimeRawInput:(BOOL)withSpace sender:(id)sender {
     NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
     [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
-    if (rawInput.length > 0) {
-        NSString *text = rawInput;
-        if (withSpace && [preference boolForKey:@"commitWordWithSpace"]) {
-            unichar firstChar = [text characterAtIndex:0];
-            unichar lastChar = [text characterAtIndex:text.length - 1];
-            if (![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:firstChar] && lastChar != '\'') {
-                text = [NSString stringWithFormat:@"%@ ", text];
-            }
-        }
-        [sender insertText:text replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
+    if (rawInput.length == 0) {
+        [self reset];
+        return;
     }
-    [self reset];
+    [self commitPinyinText:rawInput withSpace:withSpace sender:sender];
+}
+
+// Commits an English completion row of the pinyin panel - typed letters that
+// cannot be complete pinyin, so the panel offers dictionary words instead.
+- (void)commitPinyinEnglishWord:(NSString *)word withSpace:(BOOL)withSpace sender:(id)sender {
+    [rimeEngine clearComposition:(RimeSessionId)_rimeSession];
+    [self commitPinyinText:word withSpace:withSpace sender:sender];
 }
 
 // Single refresh point after every processed key: deliver pending commit,
 // mirror Rime's preedit into inline marked text, and feed the candidate panel.
 // The panel rows come from PinyinCandidateRows: Rime's current page with the
-// raw input spliced in at the configured candidate position, so the digit
-// matching that position commits what was typed.
+// raw input spliced in at the configured candidate position, and English
+// completions ahead of it when the typed letters cannot be complete pinyin.
 - (void)rimeUpdate:(id)sender {
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
@@ -362,7 +379,20 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     for (RimeCandidateItem *candidate in [rimeEngine candidates:(RimeSessionId)_rimeSession]) {
         [rimeTexts addObject:candidate.text];
     }
-    _pinyinRows = [[PinyinCandidateRows alloc] initWithRawInput:[rimeEngine rawInput:(RimeSessionId)_rimeSession]
+    NSString *rawInput = [rimeEngine rawInput:(RimeSessionId)_rimeSession];
+    // English rows only on the first page: they belong to the typed input, not
+    // to whatever Rime page is showing. Spelling guesses have their own, lower
+    // gate (five letters, see spellingSuggestionsForNonPinyinInput:) because
+    // Rime's abbreviations match almost any letters, including typos.
+    NSArray<NSString *> *englishCandidates = @[];
+    if ([rimeEngine page:(RimeSessionId)_rimeSession] == 0) {
+        englishCandidates = [engine englishCandidatesForNonPinyinInput:rawInput];
+        if (englishCandidates.count == 0) {
+            englishCandidates = [engine spellingSuggestionsForNonPinyinInput:rawInput];
+        }
+    }
+    _pinyinRows = [[PinyinCandidateRows alloc] initWithRawInput:rawInput
+                                              englishCandidates:englishCandidates
                                                  rimeCandidates:rimeTexts
                                               preferredPosition:[preference integerForKey:@"pinyinRawInputCandidatePosition"]];
     _candidates = [_pinyinRows.rows mutableCopy];

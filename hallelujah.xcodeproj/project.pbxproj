@@ -43,6 +43,9 @@
 		A11122233312 /* TestPinyinCandidateRows.mm in Sources */ = {isa = PBXBuildFile; fileRef = A11122233412 /* TestPinyinCandidateRows.mm */; };
 		A11122233313 /* CandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233413 /* CandidateTheme.m */; };
 		A11122233314 /* CandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233413 /* CandidateTheme.m */; };
+		A11122233317 /* PinyinSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233420 /* PinyinSegmenter.m */; };
+		A11122233318 /* PinyinSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233420 /* PinyinSegmenter.m */; };
+		A11122233319 /* TestPinyinSegmenter.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233421 /* TestPinyinSegmenter.m */; };
 		A11122233315 /* TestCandidateTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233414 /* TestCandidateTheme.m */; };
 		A11122233316 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = A11122233418 /* PreferencesWindowController.m */; };
 		DCF77A16FF93189F6E0F9759 /* Pods_hallelujah.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB0BF03D3169932092E2A73 /* Pods_hallelujah.framework */; };
@@ -138,6 +141,9 @@
 		A11122233416 /* CandidateTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CandidateTheme.h; path = src/CandidateTheme.h; sourceTree = "<group>"; };
 		A11122233417 /* PreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesWindowController.h; path = src/PreferencesWindowController.h; sourceTree = "<group>"; };
 		A11122233418 /* PreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesWindowController.m; path = src/PreferencesWindowController.m; sourceTree = "<group>"; };
+		A11122233419 /* PinyinSegmenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PinyinSegmenter.h; path = src/PinyinSegmenter.h; sourceTree = "<group>"; };
+		A11122233420 /* PinyinSegmenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PinyinSegmenter.m; path = src/PinyinSegmenter.m; sourceTree = "<group>"; };
+		A11122233421 /* TestPinyinSegmenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestPinyinSegmenter.m; sourceTree = "<group>"; };
 		A9D7E75BEAC2280E777E4B6F /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		C821F631E5B6762735CA76CB /* Pods-hallelujah.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hallelujah.release.xcconfig"; path = "Pods/Target Support Files/Pods-hallelujah/Pods-hallelujah.release.xcconfig"; sourceTree = "<group>"; };
 		C82BE1A7E1A45D2695354D87 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -201,6 +207,8 @@
 				A11122233413 /* CandidateTheme.m */,
 				A11122233417 /* PreferencesWindowController.h */,
 				A11122233418 /* PreferencesWindowController.m */,
+				A11122233419 /* PinyinSegmenter.h */,
+				A11122233420 /* PinyinSegmenter.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -286,6 +294,7 @@
 				A11122233406 /* TestCandidatePanelLayout.mm */,
 				A11122233409 /* TestMarkedTextState.mm */,
 				A11122233412 /* TestPinyinCandidateRows.mm */,
+				A11122233421 /* TestPinyinSegmenter.m */,
 				A11122233414 /* TestCandidateTheme.m */,
 				3802CD7D22CE034100A7E2F9 /* Info.plist */,
 			);
@@ -531,6 +540,8 @@
 				A11122233303 /* CandidatePanelState.m in Sources */,
 				A11122233311 /* PinyinCandidateRows.m in Sources */,
 				A11122233312 /* TestPinyinCandidateRows.mm in Sources */,
+				A11122233318 /* PinyinSegmenter.m in Sources */,
+				A11122233319 /* TestPinyinSegmenter.m in Sources */,
 				A11122233314 /* CandidateTheme.m in Sources */,
 				A11122233315 /* TestCandidateTheme.m in Sources */,
 			);
@@ -545,6 +556,7 @@
 				A11122233302 /* CandidatePanel.m in Sources */,
 				A11122233306 /* MarkedTextState.m in Sources */,
 				A11122233310 /* PinyinCandidateRows.m in Sources */,
+				A11122233317 /* PinyinSegmenter.m in Sources */,
 				389468D61F57C8CE00EF1F5E /* InputApplicationDelegate.m in Sources */,
 				F102C5AC1F4882D30005B03F /* InputController.mm in Sources */,
 				A11122233316 /* PreferencesWindowController.m in Sources */,

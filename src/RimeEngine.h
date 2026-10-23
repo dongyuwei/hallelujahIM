@@ -47,6 +47,9 @@
 // Candidates on the current page.
 - (NSArray<RimeCandidateItem *> *)candidates:(RimeSessionId)session;
 
+// 0-based page number of the candidate menu (0 without a composition).
+- (NSInteger)page:(RimeSessionId)session;
+
 // Highlight state; -1 when there is no composition.
 - (NSInteger)highlightedIndex:(RimeSessionId)session;
 - (BOOL)selectCandidateOnCurrentPage:(RimeSessionId)session index:(NSInteger)index;

@@ -58,6 +58,92 @@
     XCTAssertEqual([self.engine wordsStartsWith:@"a%c"].count, 0U);
 }
 
+- (void)testWordsStartsWithLimit {
+    NSArray *words = [self.engine wordsStartsWith:@"tes" limit:5];
+    XCTAssertEqual(words.count, 5U);
+    XCTAssertTrue([[words componentsJoinedByString:@";"] isEqualToString:@"test;testing;tests;tested;testimonials"]);
+    XCTAssertEqual([self.engine wordsStartsWith:@"notaword" limit:5].count, 0U);
+}
+
+// The gate for English-first rows in the pinyin panel: only letters that
+// cannot be complete pinyin yield words, and only from four letters on.
+- (void)testEnglishCandidatesForNonPinyinInput {
+    NSArray *hello = [self.engine englishCandidatesForNonPinyinInput:@"hello"];
+    XCTAssertEqualObjects(hello.firstObject, @"hello");
+
+    NSArray *consid = [self.engine englishCandidatesForNonPinyinInput:@"consid"];
+    XCTAssertEqual(consid.count, 3U);
+    XCTAssertTrue([[consid firstObject] hasPrefix:@"consid"]);
+
+    // full pinyin keeps the panel Chinese-first
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"zhongwen"], @[]);
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"women"], @[]);
+    // short strings are too ambiguous (every sh- start passes through them)
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"ok"], @[]);
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"sh"], @[]);
+    // the gate sits at four letters, so three-letter words stay Chinese-first
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"the"], @[]);
+    // the pinyin delimiter is not a letter
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"wo'men"], @[]);
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@""], @[]);
+    // no prefix match: not this method's business (spelling suggestions follow)
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"conectivity"], @[]);
+    XCTAssertEqualObjects([self.engine englishCandidatesForNonPinyinInput:@"qzwxec"], @[]);
+}
+
+// Rime keeps the typed case, so the gate runs on the lowercased input and
+// clones the typed case onto the prefix matches (Tes -> Test, Testing).
+- (void)testEnglishCandidatesPreserveTypedCase {
+    NSArray *words = [self.engine englishCandidatesForNonPinyinInput:@"Hello"];
+    XCTAssertEqual(words.count, 2U);
+    XCTAssertEqualObjects(words, (@[ @"Hello", @"Hellos" ]));
+
+    NSArray *upper = [self.engine englishCandidatesForNonPinyinInput:@"BOOK"];
+    XCTAssertEqual(upper.count, 3U);
+    XCTAssertEqualObjects(upper, (@[ @"BOOK", @"BOOKs", @"BOOKmark" ]));
+}
+
+// The typed word, when it is a dictionary word, is offered first even though
+// longer completions outrank it in frequency - otherwise space would commit a
+// word the user never typed (book -> books, star -> start).
+- (void)testExactDictionaryWordIsOfferedFirst {
+    NSArray *book = [self.engine englishCandidatesForNonPinyinInput:@"book"];
+    XCTAssertEqualObjects(book, (@[ @"book", @"books", @"bookmark" ]));
+
+    NSArray *star = [self.engine englishCandidatesForNonPinyinInput:@"star"];
+    XCTAssertEqualObjects(star, (@[ @"star", @"start", @"started" ]));
+
+    NSArray *right = [self.engine englishCandidatesForNonPinyinInput:@"right"];
+    XCTAssertEqualObjects(right, (@[ @"right", @"rights", @"righteous" ]));
+}
+
+// Rime's abbreviations match almost any letters (including typos), so guesses
+// cannot wait for Rime to come up empty; five letters is the cut instead.
+- (void)testSpellingSuggestionsForNonPinyinInput {
+    NSArray *words = [self.engine spellingSuggestionsForNonPinyinInput:@"conectivity"];
+    XCTAssertLessThanOrEqual(words.count, 3U);
+    XCTAssertTrue([words containsObject:@"connectivity"]);
+    XCTAssertEqualObjects(words.firstObject, @"connectivity");
+
+    // gated like the prefix lookup, and only from five letters on: short
+    // abbreviations (zme, dagn) stay Chinese-first
+    XCTAssertEqualObjects([self.engine spellingSuggestionsForNonPinyinInput:@"zhongwen"], @[]);
+    XCTAssertEqualObjects([self.engine spellingSuggestionsForNonPinyinInput:@"ok"], @[]);
+    XCTAssertEqualObjects([self.engine spellingSuggestionsForNonPinyinInput:@"wo'men"], @[]);
+    XCTAssertEqualObjects([self.engine spellingSuggestionsForNonPinyinInput:@"zme"], @[]);
+    XCTAssertEqualObjects([self.engine spellingSuggestionsForNonPinyinInput:@"dagn"], @[]);
+    XCTAssertLessThanOrEqual([self.engine spellingSuggestionsForNonPinyinInput:@"qzwxec"].count, 3U);
+}
+
+// Known trade-off: a long pinyin shorthand or a dropped-letter typo is spelled
+// like an English word, so English rows can still outrank the right Chinese
+// candidates (shenm -> shenmen, weishenm -> wishing). Pinned so the trade-off
+// stays a decision rather than a surprise.
+- (void)testLongPinyinShorthandCanStillTakeEnglishRows {
+    XCTAssertGreaterThan([self.engine englishCandidatesForNonPinyinInput:@"shenm"].count, 0U);
+    XCTAssertGreaterThan([self.engine spellingSuggestionsForNonPinyinInput:@"weishenm"].count, 0U);
+}
+
 - (void)testPhonexEncode {
     JSValue *phonexFunc = self.engine.phonexEncoder;
     XCTAssertTrue([[[phonexFunc callWithArguments:@[ @"test" ]] toString] isEqualToString:@"T23"]);

@@ -9,9 +9,9 @@
 // that row sits - 1st through 5th candidate - is the user's choice; the
 // default is the 2nd, keeping space on the best Chinese candidate.
 //
-// The rows are Rime's candidates for the current page with the raw input
-// spliced in at the configured position. Rows above the raw-input row keep
-// their Rime page index; rows below it shift by one.
+// The remaining rows are Rime's candidates for the current page, except that
+// English completions (typed letters that cannot be complete pinyin) take the
+// earliest rows other than the raw-input row.
 //
 // Pure logic: no AppKit and no Rime session, so the row layout and the row
 // indexing rules are unit-testable.
@@ -29,8 +29,11 @@
 // Builds the rows for one page. `preferredPosition` is the 1-based candidate
 // position for the raw input (clamped to minPosition...maxPosition); when the
 // page has fewer candidates than that, the raw input lands at the end. An
-// empty raw input yields no raw-input row at all.
+// empty raw input yields no raw-input row at all, and so does a raw input the
+// English candidates already list exactly (that row commits the same text).
+// `englishCandidates` are placed ahead of the Rime candidates.
 - (instancetype)initWithRawInput:(NSString *)rawInput
+               englishCandidates:(NSArray<NSString *> *)englishCandidates
                   rimeCandidates:(NSArray<NSString *> *)rimeCandidates
                preferredPosition:(NSInteger)preferredPosition NS_DESIGNATED_INITIALIZER;
 
@@ -43,8 +46,13 @@
 // YES when the panel row commits the raw input instead of a Rime candidate.
 - (BOOL)rowIsRawInput:(NSInteger)row;
 
-// The Rime page index for a panel row. Only valid for rows that are not the
-// raw-input row (check rowIsRawInput: first).
+// YES when the panel row commits an English completion instead of a Rime
+// candidate.
+- (BOOL)rowIsEnglish:(NSInteger)row;
+
+// The Rime page index for a panel row. Only valid for rows that are neither
+// the raw-input row nor an English row (check rowIsRawInput: and
+// rowIsEnglish: first).
 - (NSInteger)rimeIndexForRow:(NSInteger)row;
 
 @end

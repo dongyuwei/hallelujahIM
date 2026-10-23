@@ -189,6 +189,19 @@ static NSInteger utf16LengthOfBytes(const char *utf8, NSInteger byteLength) {
     return candidates;
 }
 
+- (NSInteger)page:(RimeSessionId)session {
+    if (!_started) {
+        return 0;
+    }
+    RIME_STRUCT(RimeContext, context);
+    if (!_api->get_context(session, &context)) {
+        return 0;
+    }
+    NSInteger page = context.menu.page_no;
+    _api->free_context(&context);
+    return page;
+}
+
 - (NSInteger)highlightedIndex:(RimeSessionId)session {
     if (!_started) {
         return -1;

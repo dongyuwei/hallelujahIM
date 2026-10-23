@@ -24,6 +24,29 @@
 - (void)waitForPreparedData;
 
 - (NSMutableArray *)wordsStartsWith:(NSString *)prefix;
+- (NSMutableArray *)wordsStartsWith:(NSString *)prefix limit:(NSUInteger)limit;
+
+// Up to three English prefix completions for pinyin-mode letters that cannot
+// be complete pinyin (see PinyinSegmenter), so the pinyin panel can put
+// English first; the typed word itself is offered first when it is a
+// dictionary word, so space never commits a longer completion. Typos with no
+// prefix match get nothing here; see spellingSuggestionsForNonPinyinInput:.
+// Input shorter than four letters, or non-letter input, gets nothing: short
+// strings are too ambiguous (every sh- pinyin start passes through them) and
+// their prefix ranges cost milliseconds to scan. The typed case is preserved
+// (Hello -> Hello, Hellos).
+- (NSArray<NSString *> *)englishCandidatesForNonPinyinInput:(NSString *)input;
+
+// Spelling suggestions for the same gated inputs, ranked by edit distance
+// (conectivity -> connectivity), but only from five letters on: a guess is
+// weak evidence of English, and Rime's abbreviations match almost any letters
+// (including typos), so waiting for Rime to come up empty never happens. Most
+// Chinese abbreviations are shorter than five letters (zme/dagn stay
+// Chinese-first); longer shorthands and dropped-letter typos (shenm,
+// weishenm) can still surface English rows, which is a known trade-off. The
+// typed case is preserved on prefix-shaped guesses.
+- (NSArray<NSString *> *)spellingSuggestionsForNonPinyinInput:(NSString *)input;
+
 - (NSString *)phonexEncode:(NSString *)word;
 - (NSArray *)getTranslations:(NSString *)word;
 - (NSString *)getPhoneticSymbolOfWord:(NSString *)candidateString;
