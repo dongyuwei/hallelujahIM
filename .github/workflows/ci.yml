@@ -50,7 +50,8 @@ jobs:
           PKG="$(ls -t /tmp/hallelujah-*.pkg | head -n 1)"
           SHA="$(git rev-parse --short HEAD)"
           TAG="build-${SHA}"
-          TITLE="Automated build $(date '+%Y-%m-%d %H:%M') (${SHA})"
+          SUBJECT="$(git log -1 --pretty=format:'%s' HEAD)"
+          TITLE="${SUBJECT:-Automated build $(date '+%Y-%m-%d %H:%M') (${SHA})}"
 
           # Commit subjects since the previous release tag (excluding this
           # commit's own tag, so workflow re-runs don't produce an empty range)
