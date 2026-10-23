@@ -402,7 +402,12 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
     if (preedit.length == 0) {
         [sharedCandidates hide];
         _panelHighlight = 0;
-        [self forgetMarkedText];
+        // The composition ended without a commit (backspace down to empty,
+        // escape): clear the client's inline marked text too, or the last
+        // letter stays visible and one more backspace is needed to remove it.
+        [self setMarkedTextIfChanged:[[NSAttributedString alloc] initWithString:@""]
+                      selectionRange:NSMakeRange(0, 0)
+                    replacementRange:NSMakeRange(NSNotFound, NSNotFound)];
         return;
     }
 

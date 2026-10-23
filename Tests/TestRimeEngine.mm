@@ -103,6 +103,22 @@ static int KeySymForChar(char c) {
     XCTAssertEqual([self.engine page:self.session], 0);
 }
 
+// One BackSpace has to remove one letter all the way down to the empty
+// composition; the input method relies on that for its inline marked text.
+- (void)testBackspaceClearsOneLetterAtATime {
+    [self type:@"nh"];
+    XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_BackSpace mask:0]);
+    XCTAssertEqualObjects([self.engine rawInput:self.session], @"n");
+
+    XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_BackSpace mask:0]);
+    XCTAssertEqualObjects([self.engine rawInput:self.session], @"");
+    XCTAssertEqualObjects([self.engine preedit:self.session selStart:nil selLength:nil caretPos:nil], @"");
+
+    XCTAssertFalse(
+        [self.engine processKey:self.session keycode:RimeXK_BackSpace mask:0],
+        @"backspace on an empty composition falls through to the client, which is why the input method must clear its marked text itself");
+}
+
 - (void)testSpaceCommitsConvertedText {
     [self type:@"nihao "];
     XCTAssertEqualObjects([self.engine commitText:self.session], @"你好");
