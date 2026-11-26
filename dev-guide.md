@@ -39,6 +39,13 @@ The candidate panel is drawn by the input method itself instead of the system `I
 
 The grid navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv) for the great work!
 
+Pinyin candidate ordering is shared by three components:
+
+- `ConversionEngine` supplies up to three English prefix completions or spelling suggestions for non-pinyin input;
+- `PinyinSegmenter` finds the longest fully segmented prefix and checks whether the remaining letters can be pinyin initials;
+- `InputController` lets three Rime candidates lead when that prefix is at least three letters and covers at least 70% of the input, the tail is plausible shorthand, and Rime has at least two candidates containing two or more Han characters. Otherwise English candidates lead;
+- `PinyinCandidateRows` assembles the selected ordering while preserving the raw-input position, English deduplication, and Rime page indexes.
+
 ## Data storage
 
 This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):

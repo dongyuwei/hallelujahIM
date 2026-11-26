@@ -35,6 +35,7 @@ typedef NS_ENUM(NSInteger, RowKind) {
 - (instancetype)initWithRawInput:(NSString *)rawInput
                englishCandidates:(NSArray<NSString *> *)englishCandidates
                   rimeCandidates:(NSArray<NSString *> *)rimeCandidates
+                chineseLeadCount:(NSUInteger)chineseLeadCount
                preferredPosition:(NSInteger)preferredPosition {
     self = [super init];
     if (self) {
@@ -53,6 +54,7 @@ typedef NS_ENUM(NSInteger, RowKind) {
         // never typed. Otherwise the raw input keeps its configured digit: its
         // row index is measured over the assembled row list, English rows
         // included, and a short page can only offer its last row.
+        chineseLeadCount = MIN(chineseLeadCount, rime.count);
         BOOL rawInputListed = NO;
         for (NSString *word in english) {
             if ([word compare:rawInput options:NSCaseInsensitiveSearch] == NSOrderedSame) {
@@ -73,14 +75,14 @@ typedef NS_ENUM(NSInteger, RowKind) {
                 [rows addObject:rawInput];
                 [kinds addObject:@(RowKindRawInput)];
                 [rimeIndexes addObject:@(NSNotFound)];
-            } else if (englishIndex < english.count) {
-                [rows addObject:english[englishIndex++]];
-                [kinds addObject:@(RowKindEnglish)];
-                [rimeIndexes addObject:@(NSNotFound)];
-            } else {
+            } else if (rimeIndex < chineseLeadCount || englishIndex >= english.count) {
                 [rows addObject:rime[rimeIndex]];
                 [kinds addObject:@(RowKindRime)];
                 [rimeIndexes addObject:@(rimeIndex++)];
+            } else {
+                [rows addObject:english[englishIndex++]];
+                [kinds addObject:@(RowKindEnglish)];
+                [rimeIndexes addObject:@(NSNotFound)];
             }
         }
         _rows = rows;

@@ -36,6 +36,27 @@
     XCTAssertFalse([PinyinSegmenter canFullySegment:@"zhongw"]);
 }
 
+- (void)testCompletePrefixLength {
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"wend"], 3U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"shenm"], 4U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"weishenm"], 7U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"book"], 3U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"consid"], 0U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"hello"], 2U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"star"], 0U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"wendy"], 3U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"zhongwen"], 8U);
+    XCTAssertEqual([PinyinSegmenter completePrefixLength:@"HELLO"], 0U);
+}
+
+- (void)testPlausibleAbbreviationTail {
+    XCTAssertTrue([PinyinSegmenter hasPlausibleAbbreviationTail:@"wend" prefixLength:3]);
+    XCTAssertTrue([PinyinSegmenter hasPlausibleAbbreviationTail:@"shenm" prefixLength:4]);
+    XCTAssertTrue([PinyinSegmenter hasPlausibleAbbreviationTail:@"book" prefixLength:2]);
+    XCTAssertFalse([PinyinSegmenter hasPlausibleAbbreviationTail:@"weni" prefixLength:3]);
+    XCTAssertFalse([PinyinSegmenter hasPlausibleAbbreviationTail:@"wend" prefixLength:5]);
+}
+
 - (void)testRejectsEmptyAndNonLetters {
     XCTAssertFalse([PinyinSegmenter canFullySegment:@""]);
     XCTAssertFalse([PinyinSegmenter canFullySegment:nil]);

@@ -9,9 +9,8 @@
 // that row sits - 1st through 5th candidate - is the user's choice; the
 // default is the 2nd, keeping space on the best Chinese candidate.
 //
-// The remaining rows are Rime's candidates for the current page, except that
-// English completions (typed letters that cannot be complete pinyin) take the
-// earliest rows other than the raw-input row.
+// English completions lead by default. Up to `chineseLeadCount` Rime candidates
+// can precede them when the input is likely pinyin with an abbreviated tail.
 //
 // Pure logic: no AppKit and no Rime session, so the row layout and the row
 // indexing rules are unit-testable.
@@ -31,10 +30,10 @@
 // page has fewer candidates than that, the raw input lands at the end. An
 // empty raw input yields no raw-input row at all, and so does a raw input the
 // English candidates already list exactly (that row commits the same text).
-// `englishCandidates` are placed ahead of the Rime candidates.
 - (instancetype)initWithRawInput:(NSString *)rawInput
                englishCandidates:(NSArray<NSString *> *)englishCandidates
                   rimeCandidates:(NSArray<NSString *> *)rimeCandidates
+                chineseLeadCount:(NSUInteger)chineseLeadCount
                preferredPosition:(NSInteger)preferredPosition NS_DESIGNATED_INITIALIZER;
 
 // The rows to hand the candidate panel.

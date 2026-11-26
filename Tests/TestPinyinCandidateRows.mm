@@ -10,11 +10,24 @@ static PinyinCandidateRows *Rows(NSString *rawInput, NSArray *rimeCandidates, NS
     return [[PinyinCandidateRows alloc] initWithRawInput:rawInput
                                        englishCandidates:@[]
                                           rimeCandidates:rimeCandidates
+                                        chineseLeadCount:0
                                        preferredPosition:position];
 }
 
 static PinyinCandidateRows *MixedRows(NSString *rawInput, NSArray *english, NSArray *rime, NSInteger position) {
-    return [[PinyinCandidateRows alloc] initWithRawInput:rawInput englishCandidates:english rimeCandidates:rime preferredPosition:position];
+    return [[PinyinCandidateRows alloc] initWithRawInput:rawInput
+                                       englishCandidates:english
+                                          rimeCandidates:rime
+                                        chineseLeadCount:0
+                                       preferredPosition:position];
+}
+
+static PinyinCandidateRows *PrioritizedRows(NSString *rawInput, NSArray *english, NSArray *rime, NSInteger position) {
+    return [[PinyinCandidateRows alloc] initWithRawInput:rawInput
+                                       englishCandidates:english
+                                          rimeCandidates:rime
+                                        chineseLeadCount:3
+                                       preferredPosition:position];
 }
 
 - (void)testRawInputSplicedAtConfiguredPosition {
@@ -124,6 +137,30 @@ static PinyinCandidateRows *MixedRows(NSString *rawInput, NSArray *english, NSAr
     XCTAssertEqual(rows.rawInputRow, NSNotFound);
     XCTAssertFalse([rows rowIsEnglish:2]);
     XCTAssertEqual([rows rimeIndexForRow:2], 0);
+}
+
+- (void)testChineseLeadRowsPrecedeEnglishKeepingIndexes {
+    NSArray *english = @[ @"wend", @"wendy", @"wendell" ];
+    NSArray *chinese = @[ @"稳定", @"温度", @"文档", @"问的" ];
+    PinyinCandidateRows *rows = PrioritizedRows(@"wend", english, chinese, 2);
+
+    XCTAssertEqualObjects(rows.rows, (@[ @"稳定", @"温度", @"文档", @"wend", @"wendy", @"wendell", @"问的" ]));
+    XCTAssertEqual(rows.rawInputRow, NSNotFound);
+    XCTAssertEqual([rows rimeIndexForRow:0], 0);
+    XCTAssertEqual([rows rimeIndexForRow:2], 2);
+    XCTAssertTrue([rows rowIsEnglish:3]);
+    XCTAssertEqual([rows rimeIndexForRow:6], 3);
+}
+
+- (void)testChineseLeadRowsPreserveRawInputPosition {
+    PinyinCandidateRows *rows = PrioritizedRows(@"wenx", @[ @"wenxial", @"wenxley" ], @[ @"文学", @"温度", @"文档", @"问的" ], 2);
+
+    XCTAssertEqualObjects(rows.rows, (@[ @"文学", @"wenx", @"温度", @"文档", @"wenxial", @"wenxley", @"问的" ]));
+    XCTAssertEqual(rows.rawInputRow, 1);
+    XCTAssertEqual([rows rimeIndexForRow:0], 0);
+    XCTAssertEqual([rows rimeIndexForRow:2], 1);
+    XCTAssertEqual([rows rimeIndexForRow:3], 2);
+    XCTAssertEqual([rows rimeIndexForRow:6], 3);
 }
 
 - (void)testRimeIndexForRowOutOfRangeIsNotFound {

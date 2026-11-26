@@ -32,31 +32,67 @@ enum {
 
 @implementation PinyinSegmenter
 
-+ (BOOL)canFullySegment:(NSString *)input {
++ (NSSet<NSString *> *)syllables {
     static NSSet<NSString *> *syllables;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         syllables = [NSSet setWithArray:[kSyllables componentsSeparatedByString:@" "]];
     });
+    return syllables;
+}
 
++ (BOOL)canFullySegment:(NSString *)input {
+    return input.length > 0 && [self completePrefixLength:input] == input.length;
+}
+
++ (NSUInteger)completePrefixLength:(NSString *)input {
     NSUInteger length = input.length;
     if (length == 0 || length > kMaxInputLength) {
-        return NO;
+        return 0;
+    }
+    for (NSUInteger i = 0; i < length; i++) {
+        unichar c = [input characterAtIndex:i];
+        if (c < 'a' || c > 'z') {
+            return 0;
+        }
     }
 
-    // dp[i]: the first i characters split into complete syllables
-    BOOL dp[kMaxInputLength + 1];
+    NSSet<NSString *> *syllables = [self syllables];
+    BOOL dp[kMaxInputLength + 1] = {NO};
     dp[0] = YES;
+    NSUInteger longest = 0;
     for (NSUInteger i = 1; i <= length; i++) {
-        dp[i] = NO;
         NSUInteger start = i > kMaxSyllableLength ? i - kMaxSyllableLength : 0;
         for (NSUInteger j = start; j < i && !dp[i]; j++) {
             if (dp[j] && [syllables containsObject:[input substringWithRange:NSMakeRange(j, i - j)]]) {
                 dp[i] = YES;
+                longest = i;
             }
         }
     }
-    return dp[length];
+    return longest;
+}
+
++ (BOOL)hasPlausibleAbbreviationTail:(NSString *)input prefixLength:(NSUInteger)prefixLength {
+    if (prefixLength > input.length) {
+        return NO;
+    }
+    static NSSet<NSString *> *initials;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableSet<NSString *> *letters = [NSMutableSet set];
+        for (NSString *syllable in [self syllables]) {
+            [letters addObject:[syllable substringToIndex:1]];
+        }
+        initials = letters;
+    });
+    for (NSUInteger i = prefixLength; i < input.length; i++) {
+        NSString *letter = [input substringWithRange:NSMakeRange(i, 1)];
+        if (![initials containsObject:letter]) {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 @end

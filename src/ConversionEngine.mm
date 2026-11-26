@@ -8,7 +8,7 @@
 // wordsStartsWith:).
 static const NSUInteger kMaxCandidates = 50;
 
-// English rows shown ahead of the Rime candidates in the pinyin panel.
+// English completions offered in the pinyin panel.
 static const NSUInteger kEnglishCandidateLimit = 3;
 
 // U+10FFFF is the highest Unicode code point, so `prefix + kPrefixUpperBound` is
@@ -323,9 +323,8 @@ NSDictionary *deserializeJSON(NSString *path) {
 
 // Rime's abbreviations match almost any letters (conectivity included), so a
 // guess cannot wait for Rime to come up empty; five letters is the cut
-// instead. Most Chinese abbreviations are shorter (zme/dagn stay
-// Chinese-first) but long shorthands and dropped-letter typos (shenm,
-// weishenm) can still take English rows - a known trade-off.
+// instead. The panel can still prioritize Rime rows for strong pinyin with
+// an abbreviated tail; these methods only supply the English candidates.
 - (NSArray<NSString *> *)spellingSuggestionsForNonPinyinInput:(NSString *)input {
     NSString *lower = [self lowercaseNonPinyinInput:input];
     if (lower.length < 5) {

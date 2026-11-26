@@ -11,4 +11,10 @@
 // non-pinyin letters (hello, str), uppercase, non-letters, or empty input.
 + (BOOL)canFullySegment:(NSString *)input;
 
+// Length of the longest prefix that splits entirely into complete syllables.
++ (NSUInteger)completePrefixLength:(NSString *)input;
+
+// Whether every letter after the prefix can start a pinyin syllable.
++ (BOOL)hasPlausibleAbbreviationTail:(NSString *)input prefixLength:(NSUInteger)prefixLength;
+
 @end

@@ -65,8 +65,8 @@
     XCTAssertEqual([self.engine wordsStartsWith:@"notaword" limit:5].count, 0U);
 }
 
-// The gate for English-first rows in the pinyin panel: only letters that
-// cannot be complete pinyin yield words, and only from four letters on.
+// The gate for English rows in the pinyin panel: only letters that cannot be
+// complete pinyin yield words, and only from four letters on.
 - (void)testEnglishCandidatesForNonPinyinInput {
     NSArray *hello = [self.engine englishCandidatesForNonPinyinInput:@"hello"];
     XCTAssertEqualObjects(hello.firstObject, @"hello");
@@ -135,11 +135,9 @@
     XCTAssertLessThanOrEqual([self.engine spellingSuggestionsForNonPinyinInput:@"qzwxec"].count, 3U);
 }
 
-// Known trade-off: a long pinyin shorthand or a dropped-letter typo is spelled
-// like an English word, so English rows can still outrank the right Chinese
-// candidates (shenm -> shenmen, weishenm -> wishing). Pinned so the trade-off
-// stays a decision rather than a surprise.
-- (void)testLongPinyinShorthandCanStillTakeEnglishRows {
+// Long shorthand can still offer English rows; PinyinCandidateRows decides
+// whether strong pinyin puts three Chinese candidates ahead of them.
+- (void)testLongPinyinShorthandStillOffersEnglishRows {
     XCTAssertGreaterThan([self.engine englishCandidatesForNonPinyinInput:@"shenm"].count, 0U);
     XCTAssertGreaterThan([self.engine spellingSuggestionsForNonPinyinInput:@"weishenm"].count, 0U);
 }

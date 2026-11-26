@@ -5,6 +5,7 @@
 #import "InputController.h"
 #import "MarkedTextState.h"
 #import "PinyinCandidateRows.h"
+#import "PinyinSegmenter.h"
 #import "PreferencesWindowController.h"
 #import "RimeEngine.h"
 #import "RimeKeymap.h"
@@ -17,6 +18,23 @@ extern RimeEngine *rimeEngine;
 typedef NSInteger KeyCode;
 static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC = 53, KEY_ARROW_DOWN = 125, KEY_ARROW_UP = 126,
                      KEY_ARROW_LEFT = 123, KEY_ARROW_RIGHT = 124, KEY_RIGHT_COMMAND = 54;
+
+static BOOL HasStrongChineseCandidates(NSArray<NSString *> *candidates) {
+    NSUInteger strongCount = 0;
+    for (NSString *candidate in candidates) {
+        NSUInteger hanCount = 0;
+        for (NSUInteger i = 0; i < candidate.length; i++) {
+            unichar c = [candidate characterAtIndex:i];
+            if (c >= 0x4e00 && c <= 0x9fff) {
+                hanCount++;
+            }
+        }
+        if (hanCount >= 2 && ++strongCount >= 2) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 @interface InputController () <CandidatePanelDelegate>
 
@@ -363,9 +381,8 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
 
 // Single refresh point after every processed key: deliver pending commit,
 // mirror Rime's preedit into inline marked text, and feed the candidate panel.
-// The panel rows come from PinyinCandidateRows: Rime's current page with the
-// raw input spliced in at the configured candidate position, and English
-// completions ahead of it when the typed letters cannot be complete pinyin.
+// The panel rows come from PinyinCandidateRows. English completions lead by
+// default; strong pinyin with an abbreviated tail puts three Rime rows first.
 - (void)rimeUpdate:(id)sender {
     NSString *commitText = [rimeEngine commitText:(RimeSessionId)_rimeSession];
     if (commitText.length > 0) {
@@ -391,9 +408,17 @@ static const KeyCode KEY_RETURN = 36, KEY_SPACE = 49, KEY_DELETE = 51, KEY_ESC =
             englishCandidates = [engine spellingSuggestionsForNonPinyinInput:rawInput];
         }
     }
+    NSString *lowerInput = rawInput.lowercaseString;
+    NSUInteger prefixLength = [PinyinSegmenter completePrefixLength:lowerInput];
+    NSUInteger chineseLeadCount = 0;
+    if (englishCandidates.count > 0 && lowerInput.length >= 4 && prefixLength >= 3 && prefixLength * 10 >= lowerInput.length * 7 &&
+        [PinyinSegmenter hasPlausibleAbbreviationTail:lowerInput prefixLength:prefixLength] && HasStrongChineseCandidates(rimeTexts)) {
+        chineseLeadCount = MIN((NSUInteger)3, rimeTexts.count);
+    }
     _pinyinRows = [[PinyinCandidateRows alloc] initWithRawInput:rawInput
                                               englishCandidates:englishCandidates
                                                  rimeCandidates:rimeTexts
+                                               chineseLeadCount:chineseLeadCount
                                               preferredPosition:[preference integerForKey:@"pinyinRawInputCandidatePosition"]];
     _candidates = [_pinyinRows.rows mutableCopy];
 
