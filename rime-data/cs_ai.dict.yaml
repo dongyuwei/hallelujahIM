@@ -1,0 +1,1994 @@
+# encoding: utf-8
+# CS / AI / ML / Systems Domain Dictionary (rime-qwen-freq v0.4.0)
+# Distilled via Qwen/Qwen3-14B-Base Bayesian Domain Log-Odds Lift: Delta_CS(w) = log P(w|C_CS) - log P(w|C_gen)
+---
+name: cs_ai
+version: "0.4.0"
+sort: by_weight
+...
+代码	dai ma	350000
+节点	jie dian	350000
+计算	ji suan	350000
+模型	mo xing	249402
+算法	suan fa	135478
+量化	liang hua	74793
+激活	ji huo	73176
+指令	zhi ling	62498
+分布式	fen bu shi	44796
+意图	yi tu	39934
+副作用	fu zuo yong	35567
+数据集	shu ju ji	35120
+数据流	shu ju liu	32464
+列出	lie chu	31948
+机器学习	ji qi xue xi	31847
+数据结构	shu ju jie gou	30974
+写代码	xie dai ma	30045
+深度学习	shen du xue xi	30025
+微服务	wei fu wu	27566
+所有权	suo you quan	26269
+超参数	chao can shu	23074
+列举	lie ju	22205
+对计算机	dui ji suan ji	21505
+强化学习	qiang hua xue xi	19826
+代理的	dai li de	19461
+智能体	zhi neng ti	17328
+模型的	mo xing de	17089
+神经网络	shen jing wang luo	16746
+可计算	ke ji suan	16209
+互信息	hu xin xi	15409
+生命周期	sheng ming zhou qi	15306
+节点的	jie dian de	15119
+源代码	yuan dai ma	15071
+数据增强	shu ju zeng qiang	14356
+图结构	tu jie gou	13454
+数据清洗	shu ju qing xi	13234
+注册表	zhu ce biao	13145
+表达式	biao da shi	11918
+状态机	zhuang tai ji	11781
+表示为	biao shi wei	11636
+算力	suan li	11482
+准确率	zhun que lv	11449
+核函数	he han shu	11312
+缓存	huan cun	11171
+决策树	jue ce shu	10607
+图数据库	tu shu ju ku	10537
+验证集	yan zheng ji	10479
+微调	wei tiao	10444
+解码	jie ma	10193
+检查点	jian cha dian	10071
+预训练	yu xun lian	10007
+持续学习	chi xu xue xi	9723
+数据模型	shu ju mo xing	9600
+梯度	ti du	9416
+完整列表	wan zheng lie biao	9215
+用计算机	yong ji suan ji	9201
+自回归	zi hui gui	9095
+操作码	cao zuo ma	8811
+标准差	biao zhun cha	8719
+闭包	bi bao	8658
+编译	bian yi	8518
+异步	yi bu	8436
+元学习	yuan xue xi	8236
+纯函数	chun han shu	7815
+动态规划	dong tai gui hua	7663
+测试集	ce shi ji	7526
+激活函数	ji huo han shu	7283
+图灵测试	tu ling ce shi	7206
+方差	fang cha	7132
+自注意力	zi zhu yi li	7011
+特征值	te zheng zhi	6880
+程序代码	cheng xu dai ma	6723
+计算图	ji suan tu	6684
+散列表	san lie biao	6510
+将图片	jiang tu pian	6451
+计算能力	ji suan neng li	6177
+量子计算	liang zi ji suan	6088
+计算资源	ji suan zi yuan	6082
+将代码	jiang dai ma	5850
+边缘计算	bian yuan ji suan	5839
+图数据	tu shu ju	5805
+知识图谱	zhi shi tu pu	5707
+控制流	kong zhi liu	5568
+算子	suan zi	5524
+数据计算	shu ju ji suan	5475
+信号量	xin hao liang	5472
+指令集	zhi ling ji	5309
+代码库	dai ma ku	5245
+泛化	fan hua	5188
+交叉验证	jiao cha yan zheng	5167
+排序算法	pai xu suan fa	5045
+分类器	fen lei qi	4995
+计算设备	ji suan she bei	4901
+数据表示	shu ju biao shi	4899
+先进计算	xian jin ji suan	4879
+条件概率	tiao jian gai lv	4875
+机器码	ji qi ma	4659
+并查集	bing cha ji	4633
+散列	san lie	4629
+资源池	zi yuan chi	4512
+表示学习	biao shi xue xi	4473
+这个代码	zhe ge dai ma	4400
+协方差	xie fang cha	4371
+序列化	xu lie hua	4352
+计算问题	ji suan wen ti	4287
+凸函数	tu han shu	4231
+节点数	jie dian shu	4214
+协程	xie cheng	4187
+主节点	zhu jie dian	4137
+列表中的	lie biao zhong de	4032
+预计算	yu ji suan	3996
+查询表	cha xun biao	3979
+事件循环	shi jian xun huan	3864
+搜索树	sou suo shu	3828
+搜索算法	sou suo suan fa	3766
+词法	ci fa	3763
+预测模型	yu ce mo xing	3705
+死锁	si suo	3636
+过拟合	guo ni he	3632
+将计算	jiang ji suan	3627
+特征工程	te zheng gong cheng	3616
+知识表示	zhi shi biao shi	3531
+关键术语	guan jian shu yu	3507
+服务发现	fu wu fa xian	3485
+语言模型	yu yan mo xing	3437
+根节点	gen jie dian	3433
+单节点	dan jie dian	3310
+最短路径	zui duan lu jing	3293
+重新排列	chong xin pai lie	3278
+多智能体	duo zhi neng ti	3263
+智能计算	zhi neng ji suan	3258
+价值函数	jia zhi han shu	3250
+垃圾回收	la ji hui shou	3240
+堆排序	dui pai xu	3226
+表示法	biao shi fa	3169
+计算智能	ji suan zhi neng	3136
+分支预测	fen zhi yu ce	3107
+智能代理	zhi neng dai li	3079
+理论计算	li lun ji suan	3028
+任务调度	ren wu diao du	2992
+扩散模型	kuo san mo xing	2989
+用户态	yong hu tai	2932
+状态图	zhuang tai tu	2919
+置信区间	zhi xin qu jian	2889
+梯度下降	ti du xia jiang	2851
+最大流	zui da liu	2849
+词汇表	ci hui biao	2841
+思维链	si wei lian	2822
+逻辑回归	luo ji hui gui	2822
+联合分布	lian he fen bu	2775
+开发流程	kai fa liu cheng	2769
+数字证书	shu zi zheng shu	2713
+计算过程	ji suan guo cheng	2711
+计算机是	ji suan ji shi	2707
+数据流图	shu ju liu tu	2700
+有向图	you xiang tu	2686
+键值	jian zhi	2681
+编译器	bian yi qi	2668
+控制流程	kong zhi liu cheng	2655
+设计计算	she ji ji suan	2633
+负载均衡	fu zai jun heng	2631
+动态图	dong tai tu	2605
+红黑树	hong hei shu	2604
+将特征	jiang te zheng	2591
+代码质量	dai ma zhi liang	2538
+图卷	tu juan	2534
+异常流量	yi chang liu liang	2526
+伪代码	wei dai ma	2519
+全节点	quan jie dian	2459
+模式匹配	mo shi pi pei	2459
+前向传播	qian xiang chuan bo	2458
+数据池	shu ju chi	2431
+将模型	jiang mo xing	2426
+连接池	lian jie chi	2409
+路径压缩	lu jing ya suo	2367
+迁移学习	qian yi xue xi	2325
+正定矩阵	zheng ding ju zhen	2314
+计算性	ji suan xing	2281
+代码行	dai ma hang	2266
+特征选择	te zheng xuan ze	2263
+任务流	ren wu liu	2253
+充分表达	chong fen biao da	2250
+将进程	jiang jin cheng	2247
+计算量	ji suan liang	2244
+元模型	yuan mo xing	2226
+代码块	dai ma kuai	2221
+可计算性	ke ji suan xing	2212
+将数组	jiang shu zu	2185
+表示层	biao shi ceng	2148
+码位	ma wei	2138
+将查询	jiang cha xun	2132
+流式	liu shi	2120
+错误代码	cuo wu dai ma	2108
+特征提取	te zheng ti qu	2098
+将节点	jiang jie dian	2091
+软计算	ruan ji suan	2091
+遗传算法	yi chuan suan fa	2084
+数字签名	shu zi qian ming	2061
+任务模型	ren wu mo xing	2043
+流计算	liu ji suan	2024
+功能图	gong neng tu	2013
+是模型	shi mo xing	1974
+最大堆	zui da dui	1956
+共识机制	gong shi ji zhi	1951
+流数据	liu shu ju	1948
+将图像	jiang tu xiang	1937
+计算力	ji suan li	1931
+计算效率	ji suan xiao lv	1911
+堆栈	dui zhan	1906
+系统调用	xi tong diao yong	1901
+对比学习	dui bi xue xi	1898
+指导监督	zhi dao jian du	1895
+学计算机	xue ji suan ji	1871
+代表未来	dai biao wei lai	1862
+训练模型	xun lian mo xing	1853
+需要计算	xu yao ji suan	1848
+协议和	xie yi he	1847
+向量化	xiang liang hua	1847
+数量化	shu liang hua	1833
+将代理	jiang dai li	1830
+将指令	jiang zhi ling	1823
+算法是	suan fa shi	1819
+执行指令	zhi xing zhi ling	1813
+执行代码	zhi xing dai ma	1796
+语料库	yu liao ku	1795
+世界模型	shi jie mo xing	1794
+安全模型	an quan mo xing	1793
+将流程	jiang liu cheng	1790
+自编码	zi bian ma	1788
+计算模型	ji suan mo xing	1782
+学习率	xue xi lv	1768
+进行计算	jin xing ji suan	1765
+位置编码	wei zhi bian ma	1760
+将算法	jiang suan fa	1751
+稳定分布	wen ding fen bu	1740
+召回率	zhao hui lv	1736
+代码实现	dai ma shi xian	1727
+领域模型	ling yu mo xing	1717
+库函数	ku han shu	1709
+将分布	jiang fen bu	1708
+建立模型	jian li mo xing	1703
+节点故障	jie dian gu zhang	1700
+散度	san du	1666
+父节点	fu jie dian	1647
+单进程	dan jin cheng	1646
+超分辨率	chao fen bian lv	1640
+分片	fen pian	1639
+将密码	jiang mi ma	1623
+分布性	fen bu xing	1620
+链接库	lian jie ku	1616
+长连接	chang lian jie	1606
+设备树	she bei shu	1604
+统计模型	tong ji mo xing	1588
+和密码	he mi ma	1584
+全栈	quan zhan	1574
+比较关键	bi jiao guan jian	1569
+注册码	zhu ce ma	1562
+对象池	dui xiang chi	1556
+可表示	ke biao shi	1543
+将协议	jiang xie yi	1538
+分布表	fen bu biao	1530
+流密码	liu mi ma	1509
+监督分类	jian du fen lei	1509
+这段代码	zhe duan dai ma	1507
+代码段	dai ma duan	1500
+删除节点	shan chu jie dian	1495
+桶排序	tong pai xu	1491
+数据泄漏	shu ju xie lou	1489
+后验概率	hou yan gai lv	1488
+子进程	zi jin cheng	1484
+条件变量	tiao jian bian liang	1481
+先验概率	xian yan gai lv	1478
+字节码	zi jie ma	1478
+训练集	xun lian ji	1474
+图分析	tu fen xi	1473
+先验知识	xian yan zhi shi	1468
+编解码	bian jie ma	1467
+智能算法	zhi neng suan fa	1445
+节点连接	jie dian lian jie	1445
+模型训练	mo xing xun lian	1439
+数据列	shu ju lie	1421
+解码器	jie ma qi	1418
+多路复用	duo lu fu yong	1414
+短连接	duan lian jie	1414
+计算分析	ji suan fen xi	1409
+令牌桶	ling pai tong	1394
+分配表	fen pei biao	1393
+连接节点	lian jie jie dian	1384
+局部最优	ju bu zui you	1367
+模型参数	mo xing can shu	1365
+以下代码	yi xia dai ma	1360
+进程调度	jin cheng diao du	1354
+参数模型	can shu mo xing	1353
+正交矩阵	zheng jiao ju zhen	1352
+问题表示	wen ti biao shi	1351
+查询任务	cha xun ren wu	1346
+输入流	shu ru liu	1344
+数据并行	shu ju bing xing	1340
+损失表	sun shi biao	1334
+空指针	kong zhi zhen	1333
+重排序	chong pai xu	1333
+代表智慧	dai biao zhi hui	1327
+自编码器	zi bian ma qi	1325
+页表	ye biao	1323
+算法设计	suan fa she ji	1321
+残差	can cha	1312
+方面表示	fang mian biao shi	1300
+计算成本	ji suan cheng ben	1295
+规定计算	gui ding ji suan	1280
+将意图	jiang yi tu	1266
+优势函数	you shi han shu	1263
+分治算法	fen zhi suan fa	1260
+用户流量	yong hu liu liang	1256
+条件数	tiao jian shu	1251
+子节点	zi jie dian	1247
+将内存	jiang nei cun	1233
+杀进程	sha jin cheng	1233
+超图	chao tu	1228
+函数调用	han shu diao yong	1227
+活锁	huo suo	1221
+程序中断	cheng xu zhong duan	1217
+技术栈	ji shu zhan	1215
+图像识别	tu xiang shi bie	1212
+置信度	zhi xin du	1211
+源节点	yuan jie dian	1204
+性能特征	xing neng te zheng	1200
+拥塞控制	yong se kong zhi	1197
+图优化	tu you hua	1192
+用图形	yong tu xing	1185
+代码执行	dai ma zhi xing	1184
+数据帧	shu ju zhen	1183
+查询码	cha xun ma	1177
+词元	ci yuan	1175
+分析计算	fen xi ji suan	1173
+形式模型	xing shi mo xing	1172
+显示内存	xian shi nei cun	1170
+语义分析	yu yi fen xi	1169
+主进程	zhu jin cheng	1167
+反向传播	fan xiang chuan bo	1149
+性能表	xing neng biao	1142
+费用流	fei yong liu	1139
+去量化	qu liang hua	1136
+将激活	jiang ji huo	1135
+图像分类	tu xiang fen lei	1131
+图任务	tu ren wu	1130
+共识算法	gong shi suan fa	1129
+选择算法	xuan ze suan fa	1127
+词向量	ci xiang liang	1122
+微指令	wei zhi ling	1107
+图技术	tu ji shu	1104
+行为树	xing wei shu	1103
+可表达	ke biao da	1097
+特征点	te zheng dian	1096
+创建表	chuang jian biao	1076
+调度器	diao du qi	1073
+搜索图	sou suo tu	1065
+优化算法	you hua suan fa	1064
+层次模型	ceng ci mo xing	1064
+列表法	lie biao fa	1062
+子图	zi tu	1062
+流分析	liu fen xi	1062
+高阶函数	gao jie han shu	1061
+服务模型	fu wu mo xing	1060
+半精度	ban jing du	1055
+背压	bei ya	1054
+模型设计	mo xing she ji	1050
+数据溢出	shu ju yi chu	1047
+强一致性	qiang yi zhi xing	1044
+环境图	huan jing tu	1041
+将微调	jiang wei tiao	1040
+比较主流	bi jiao zhu liu	1022
+贪心算法	tan xin suan fa	1020
+输入表	shu ru biao	1018
+标量化	biao liang hua	1016
+分布中心	fen bu zhong xin	1015
+表示函数	biao shi han shu	1015
+拓扑排序	tuo pu pai xu	1014
+排序树	pai xu shu	1014
+表示论	biao shi lun	1014
+协议层	xie yi ceng	1007
+开源协议	kai yuan xie yi	1006
+模型结构	mo xing jie gou	1000
+状态表	zhuang tai biao	1000
+列表项	lie biao xiang	999
+设计协议	she ji xie yi	999
+单指令	dan zhi ling	994
+节点数目	jie dian shu mu	992
+计算密集	ji suan mi ji	991
+全收集	quan shou ji	990
+微调整	wei tiao zheng	987
+故障注入	gu zhang zhu ru	983
+代码注入	dai ma zhu ru	981
+循环展开	xun huan zhan kai	975
+异常中断	yi chang zhong duan	973
+元计算	yuan ji suan	971
+树节点	shu jie dian	963
+周期图	zhou qi tu	957
+删除键	shan chu jian	955
+学习算法	xue xi suan fa	943
+注入攻击	zhu ru gong ji	943
+将大表	jiang da biao	942
+平稳分布	ping wen fen bu	941
+将缓存	jiang huan cun	933
+退出算法	tui chu suan fa	925
+自动微分	zi dong wei fen	923
+服务中断	fu wu zhong duan	922
+平衡树	ping heng shu	915
+条件图	tiao jian tu	915
+条件指令	tiao jian zhi ling	914
+开发协议	kai fa xie yi	903
+指令码	zhi ling ma	899
+类图	lei tu	895
+终止节点	zhong zhi jie dian	895
+无代理	wu dai li	892
+完成图	wan cheng tu	890
+增长图	zeng zhang tu	885
+依赖注入	yi lai zhu ru	884
+认知计算	ren zhi ji suan	883
+微代码	wei dai ma	882
+源计算机	yuan ji suan ji	882
+代码量	dai ma liang	881
+无向图	wu xiang tu	879
+核心算法	he xin suan fa	876
+联邦学习	lian bang xue xi	872
+将量化	jiang liang hua	870
+重计算	chong ji suan	866
+二分查找	er fen cha zhao	865
+奖励模型	jiang li mo xing	862
+虚拟内存	xu ni nei cun	860
+可以量化	ke yi liang hua	854
+模型预测	mo xing yu ce	852
+分析树	fen xi shu	848
+真值表	zhen zhi biao	847
+用户流失	yong hu liu shi	844
+中间表示	zhong jian biao shi	841
+表示如果	biao shi ru guo	840
+相关系数	xiang guan xi shu	838
+将梯度	jiang ti du	836
+客户端库	ke hu duan ku	835
+状态价值	zhuang tai jia zhi	830
+吞吐量	tun tu liang	828
+自动编码	zi dong bian ma	828
+将容器	jiang rong qi	827
+智慧计算	zhi hui ji suan	827
+堆数据	dui shu ju	824
+将回归	jiang hui gui	823
+先进算法	xian jin suan fa	817
+开发库	kai fa ku	815
+分析模型	fen xi mo xing	811
+始节点	shi jie dian	809
+将图层	jiang tu ceng	807
+优先队列	you xian dui lie	806
+代理会	dai li hui	805
+反序列化	fan xu lie hua	805
+算法优化	suan fa you hua	805
+将编译	jiang bian yi	798
+硬编码	ying bian ma	797
+共享内存	gong xiang nei cun	794
+进程组	jin cheng zu	791
+子表示	zi biao shi	790
+将延迟	jiang yan chi	786
+计算平台	ji suan ping tai	785
+无代码	wu dai ma	783
+编解码器	bian jie ma qi	783
+延迟的	yan chi de	776
+删除列	shan chu lie	774
+三次握手	san ci wo shou	772
+初始化表	chu shi hua biao	767
+跳表	tiao biao	767
+父进程	fu jin cheng	766
+流失率	liu shi lv	765
+大数定律	da shu ding lv	763
+占用内存	zhan yong nei cun	761
+函数库	han shu ku	760
+将原图	jiang yuan tu	760
+节点号	jie dian hao	760
+将编码	jiang bian ma	758
+查询点	cha xun dian	758
+计算机化	ji suan ji hua	754
+掩码	yan ma	753
+和内存	he nei cun	752
+域特征	yu te zheng	752
+全局最优	quan ju zui you	750
+图像分割	tu xiang fen ge	750
+控制算法	kong zhi suan fa	749
+流传输	liu chuan shu	749
+非常流畅	fei chang liu chang	749
+转移概率	zhuan yi gai lv	747
+贡献列表	gong xian lie biao	746
+动作价值	dong zuo jia zhi	745
+评价模型	ping jia mo xing	744
+节点域	jie dian yu	743
+精确率	jing que lv	742
+设计列表	she ji lie biao	742
+面积图	mian ji tu	737
+特征图	te zheng tu	735
+超标量	chao biao liang	733
+输入向量	shu ru xiang liang	724
+特征组合	te zheng zu he	723
+智能模型	zhi neng mo xing	722
+分类编码	fen lei bian ma	717
+计算对象	ji suan dui xiang	716
+将向量	jiang xiang liang	715
+应用库	ying yong ku	714
+储备池	chu bei chi	710
+共识协议	gong shi xie yi	709
+数据中断	shu ju zhong duan	704
+将矩阵	jiang ju zhen	703
+将键值	jiang jian zhi	703
+混合模型	hun he mo xing	699
+软标签	ruan biao qian	699
+属性注入	shu xing zhu ru	698
+输入电流	shu ru dian liu	698
+原始码	yuan shi ma	694
+将视图	jiang shi tu	692
+任务栈	ren wu zhan	689
+均方误差	jun fang wu cha	687
+关键组件	guan jian zu jian	686
+水平触发	shui ping chu fa	686
+假设检验	jia she jian yan	682
+分布外	fen bu wai	678
+倒排索引	dao pai suo yin	674
+电子计算	dian zi ji suan	674
+主模型	zhu mo xing	673
+软中断	ruan zhong duan	673
+共享库	gong xiang ku	671
+响应码	xiang ying ma	667
+贪婪算法	tan lan suan fa	667
+查询中断	cha xun zhong duan	664
+词法分析	ci fa fen xi	662
+模型构建	mo xing gou jian	661
+候选码	hou xuan ma	659
+改代码	gai dai ma	659
+概率图	gai lv tu	659
+双注入	shuang zhu ru	656
+分支指令	fen zhi zhi ling	655
+堆分配	dui fen pei	654
+岭回归	ling hui gui	654
+调参	tiao can	650
+动态数组	dong tai shu zu	648
+特征量	te zheng liang	648
+共享锁	gong xiang suo	646
+将中断	jiang zhong duan	646
+主内存	zhu nei cun	645
+可代理	ke dai li	644
+计算装置	ji suan zhuang zhi	644
+经验表明	jing yan biao ming	643
+有限表示	you xian biao shi	640
+优化流程	you hua liu cheng	638
+将草图	jiang cao tu	637
+协作图	xie zuo tu	634
+量化误差	liang hua wu cha	632
+转移表	zhuan yi biao	631
+有色图	you se tu	630
+主线程	zhu xian cheng	629
+内存泄漏	nei cun xie lou	628
+写的代码	xie de dai ma	626
+量化模型	liang hua mo xing	624
+应用图	ying yong tu	622
+束搜索	shu sou suo	622
+两个图	liang ge tu	621
+条件熵	tiao jian shang	621
+梯度爆炸	ti du bao zha	621
+编写代码	bian xie dai ma	620
+分析表	fen xi biao	615
+叶节点	ye jie dian	614
+访问表	fang wen biao	614
+数据转储	shu ju zhuan chu	611
+代理集	dai li ji	609
+删除表	shan chu biao	609
+瀑布模型	pu bu mo xing	605
+小批量	xiao pi liang	604
+类型推导	lei xing tui dao	603
+伙伴算法	huo ban suan fa	599
+将采样	jiang cai yang	598
+获取锁	huo qu suo	596
+规划表	gui hua biao	596
+预测表	yu ce biao	595
+修改代码	xiu gai dai ma	594
+将注入	jiang zhu ru	594
+根据计算	gen ju ji suan	594
+即时编译	ji shi bian yi	592
+异常概率	yi chang gai lv	592
+编程模型	bian cheng mo xing	592
+固定模型	gu ding mo xing	591
+推出算法	tui chu suan fa	591
+关键优势	guan jian you shi	590
+命令注入	ming ling zhu ru	590
+类型擦除	lei xing ca chu	590
+主外键	zhu wai jian	589
+反编译	fan bian yi	588
+规则表	gui ze biao	588
+注入漏洞	zhu ru lou dong	587
+候选键	hou xuan jian	585
+核心架构	he xin jia gou	584
+乐观锁	le guan suo	578
+零样本	ling yang ben	576
+终止进程	zhong zhi jin cheng	575
+快表	kuai biao	573
+预测编码	yu ce bian ma	573
+差异表	cha yi biao	572
+逻辑运算	luo ji yun suan	572
+对象图	dui xiang tu	571
+动态库	dong tai ku	567
+距离矩阵	ju li ju zhen	567
+查表	cha biao	565
+键和值	jian he zhi	565
+将锁定	jiang suo ding	563
+特征矩阵	te zheng ju zhen	563
+混合专家	hun he zhuan jia	555
+共识节点	gong shi jie dian	554
+查询密码	cha xun mi ma	553
+结果列表	jie guo lie biao	553
+分布解	fen bu jie	548
+智能查询	zhi neng cha xun	548
+核心库	he xin ku	544
+模型计算	mo xing ji suan	544
+定向图	ding xiang tu	541
+容错性	rong cuo xing	541
+分配图	fen pei tu	537
+普适计算	pu shi ji suan	535
+稀疏矩阵	xi shu ju zhen	535
+迭代计算	die dai ji suan	535
+接入节点	jie ru jie dian	532
+算法实现	suan fa shi xian	532
+回归预测	hui gui yu ce	531
+将纹理	jiang wen li	529
+读指令	du zhi ling	529
+修改表	xiu gai biao	528
+子模型	zi mo xing	526
+智能调度	zhi neng diao du	526
+动量法	dong liang fa	525
+改算法	gai suan fa	525
+模型分析	mo xing fen xi	525
+递归算法	di gui suan fa	524
+重复计算	chong fu ji suan	523
+控制流图	kong zhi liu tu	518
+改模型	gai mo xing	517
+协议套	xie yi tao	516
+可表示为	ke biao shi wei	516
+指令执行	zhi ling zhi xing	516
+注册表项	zhu ce biao xiang	515
+进程退出	jin cheng tui chu	515
+智能图像	zhi neng tu xiang	514
+硬件中断	ying jian zhong duan	514
+堆文件	dui wen jian	511
+流匹配	liu pi pei	511
+量化策略	liang hua ce lve	510
+会写代码	hui xie dai ma	509
+均匀量化	jun yun liang hua	509
+全权代理	quan quan dai li	508
+将序列	jiang xu lie	508
+线程池	xian cheng chi	507
+信康码	xin kang ma	505
+构建树	gou jian shu	504
+将图表	jiang tu biao	501
+算子函数	suan zi han shu	501
+交叉熵	jiao cha shang	500
+视觉编码	shi jue bian ma	499
+指定代理	zhi ding dai li	498
+终止代码	zhong zhi dai ma	498
+计算存储	ji suan cun chu	498
+代码签名	dai ma qian ming	497
+瑕积分	xia ji fen	497
+概率性	gai lv xing	496
+算子的	suan zi de	496
+转义字符	zhuan yi zi fu	495
+将语义	jiang yu yi	494
+无锁定	wu suo ding	494
+协议头	xie yi tou	493
+移动代码	yi dong dai ma	492
+定点计算	ding dian ji suan	490
+读写锁	du xie suo	490
+函数指针	han shu zhi zhen	489
+图像增强	tu xiang zeng qiang	488
+将端口	jiang duan kou	488
+密度矩阵	mi du ju zhen	487
+对数几率	dui shu ji lv	487
+凸优化	tu you hua	486
+学习表	xue xi biao	486
+边缘触发	bian yuan chu fa	486
+悲观锁	bei guan suo	483
+代码示例	dai ma shi li	481
+转置核	zhuan zhi he	481
+反激活	fan ji huo	477
+混淆矩阵	hun xiao ju zhen	477
+收益图	shou yi tu	476
+计算单元	ji suan dan yuan	476
+可计算的	ke ji suan de	475
+支配树	zhi pei shu	475
+模糊查询	mo hu cha xun	475
+前沿模型	qian yan mo xing	473
+图遍历	tu bian li	473
+特征集	te zheng ji	473
+运算速度	yun suan su du	472
+运算量	yun suan liang	472
+列表解析	lie biao jie xi	471
+串行执行	chuan xing zhi xing	470
+总算力	zong suan li	470
+辅助损失	fu zhu sun shi	470
+伪分布式	wei fen bu shi	469
+流程计算	liu cheng ji suan	469
+空指令	kong zhi ling	469
+连续计算	lian xu ji suan	469
+值表达式	zhi biao da shi	468
+纠错码	jiu cuo ma	465
+查找树	cha zhao shu	464
+算法语言	suan fa yu yan	464
+副本集	fu ben ji	462
+计算层	ji suan ceng	462
+将表单	jiang biao dan	461
+全局内存	quan ju nei cun	460
+分库分表	fen ku fen biao	460
+有根图	you gen tu	460
+代码简洁	dai ma jian jie	459
+梯度消失	ti du xiao shi	459
+先验分布	xian yan fen bu	458
+真实图像	zhen shi tu xiang	458
+符号表示	fu hao biao shi	458
+软件堆栈	ruan jian dui zhan	458
+辅助码	fu zhu ma	457
+回归函数	hui gui han shu	456
+术语表	shu yu biao	456
+以便计算	yi bian ji suan	453
+策略模型	ce lve mo xing	453
+串行化	chuan xing hua	452
+计算负荷	ji suan fu he	451
+软件栈	ruan jian zhan	450
+知识蒸馏	zhi shi zheng liu	449
+特征向量	te zheng xiang liang	448
+代码重用	dai ma zhong yong	446
+混合精度	hun he jing du	446
+知识计算	zhi shi ji suan	446
+稀疏表示	xi shu biao shi	446
+算法编程	suan fa bian cheng	446
+链地址法	lian di zhi fa	446
+强化监督	qiang hua jian du	445
+计算实例	ji suan shi li	443
+套接字	tao jie zi	439
+异步编程	yi bu bian cheng	437
+泛化能力	fan hua neng li	437
+线程束	xian cheng shu	437
+解密数据	jie mi shu ju	436
+流式数据	liu shi shu ju	435
+语义网	yu yi wang	435
+后缀数组	hou zhui shu zu	434
+困惑度	kun huo du	434
+特征库	te zheng ku	432
+异步消息	yi bu xiao xi	431
+原子操作	yuan zi cao zuo	430
+将指针	jiang zhi zhen	430
+列清楚	lie qing chu	429
+图绘制	tu hui zhi	429
+代码猴子	dai ma hou zi	428
+响应延迟	xiang ying yan chi	428
+效验码	xiao yan ma	428
+梯度累积	ti du lei ji	428
+深化图	shen hua tu	428
+函数序列	han shu xu lie	427
+故障模型	gu zhang mo xing	427
+编译优化	bian yi you hua	427
+堆优化	dui you hua	426
+代码包	dai ma bao	425
+全归约	quan gui yue	422
+异步函数	yi bu han shu	421
+消息流	xiao xi liu	421
+真子图	zhen zi tu	420
+虚拟节点	xu ni jie dian	420
+交流起来	jiao liu qi lai	417
+集体模型	ji ti mo xing	417
+容器技术	rong qi ji shu	414
+回归树	hui gui shu	412
+模糊图像	mo hu tu xiang	412
+特征分	te zheng fen	412
+写内存	xie nei cun	411
+叶子节点	ye zi jie dian	409
+柯里化	ke li hua	409
+图形渲染	tu xing xuan ran	408
+概率逻辑	gai lv luo ji	408
+指令微调	zhi ling wei tiao	407
+嵌套查询	qian tao cha xun	406
+缓存行	huan cun hang	403
+分片链	fen pian lian	402
+前馈网络	qian kui wang luo	402
+原子命题	yuan zi ming ti	402
+算法模型	suan fa mo xing	401
+查找表	cha zhao biao	400
+顺序图	shun xu tu	400
+清缓存	qing huan cun	399
+求梯度	qiu ti du	397
+图形结构	tu xing jie gou	394
+元语法	yuan yu fa	392
+跨进程	kua jin cheng	392
+完成端口	wan cheng duan kou	391
+流式传输	liu shi chuan shu	391
+位序列	wei xu lie	390
+将映射	jiang ying she	390
+线程安全	xian cheng an quan	390
+伪码	wei ma	389
+双解码	shuang jie ma	389
+工具调用	gong ju diao yong	389
+反向代理	fan xiang dai li	388
+输出向量	shu chu xiang liang	388
+异步操作	yi bu cao zuo	387
+建图	jian tu	386
+投机执行	tou ji zhi xing	386
+异步请求	yi bu qing qiu	384
+修复漏洞	xiu fu lou dong	383
+剪枝	jian zhi	383
+公共库	gong gong ku	382
+键控	jian kong	382
+初始模型	chu shi mo xing	379
+挂代理	gua dai li	379
+激活扩散	ji huo kuo san	378
+表扫描	biao sao miao	377
+问题表征	wen ti biao zheng	377
+主从复制	zhu cong fu zhi	376
+树模型	shu mo xing	374
+符号计算	fu hao ji suan	374
+代理线	dai li xian	373
+排列成	pai lie cheng	373
+编译型	bian yi xing	371
+内存映射	nei cun ying she	369
+训练图像	xun lian tu xiang	369
+转换堆	zhuan huan dui	368
+数据带宽	shu ju dai kuan	366
+正向代理	zheng xiang dai li	366
+长上下文	chang shang xia wen	366
+异步输入	yi bu shu ru	365
+模型拟合	mo xing ni he	365
+低秩	di zhi	362
+模型缩放	mo xing suo fang	362
+修改密码	xiu gai mi ma	361
+映射函数	ying she han shu	361
+分号键	fen hao jian	359
+置换表示	zhi huan biao shi	359
+权重矩阵	quan zhong ju zhen	358
+置换码	zhi huan ma	358
+语音指令	yu yin zhi ling	357
+进程池	jin cheng chi	357
+僵尸进程	jiang shi jin cheng	356
+图序列	tu xu lie	355
+异步通信	yi bu tong xin	355
+线程块	xian cheng kuai	355
+反应模型	fan ying mo xing	354
+子采样	zi cai yang	354
+延迟确认	yan chi que ren	354
+表述为	biao shu wei	351
+负荷分布	fu he fen bu	351
+依存树	yi cun shu	350
+乱序执行	luan xu zhi xing	349
+状态向量	zhuang tai xiang liang	349
+激活器	ji huo qi	348
+关联矩阵	guan lian ju zhen	347
+基线模型	ji xian mo xing	346
+开放源码	kai fang yuan ma	346
+区间图	qu jian tu	345
+合并计算	he bing ji suan	345
+图形编程	tu xing bian cheng	345
+异步方式	yi bu fang shi	345
+当前帧	dang qian zhen	345
+信念分布	xin nian fen bu	343
+对称矩阵	dui chen ju zhen	343
+延迟参数	yan chi can shu	341
+策略梯度	ce lve ti du	341
+模型连接	mo xing lian jie	340
+语句表	yu ju biao	340
+预测图	yu ce tu	340
+尾递归	wei di gui	339
+示意模型	shi yi mo xing	339
+算法库	suan fa ku	339
+运算数	yun suan shu	339
+简洁代码	jian jie dai ma	338
+词表大小	ci biao da xiao	338
+读屏障	du ping zhang	338
+内存屏障	nei cun ping zhang	337
+固定编码	gu ding bian ma	337
+堆内存	dui nei cun	337
+树状数组	shu zhuang shu zu	337
+可表达性	ke biao da xing	336
+对数概率	dui shu gai lv	336
+引用透明	yin yong tou ming	336
+安全内核	an quan nei he	335
+滑动窗口	hua dong chuang kou	335
+画表格	hua biao ge	335
+逐位运算	zhu wei yun suan	335
+内存对齐	nei cun dui qi	334
+两图	liang tu	333
+实际指令	shi ji zhi ling	333
+反查表	fan cha biao	332
+权矩阵	quan ju zhen	332
+诱导表示	you dao biao shi	332
+代码行数	dai ma hang shu	331
+门控网络	men kong wang luo	331
+书面指令	shu mian zhi ling	330
+谱表示	pu biao shi	330
+共识层	gong shi ceng	329
+拒绝采样	ju jue cai yang	329
+内存池	nei cun chi	328
+异构计算	yi gou ji suan	328
+核心编程	he xin bian cheng	328
+网络拥塞	wang luo yong se	328
+行式存储	xing shi cun chu	328
+划分树	hua fen shu	327
+异步任务	yi bu ren wu	326
+花指令	hua zhi ling	326
+幂等	mi deng	325
+残差连接	can cha lian jie	325
+跨线程	kua xian cheng	325
+进程通讯	jin cheng tong xun	325
+声学模型	sheng xue mo xing	323
+映射器	ying she qi	323
+缓存失效	huan cun shi xiao	323
+动作库	dong zuo ku	322
+复合指令	fu he zhi ling	322
+教师模型	jiao shi mo xing	322
+无向量	wu xiang liang	322
+终止序列	zhong zhi xu lie	322
+物理内存	wu li nei cun	321
+运算结果	yun suan jie guo	321
+作图题	zuo tu ti	320
+击键记录	ji jian ji lu	320
+硬中断	ying zhong duan	320
+延迟隐藏	yan chi yin cang	319
+引用计数	yin yong ji shu	319
+技术堆栈	ji shu dui zhan	319
+通用图	tong yong tu	319
+创建线程	chuang jian xian cheng	318
+单线程	dan xian cheng	318
+聚合模型	ju he mo xing	318
+仿真计算	fang zhen ji suan	317
+流式计算	liu shi ji suan	317
+伪分布	wei fen bu	316
+定点运算	ding dian yun suan	316
+对偶问题	dui ou wen ti	315
+编译原理	bian yi yuan li	315
+转移图	zhuan yi tu	315
+异步传输	yi bu chuan shu	314
+栈分配	zhan fen pei	314
+分布器	fen bu qi	313
+扩充列表	kuo chong lie biao	313
+实现多态	shi xian duo tai	312
+指数退避	zhi shu tui bi	312
+归纳偏置	gui na pian zhi	311
+联合主键	lian he zhu jian	311
+树状结构	shu zhuang jie gou	310
+内核态	nei he tai	309
+跳跃列表	tiao yue lie biao	309
+映射成	ying she cheng	308
+计算卸载	ji suan xie zai	308
+语义记忆	yu yi ji yi	308
+张量表示	zhang liang biao shi	307
+指定端口	zhi ding duan kou	307
+整闭包	zheng bi bao	307
+功能框图	gong neng kuang tu	306
+图和图	tu he tu	305
+帧缓冲器	zhen huan chong qi	305
+可重入	ke chong ru	304
+控制序列	kong zhi xu lie	304
+边缘运算	bian yuan yun suan	304
+出向量	chu xiang liang	303
+特征集合	te zheng ji he	303
+编程语法	bian cheng yu fa	303
+代码复用	dai ma fu yong	302
+压力模型	ya li mo xing	302
+情节点	qing jie dian	302
+激活量化	ji huo liang hua	302
+矩阵计算	ju zhen ji suan	302
+超分辨	chao fen bian	302
+分类映射	fen lei ying she	301
+独热编码	du re bian ma	301
+信源编码	xin yuan bian ma	300
+可达图	ke da tu	300
+无延迟	wu yan chi	300
+可缓存	ke huan cun	299
+概率向量	gai lv xiang liang	299
+真表	zhen biao	299
+逻辑框图	luo ji kuang tu	299
+泛型编程	fan xing bian cheng	298
+可表示的	ke biao shi de	297
+包协议	bao xie yi	296
+字典树	zi dian shu	296
+学生模型	xue sheng mo xing	296
+异步执行	yi bu zhi xing	296
+泛化误差	fan hua wu cha	296
+算术运算	suan shu yun suan	296
+编码效率	bian ma xiao lv	296
+超分	chao fen	296
+分布式锁	fen bu shi suo	295
+故障特征	gu zhang te zheng	295
+纹理分析	wen li fen xi	295
+偏回归	pian hui gui	294
+对偶图	dui ou tu	294
+流式输出	liu shi shu chu	294
+语法分析	yu fa fen xi	294
+序列分析	xu lie fen xi	293
+开源代码	kai yuan dai ma	293
+点互信息	dian hu xin xi	293
+导入模型	dao ru mo xing	292
+维度表	wei du biao	292
+解压码	jie ya ma	291
+分代回收	fen dai hui shou	290
+接口库	jie kou ku	290
+激活量	ji huo liang	290
+边界像素	bian jie xiang su	290
+长尾分布	chang wei fen bu	290
+交互计算	jiao hu ji suan	289
+全正矩阵	quan zheng ju zhen	289
+表述清楚	biao shu qing chu	289
+彩色图像	cai se tu xiang	288
+纠删码	jiu shan ma	288
+微内核	wei nei he	287
+边子图	bian zi tu	287
+非代理	fei dai li	287
+速查表	su cha biao	285
+写时复制	xie shi fu zhi	284
+函数表示	han shu biao shi	284
+分块码	fen kuai ma	284
+多级页表	duo ji ye biao	284
+子表达式	zi biao da shi	284
+稀疏编码	xi shu bian ma	284
+变长编码	bian chang bian ma	283
+权重量化	quan zhong liang hua	283
+用户线程	yong hu xian cheng	283
+本机代码	ben ji dai ma	281
+流量清洗	liu liang qing xi	280
+向量检索	xiang liang jian suo	279
+混合分布	hun he fen bu	279
+算子融合	suan zi rong he	278
+进程线程	jin cheng xian cheng	278
+数表示法	shu biao shi fa	277
+参数表示	can shu biao shi	276
+控制向量	kong zhi xiang liang	276
+运算力	yun suan li	276
+权重衰减	quan zhong shuai jian	275
+表达式树	biao da shi shu	275
+雾计算	wu ji suan	275
+分流点	fen liu dian	274
+解向量	jie xiang liang	274
+边缘网关	bian yuan wang guan	274
+参照表	can zhao biao	272
+异步并行	yi bu bing xing	272
+指令流	zhi ling liu	272
+用图表示	yong tu biao shi	272
+信道编码	xin dao bian ma	271
+对齐税	dui qi shui	271
+浮点表示	fu dian biao shi	271
+显存占用	xian cun zhan yong	270
+绝对编码	jue dui bian ma	270
+代码实例	dai ma shi li	269
+和数据包	he shu ju bao	269
+提前编译	ti qian bian yi	269
+条纹码	tiao wen ma	269
+映射表	ying she biao	268
+比特深度	bi te shen du	268
+编译程序	bian yi cheng xu	268
+表视图	biao shi tu	268
+鞍点	an dian	268
+太流畅	tai liu chang	267
+序列识别	xu lie shi bie	267
+异或运算	yi huo yun suan	267
+模型改进	mo xing gai jin	267
+积分图	ji fen tu	267
+冲突表	chong tu biao	266
+块内存	kuai nei cun	266
+激活率	ji huo lv	266
+非负矩阵	fei fu ju zhen	266
+默认网关	mo ren wang guan	266
+分桶	fen tong	265
+双线程	shuang xian cheng	264
+复合运算	fu he yun suan	264
+分布负载	fen bu fu zai	263
+图像变换	tu xiang bian huan	262
+幂律分布	mi lv fen bu	262
+异步通知	yi bu tong zhi	262
+数据集主	shu ju ji zhu	262
+映射出	ying she chu	262
+留出集	liu chu ji	262
+酉矩阵	you ju zhen	262
+主文件表	zhu wen jian biao	261
+参照图	can zhao tu	261
+模型幻觉	mo xing huan jue	261
+双端队列	shuang duan dui lie	260
+文件指针	wen jian zhi zhen	260
+无后效性	wu hou xiao xing	260
+模型仿真	mo xing fang zhen	260
+漏洞复现	lou dong fu xian	260
+跳跃表	tiao yue biao	260
+依存语法	yi cun yu fa	259
+稀疏激活	xi shu ji huo	259
+异步获取	yi bu huo qu	258
+线性模型	xian xing mo xing	257
+峰值带宽	feng zhi dai kuan	256
+搜索剪枝	sou suo jian zhi	256
+权值矩阵	quan zhi ju zhen	256
+死信队列	si xin dui lie	256
+预缓存	yu huan cun	256
+开放寻址	kai fang xun zhi	255
+选择表项	xuan ze biao xiang	255
+代码走查	dai ma zou cha	254
+传递图	chuan di tu	254
+伪共享	wei gong xiang	254
+屏蔽码	ping bi ma	253
+编译类型	bian yi lei xing	253
+音形码	yin xing ma	253
+融合算子	rong he suan zi	252
+饱和模型	bao he mo xing	251
+串行运行	chuan xing yun xing	250
+真表示	zhen biao shi	250
+算法化	suan fa hua	250
+列式存储	lie shi cun chu	248
+指令投	zhi ling tou	248
+算法实验	suan fa shi yan	248
+边界模型	bian jie mo xing	248
+可表示性	ke biao shi xing	247
+异步调用	yi bu diao yong	247
+监控表	jian kong biao	247
+监督微调	jian du wei tiao	247
+超采样	chao cai yang	247
+运算对象	yun suan dui xiang	247
+显存池	xian cun chi	246
+长度外推	chang du wai tui	246
+异步工作	yi bu gong zuo	245
+异步运行	yi bu yun xing	245
+带宽限制	dai kuan xian zhi	244
+条带图	tiao dai tu	244
+补码表示	bu ma biao shi	244
+保留内存	bao liu nei cun	243
+删除主键	shan chu zhu jian	243
+取所有键	qu suo you jian	243
+改源代码	gai yuan dai ma	243
+迷宫算法	mi gong suan fa	243
+矩阵表示	ju zhen biao shi	242
+红外图像	hong wai tu xiang	242
+诱导特征	you dao te zheng	242
+渲染器	xuan ran qi	241
+线程执行	xian cheng zhi xing	241
+原子公式	yuan zi gong shi	240
+离线算法	li xian suan fa	240
+算术强度	suan shu qiang du	240
+编译成	bian yi cheng	240
+解题流程	jie ti liu cheng	240
+操作数栈	cao zuo shu zhan	239
+辛算法	xin suan fa	239
+帧内编码	zhen nei bian ma	238
+序列估计	xu lie gu ji	238
+投影算子	tou ying suan zi	238
+检验图	jian yan tu	238
+状态图表	zhuang tai tu biao	238
+微分层	wei fen ceng	237
+情感注入	qing gan zhu ru	237
+推流端	tui liu duan	237
+私钥解密	si yao jie mi	237
+优势凸显	you shi tu xian	236
+信号流图	xin hao liu tu	236
+键值编码	jian zhi bian ma	236
+副本数	fu ben shu	235
+对偶理论	dui ou li lun	235
+排列出	pai lie chu	235
+激活中心	ji huo zhong xin	235
+算法列表	suan fa lie biao	235
+解码率	jie ma lv	235
+变换编码	bian huan bian ma	234
+覆盖索引	fu gai suo yin	234
+可分核	ke fen he	233
+幻读	huan du	233
+无锁	wu suo	233
+线程通信	xian cheng tong xin	233
+异步的	yi bu de	232
+双缓冲	shuang huan chong	231
+爆显存	bao xian cun	231
+占内存	zhan nei cun	230
+网格搜索	wang ge sou suo	230
+解密软件	jie mi ruan jian	230
+回溯算法	hui su suan fa	229
+实闭包	shi bi bao	229
+对偶模型	dui ou mo xing	229
+真机图	zhen ji tu	229
+编程代码	bian cheng dai ma	229
+词法范围	ci fa fan wei	229
+调用栈	diao yong zhan	229
+可疑进程	ke yi jin cheng	228
+堆栈跟踪	dui zhan gen zong	228
+剩余内存	sheng yu nei cun	227
+读写分离	du xie fen li	227
+交互图	jiao hu tu	226
+可变数组	ke bian shu zu	226
+线段树	xian duan shu	226
+网络栈	wang luo zhan	226
+解密算法	jie mi suan fa	226
+带状图	dai zhuang tu	225
+查询视图	cha xun shi tu	225
+死锁检测	si suo jian ce	225
+浮点运算	fu dian yun suan	225
+温度系数	wen du xi shu	225
+互斥锁	hu chi suo	224
+反向图	fan xiang tu	224
+命名表	ming ming biao	224
+弹性模型	tan xing mo xing	223
+缺页中断	que ye zhong duan	223
+链表反转	lian biao fan zhuan	223
+源编码	yuan bian ma	222
+容量分布	rong liang fen bu	221
+点映射	dian ying she	221
+数据锁存	shu ju suo cun	220
+数据集名	shu ju ji ming	220
+纹理增强	wen li zeng qiang	220
+表示函子	biao shi han zi	220
+超多线程	chao duo xian cheng	220
+边界列表	bian jie lie biao	220
+基座模型	ji zuo mo xing	219
+编程算法	bian cheng suan fa	218
+优先级表	you xian ji biao	217
+决策向量	jue ce xiang liang	217
+失效节点	shi xiao jie dian	217
+幺模矩阵	yao mo ju zhen	217
+模型库	mo xing ku	217
+可视化库	ke shi hua ku	216
+分布偏移	fen bu pian yi	215
+可堆叠	ke dui die	215
+带状矩阵	dai zhuang ju zhen	215
+术前模型	shu qian mo xing	215
+查询话费	cha xun hua fei	215
+梯度化	ti du hua	215
+重尾分布	zhong wei fen bu	215
+函式库	han shi ku	214
+均衡树	jun heng shu	214
+对数核	dui shu he	214
+栈溢出	zhan yi chu	214
+转义序列	zhuan yi xu lie	214
+键值存储	jian zhi cun chu	214
+零缓存	ling huan cun	214
+算法论	suan fa lun	213
+进程链	jin cheng lian	213
+优化序列	you hua xu lie	212
+低秩近似	di zhi jin si	212
+并行解码	bing xing jie ma	212
+无缓存	wu huan cun	212
+调库	diao ku	212
+初始分布	chu shi fen bu	211
+聚簇索引	ju cu suo yin	211
+运算器	yun suan qi	211
+齐夫定律	qi fu ding lv	211
+帧结构	zhen jie gou	210
+异步复制	yi bu fu zhi	210
+张量并行	zhang liang bing xing	210
+赋值指令	fu zhi zhi ling	210
+遗传表达	yi chuan biao da	210
+代码补全	dai ma bu quan	209
+松弛表	song chi biao	209
+误差方差	wu cha fang cha	209
+运输算法	yun shu suan fa	209
+存储图	cun chu tu	208
+早停法	zao ting fa	208
+辅码	fu ma	208
+零拷贝	ling kao bei	208
+频率图	pin lv tu	208
+全表扫描	quan biao sao miao	207
+冗余代码	rong yu dai ma	207
+存储栈	cun chu zhan	207
+工作线程	gong zuo xian cheng	207
+映射方法	ying she fang fa	207
+流量计费	liu liang ji fei	207
+缓存中毒	huan cun zhong du	207
+近似表示	jin si biao shi	207
+可调度性	ke diao du xing	206
+意境图	yi jing tu	205
+机内码	ji nei ma	205
+模糊图	mo hu tu	205
+海森矩阵	hai sen ju zhen	205
+双重图像	shuang chong tu xiang	204
+背板带宽	bei ban dai kuan	204
+差分数组	cha fen shu zu	203
+开源库	kai yuan ku	203
+相对熵	xiang dui shang	203
+运算元素	yun suan yuan su	203
+逻辑视图	luo ji shi tu	203
+反幂法	fan mi fa	202
+数字算子	shu zi suan zi	202
+未登录词	wei deng lu ci	202
+编译码	bian yi ma	202
+采样分布	cai yang fen bu	201
+对偶表示	dui ou biao shi	200
+点传递图	dian chuan di tu	200
+兆字节	zhao zi jie	199
+哈希冲突	ha xi chong tu	199
+响应表	xiang ying biao	199
+心跳检测	xin tiao jian ce	199
+福特算法	fu te suan fa	198
+超低延迟	chao di yan chi	198
+动态树	dong tai shu	197
+无中断	wu zhong duan	197
+比特翻转	bi te fan zhuan	197
+源节点和	yuan jie dian he	197
+词元化	ci yuan hua	197
+存储堆栈	cun chu dui zhan	196
+提取编码	ti qu bian ma	196
+模型导入	mo xing dao ru	196
+线程调度	xian cheng diao du	196
+区分图	qu fen tu	195
+图形库	tu xing ku	195
+指称语义	zhi cheng yu yi	195
+编译指示	bian yi zhi shi	195
+数列排序	shu lie pai xu	194
+野指针	ye zhi zhen	194
+串行的	chuan xing de	193
+强联通图	qiang lian tong tu	193
+推理图	tui li tu	193
+重采样	zhong cai yang	193
+代数规划	dai shu gui hua	192
+编译期	bian yi qi	192
+记录锁	ji lu suo	191
+诱导子图	you dao zi tu	191
+包络图	bao luo tu	190
+单向链表	dan xiang lian biao	190
+对偶变量	dui ou bian liang	190
+漏桶算法	lou tong suan fa	190
+算法式	suan fa shi	190
+背景图层	bei jing tu ceng	190
+迭代序列	die dai xu lie	190
+分派表	fen pai biao	189
+图像锐化	tu xiang rui hua	189
+字符向量	zi fu xiang liang	189
+误比特率	wu bi te lv	189
+重组协议	chong zu xie yi	189
+浮点值	fu dian zhi	188
+分类词库	fen lei ci ku	187
+命令库	ming ling ku	187
+带宽需求	dai kuan xu qiu	187
+序列并行	xu lie bing xing	187
+延迟转移	yan chi zhuan yi	187
+算法实体	suan fa shi ti	187
+行向量	xing xiang liang	187
+异步上传	yi bu shang chuan	186
+半正定	ban zheng ding	185
+图像标记	tu xiang biao ji	185
+异方差性	yi fang cha xing	185
+异构算力	yi gou suan li	185
+指向指针	zhi xiang zhi zhen	185
+近似计算	jin si ji suan	185
+采样密度	cai yang mi du	185
+冗余码	rong yu ma	184
+标记清除	biao ji qing chu	184
+算法层	suan fa ceng	184
+反键态	fan jian tai	183
+稠密矩阵	chou mi ju zhen	183
+线程管理	xian cheng guan li	183
+带宽要求	dai kuan yao qiu	182
+弧传递图	hu chuan di tu	182
+按键中断	an jian zhong duan	182
+键值反转	jian zhi fan zhuan	182
+异步通讯	yi bu tong xun	181
+显存是	xian cun shi	181
+源字母表	yuan zi mu biao	181
+超分算法	chao fen suan fa	181
+存储桶	cun chu tong	180
+尾延迟	wei yan chi	180
+枚举变量	mei ju bian liang	180
+标号图	biao hao tu	180
+运算特征	yun suan te zheng	180
+张量格式	zhang liang ge shi	179
+梯度裁剪	ti du cai jian	179
+行和列	xing he lie	179
+计算载荷	ji suan zai he	179
+零元运算	ling yuan yun suan	179
+齐次模型	qi ci mo xing	179
+创建视图	chuang jian shi tu	178
+前缀树	qian zhui shu	178
+外推能力	wai tui neng li	178
+摇树优化	yao shu you hua	177
+维恩图	wei en tu	177
+编译速度	bian yi su du	177
+出口带宽	chu kou dai kuan	176
+分词器	fen ci qi	176
+图的桥	tu de qiao	176
+容器实例	rong qi shi li	176
+有色树	you se shu	176
+条形图	tiao xing tu	176
+请见图	qing jian tu	176
+交错树	jiao cuo shu	175
+单调算子	dan diao suan zi	175
+草稿模型	cao gao mo xing	175
+词典列表	ci dian lie biao	175
+轨迹图	gui ji tu	175
+令牌表	ling pai biao	174
+延迟修复	yan chi xiu fu	174
+消息映射	xiao xi ying she	174
+离散模型	li san mo xing	174
+原子变量	yuan zi bian liang	173
+栈存储器	zhan cun chu qi	173
+翻源码	fan yuan ma	173
+自动机图	zi dong ji tu	173
+语法树	yu fa shu	173
+语法糖	yu fa tang	173
+谱聚类	pu ju lei	173
+反演码	fan yan ma	172
+编译为	bian yi wei	172
+语义等价	yu yi deng jia	172
+平衡超图	ping heng chao tu	171
+函数代数	han shu dai shu	170
+守候进程	shou hou jin cheng	170
+密码原语	mi ma yuan yu	170
+迷向向量	mi xiang xiang liang	170
+链级码	lian ji ma	170
+数学库	shu xue ku	169
+方法多态	fang fa duo tai	169
+显存碎片	xian cun sui pian	169
+梯度搜索	ti du sou suo	169
+页级锁	ye ji suo	169
+关联表	guan lian biao	168
+字节编址	zi jie bian zhi	168
+消融实验	xiao rong shi yan	168
+逐帧分析	zhu zhen fen xi	168
+暴力枚举	bao li mei ju	167
+线程中断	xian cheng zhong duan	167
+交织图	jiao zhi tu	166
+标记图	biao ji tu	166
+单通道图	dan tong dao tu	165
+子词切分	zi ci qie fen	165
+导入证书	dao ru zheng shu	165
+底函子	di han zi	165
+撸代码	lu dai ma	165
+双缓冲区	shuang huan chong qu	163
+取列宽	qu lie kuan	163
+固件列表	gu jian lie biao	163
+域套接字	yu tao jie zi	163
+嵌套中断	qian tao zhong duan	163
+插帧技术	cha zhen ji shu	163
+虚拟机栈	xu ni ji zhan	163
+递归序列	di gui xu lie	163
+代数计算	dai shu ji suan	162
+写缓冲器	xie huan chong qi	162
+平均算子	ping jun suan zi	162
+爆内存	bao nei cun	162
+僵死进程	jiang si jin cheng	161
+欠拟合	qian ni he	161
+流利度	liu li du	161
+缓存投毒	huan cun tou du	161
+自旋锁	zi xuan suo	161
+键值观察	jian zhi guan cha	161
+压栈	ya zhan	160
+安全网关	an quan wang guan	160
+嵌入代码	qian ru dai ma	160
+影像算法	ying xiang suan fa	160
+方框图	fang kuang tu	160
+李模型	li mo xing	160
+置信界限	zhi xin jie xian	160
+访存密集	fang cun mi ji	160
+串行操作	chuan xing cao zuo	159
+堆栈算法	dui zhan suan fa	158
+异步线程	yi bu xian cheng	158
+父容器	fu rong qi	158
+原子性	yuan zi xing	157
+帧间预测	zhen jian yu ce	157
+算法已知	suan fa yi zhi	157
+丛映射	cong ying she	156
+副图指标	fu tu zhi biao	156
+层拓扑	ceng tuo pu	155
+满秩	man zhi	155
+可缩图	ke suo tu	154
+在线蒸馏	zai xian zheng liu	154
+堆和栈	dui he zhan	154
+子程序库	zi cheng xu ku	154
+对数似然	dui shu si ran	154
+编码提示	bian ma ti shi	154
+零延迟	ling yan chi	154
+开源权重	kai yuan quan zhong	153
+悬垂指针	xuan chui zhi zhen	153
+接续图	jie xu tu	153
+明文密码	ming wen mi ma	153
+映射区	ying she qu	153
+栈指针	zhan zhi zhen	153
+线程编程	xian cheng bian cheng	153
+调用堆栈	diao yong dui zhan	153
+锁定嫌疑	suo ding xian yi	153
+云端运算	yun duan yun suan	152
+微分对策	wei fen dui ce	152
+簇变形	cu bian xing	152
+线程并发	xian cheng bing fa	152
+进拓扑	jin tuo pu	152
+内联展开	nei lian zhan kai	151
+异步回发	yi bu hui fa	151
+前缀和	qian zhui he	150
+口头指令	kou tou zhi ling	150
+可微算子	ke wei suan zi	150
+图形性能	tu xing xing neng	150
+对偶约束	dui ou yue shu	150
+异构多核	yi gou duo he	150
+模型已知	mo xing yi zhi	150
+置换算子	zhi huan suan zi	150
+费用向量	fei yong xiang liang	150
+流水线化	liu shui xian hua	149
+相位编码	xiang wei bian ma	149
+预写日志	yu xie ri zhi	149
+传输带宽	chuan shu dai kuan	148
+流式视图	liu shi shi tu	147
+索引下推	suo yin xia tui	147
+零映射	ling ying she	147
+控制帧	kong zhi zhen	146
+模型颗粒	mo xing ke li	146
+逃逸分析	tao yi fen xi	146
+内存序	nei cun xu	145
+封锁粒度	feng suo li du	145
+层叠图	ceng die tu	145
+带宽控制	dai kuan kong zhi	145
+延迟上屏	yan chi shang ping	145
+取所有表	qu suo you biao	144
+线性运算	xian xing yun suan	144
+运算元	yun suan yuan	144
+凸集	tu ji	143
+删失回归	shan shi hui gui	143
+密钥流	mi yao liu	143
+预测号码	yu ce hao ma	143
+分析视图	fen xi shi tu	142
+列文定理	lie wen ding li	142
+幅移键控	fu yi jian kong	142
+最小割	zui xiao ge	142
+吞吐率	tun tu lv	141
+层归一化	ceng gui yi hua	141
+戈莱码	ge lai ma	141
+栈顶	zhan ding	141
+约当代数	yue dang dai shu	141
+量化间隔	liang hua jian ge	141
+顶点缓冲	ding dian huan chong	141
+占用带宽	zhan yong dai kuan	140
+延迟率	yan chi lv	140
+侦测码	zhen ce ma	139
+合并访存	he bing fang cun	139
+页寄存器	ye ji cun qi	139
+光谱熵	guang pu shang	138
+原子过程	yuan zi guo cheng	138
+坐标映射	zuo biao ying she	138
+套件列表	tao jian lie biao	138
+特征点法	te zheng dian fa	138
+示例代码	shi li dai ma	138
+可分张量	ke fen zhang liang	137
+按键映射	an jian ying she	137
+延迟感	yan chi gan	136
+插槽	cha cao	136
+置信推理	zhi xin tui li	136
+三色标记	san se biao ji	135
+子带编码	zi dai bian ma	135
+凸分解	tu fen jie	134
+恒等图	heng deng tu	134
+显存带宽	xian cun dai kuan	134
+线程变量	xian cheng bian liang	134
+对偶模	dui ou mo	133
+栈元素	zhan yuan su	133
+概率误差	gai lv wu cha	133
+静态图	jing tai tu	133
+双内核	shuang nei he	132
+键拖动	jian tuo dong	132
+偏协方差	pian xie fang cha	131
+杨氏图	yang shi tu	131
+链映射	lian ying she	131
+分组协议	fen zu xie yi	130
+反式激活	fan shi ji huo	130
+集总模型	ji zong mo xing	130
+可分闭包	ke fen bi bao	129
+概率化	gai lv hua	129
+段寄存器	duan ji cun qi	129
+缓存池	huan cun chi	129
+代码视图	dai ma shi tu	128
+单调栈	dan diao zhan	128
+命题代数	ming ti dai shu	128
+图的收缩	tu de shou suo	128
+字符指针	zi fu zhi zhen	128
+容许分布	rong xu fen bu	128
+术语库	shu yu ku	128
+艾伦图灵	ai lun tu ling	128
+公理语义	gong li yu yi	127
+流汗黄豆	liu han huang dou	127
+词法扫描	ci fa sao miao	127
+代数化	dai shu hua	126
+副图公式	fu tu gong shi	126
+工作窃取	gong zuo qie qu	126
+枚举型	mei ju xing	126
+酉算子	you suan zi	126
+金池塘	jin chi tang	126
+专家路由	zhuan jia lu you	125
+余子矩阵	yu zi ju zhen	125
+光栅化	guang shan hua	125
+剪枝优化	jian zhi you hua	125
+复合代数	fu he dai shu	125
+异步启动	yi bu qi dong	125
+源端口	yuan duan kou	125
+精确中断	jing que zhong duan	125
+重复惩罚	chong fu cheng fa	125
+反键电子	fan jian dian zi	124
+嵌套表	qian tao biao	124
+帧封装	zhen feng zhuang	124
+幂等性	mi deng xing	124
+张量核心	zhang liang he xin	124
+恒等表示	heng deng biao shi	124
+矩阵变量	ju zhen bian liang	124
+锁步	suo bu	124
+卷积核	juan ji he	123
+图像剪裁	tu xiang jian cai	123
+对偶解	dui ou jie	123
+由里出表	you li chu biao	123
+自动转储	zi dong zhuan chu	123
+选字键盘	xuan zi jian pan	123
+伊辛模型	yi xin mo xing	122
+增量转储	zeng liang zhuan chu	122
+推测解码	tui ce jie ma	122
+画布视图	hua bu shi tu	122
+余弦退火	yu xian tui huo	121
+幂律	mi lv	121
+步序列	bu xu lie	121
+渲染视图	xuan ran shi tu	121
+一致性哈希	yi zhi xing ha xi	120
+一致性散列	yi zhi xing san lie	120
+上下文切换	shang xia wen qie huan	120
+上下文工程	shang xia wen gong cheng	120
+上下文并行	shang xia wen bing xing	120
+上下文窗口	shang xia wen chuang kou	120
+不可变数据	bu ke bian shu ju	120
+不可重复读	bu ke chong fu du	120
+专家并行	zhuan jia bing xing	120
+两阶段提交	liang jie duan ti jiao	120
+中心极限定理	zhong xin ji xian ding li	120
+主成分分析	zhu cheng fen fen xi	120
+事务隔离级别	shi wu ge li ji bie	120
+二分图匹配	er fen tu pi pei	120
+二叉堆	er cha dui	120
+交叉注意力	jiao cha zhu yi li	120
+交叉熵损失	jiao cha shang sun shi	120
+人类反馈强化学习	ren lei fan kui qiang hua xue xi	120
+代数数据类型	dai shu shu ju lei xing	120
+低秩自适应	di zhi zi shi ying	120
+余弦相似度	yu xian xiang si du	120
+借用检查	jie yong jian cha	120
+全分片数据并行	quan fen pian shu ju bing xing	120
+全参数微调	quan can shu wei tiao	120
+公共子表达式消除	gong gong zi biao da shi xiao chu	120
+写屏障	xie ping zhang	120
+分组查询注意力	fen zu cha xun zhu yi li	120
+分页注意力	fen ye zhu yi li	120
+前缀缓存	qian zhui huan cun	120
+剩余方差	sheng yu fang cha	120
+动态批处理	dong tai pi chu li	120
+协方差矩阵	xie fang cha ju zhen	120
+单指令多数据	dan zhi ling duo shu ju	120
+单调队列	dan diao dui lie	120
+卷积神经网络	juan ji shen jing wang luo	120
+原子组件	yuan zi zu jian	120
+参数高效微调	can shu gao xiao wei tiao	120
+双指针	shuang zhi zhen	120
+双数组字典树	shuang shu zu zi dian shu	120
+变分自编码器	bian fen zi bian ma qi	120
+后缀自动机	hou zhui zi dong ji	120
+后训练量化	hou xun lian liang hua	120
+向量数据库	xiang liang shu ju ku	120
+四次挥手	si ci hui shou	120
+因果一致性	yin guo yi zhi xing	120
+固流体	gu liu ti	120
+图像翻转	tu xiang fan zhuan	120
+均摊复杂度	jun tan fu za du	120
+均方根归一化	jun fang gen gui yi hua	120
+多头注意力	duo tou zhu yi li	120
+多头潜在注意力	duo tou qian zai zhu yi li	120
+多模态大模型	duo mo tai da mo xing	120
+多版本并发控制	duo ban ben bing fa kong zhi	120
+多项式时间	duo xiang shi shi jian	120
+大语言模型	da yu yan mo xing	120
+大页内存	da ye nei cun	120
+奇异值分解	qi yi zhi fen jie	120
+字节对编码	zi jie dui bian ma	120
+存储体冲突	cun chu ti chong tu	120
+学习率预热	xue xi lv yu re	120
+寄存器分配	ji cun qi fen pei	120
+寄存器溢出	ji cun qi yi chu	120
+对数求和指数	dui shu qiu he zhi shu	120
+少样本提示	shao yang ben ti shi	120
+屋顶线模型	wu ding xian mo xing	120
+布隆过滤器	bu long guo lv qi	120
+带宽瓶颈	dai kuan ping jing	120
+常量折叠	chang liang zhe die	120
+平衡二叉树	ping heng er cha shu	120
+异步非阻塞	yi bu fei zu se	120
+强连通分量	qiang lian tong fen liang	120
+归约散射	gui yue san she	120
+循环神经网络	xun huan shen jing wang luo	120
+惰性求值	duo xing qiu zhi	120
+懒标记	lan biao ji	120
+批归一化	pi gui yi hua	120
+抽象语法树	chou xiang yu fa shu	120
+拉格朗日乘子	la ge lang ri cheng zi	120
+指令流水线	zhi ling liu shui xian	120
+按秩合并	an zhi he bing	120
+提示词工程	ti shi ci gong cheng	120
+文件描述符	wen jian miao shu fu	120
+旋转位置编码	xuan zhuan wei zhi bian ma	120
+无栈协程	wu zhan xie cheng	120
+无锁队列	wu suo dui lie	120
+时间复杂度	shi jian fu za du	120
+最优子结构	zui you zi jie gou	120
+最大似然估计	zui da si ran gu ji	120
+最大后验估计	zui da hou yan gu ji	120
+最小堆	zui xiao dui	120
+最小生成树	zui xiao sheng cheng shu	120
+最终一致性	zui zhong yi zhi xing	120
+有栈协程	you zhan xie cheng	120
+杨氏矩阵	yang shi ju zhen	120
+栈帧	zhan zhen	1250
+缓存命中	huan cun ming zhong	950
+树状思维	shu zhuang si wei	120
+核采样	he cai yang	120
+梯度检查点	ti du jian cha dian	120
+检索增强生成	jian suo zeng qiang sheng cheng	120
+死代码消除	si dai ma xiao chu	120
+比较并交换	bi jiao bing jiao huan	120
+注意力机制	zhu yi li ji zhi	120
+流水线并行	liu shui xian bing xing	120
+混合专家模型	hun he zhuan jia mo xing	120
+混合检索	hun he jian suo	120
+混合精度训练	hun he jing du xun lian	120
+渐近复杂度	jian jin fu za du	120
+滑动窗口注意力	hua dong chuang kou zhu yi li	120
+激活检查点	ji huo jian cha dian	120
+灾难性遗忘	zai nan xing yi wang	120
+点积注意力	dian ji zhu yi li	120
+熔断降级	rong duan jiang ji	120
+特征值分解	te zheng zhi fen jie	120
+状态空间模型	zhuang tai kong jian mo xing	120
+状态转移方程	zhuang tai zhuan yi fang cheng	120
+环形通信	huan xing tong xin	120
+直接偏好优化	zhi jie pian hao you hua	120
+相对位置编码	xiang dui wei zhi bian ma	120
+离线蒸馏	li xian zheng liu	120
+秩亏	zhi kui	120
+秩相关系数	zhi xiang guan xi shu	120
+稀疏注意力	xi shu zhu yi li	120
+空间复杂度	kong jian fu za du	120
+系统提示词	xi tong ti shi ci	120
+线性一致性	xian xing yi zhi xing	120
+线性注意力	xian xing zhu yi li	120
+组相对策略优化	zu xiang dui ce lve you hua	120
+结构化输出	jie gou hua shu chu	120
+绝对位置编码	jue dui wei zhi bian ma	120
+缓冲区溢出	huan chong qu yi chu	120
+缓存一致性	huan cun yi zhi xing	120
+缓存命中率	huan cun ming zhong lv	120
+缩放点积	suo fang dian ji	120
+脏读	zang du	120
+脑浮点	nao fu dian	120
+自回归模型	zi hui gui mo xing	120
+自监督学习	zi jian du xue xi	120
+自适应矩估计	zi shi ying ju gu ji	120
+蒙特卡洛树搜索	meng te ka luo shu sou suo	120
+蒙特卡洛采样	meng te ka luo cai yang	120
+视觉编码器	shi jue bian ma qi	120
+记忆化搜索	ji yi hua sou suo	120
+贝叶斯优化	bei ye si you hua	120
+贝叶斯定理	bei ye si ding li	120
+贝尔曼方程	bei er man fang cheng	120
+负对数似然	fu dui shu si ran	120
+负载均衡损失	fu zai jun heng sun shi	120
+贪心解码	tan xin jie ma	120
+超参数调优	chao can shu tiao you	120
+近似微分	jin si wei fen	120
+近似最近邻	jin si zui jin lin	120
+近端策略优化	jin duan ce lve you hua	120
+连续批处理	lian xu pi chu li	120
+通信掩盖	tong xin yan gai	120
+通用视图	tong yong shi tu	120
+重要性采样	zhong yao xing cai yang	120
+重试风暴	chong shi feng bao	120
+量化感知训练	liang hua gan zhi xun lian	120
+键值缓存	jian zhi huan cun	120
+门控线性单元	men kong xian xing dan yuan	120
+门控线性注意力	men kong xian xing zhu yi li	120
+闪存注意力	shan cun zhu yi li	120
+队头阻塞	dui tou zu se	120
+限流算法	xian liu suan fa	120
+随机梯度下降	sui ji ti du xia jiang	120
+雅可比矩阵	ya ke bi ju zhen	120
+集合通信	ji he tong xin	120
+零冗余优化器	ling rong yu you hua qi	120
+静态单赋值	jing tai dan fu zhi	120
+顺序一致性	shun xu yi zhi xing	120
+首字延迟	shou zi yan chi	120
+马尔可夫决策过程	ma er ke fu jue ce guo cheng	120
+马尔可夫链	ma er ke fu lian	120
+制表键	zhi biao jian	119
+整数指针	zheng shu zhi zhen	119
+剔除残差	ti chu can cha	118
+展示容错	zhan shi rong cuo	118
+统计熵	tong ji shang	118
+起始页码	qi shi ye ma	118
+边传递图	bian chuan di tu	118
+逐码提示	zhu ma ti shi	118
+分帧	fen zhen	116
+制表位	zhi biao wei	116
+收缩算子	shou suo suan zi	116
+极小向量	ji xiao xiang liang	116
+滑动指针	hua dong zhi zhen	116
+纹理梯度	wen li ti du	116
+赫布模型	he bu mo xing	116
+近似积分	jin si ji fen	116
+可逆算子	ke ni suan zi	115
+异步传送	yi bu chuan song	115
+条形码	tiao xing ma	115
+积分直和	ji fen zhi he	115
+门限译码	men xian yi ma	115
+位移算子	wei yi suan zi	114
+凸子集	tu zi ji	114
+箭头图	jian tou tu	114
+列表译码	lie biao yi ma	113
+卡片视图	ka pian shi tu	113
+本机端口	ben ji duan kou	113
+单位函子	dan wei han zi	112
+反传算法	fan chuan suan fa	112
+序列帧	xu lie zhen	112
+伪向量	wei xiang liang	111
+图形保真	tu xing bao zhen	111
+彩虹图	cai hong tu	111
+微服务化	wei fu wu hua	111
+无重码	wu chong ma	111
+语声编码	yu sheng bian ma	111
+单值运算	dan zhi yun suan	110
+指令制导	zhi ling zhi dao	110
+瑟林模型	se lin mo xing	110
+隐枚举法	yin mei ju fa	110
+单点分布	dan dian fen bu	109
+核型算子	he xing suan zi	109
+自比量表	zi bi liang biao	109
+语义相容	yu yi xiang rong	109
+可约表示	ke yue biao shi	108
+用连接池	yong lian jie chi	108
+透明视图	tou ming shi tu	108
+降阶模型	jiang jie mo xing	108
+云算力	yun suan li	107
+双相整流	shuang xiang zheng liu	107
+斜导算子	xie dao suan zi	107
+方括号键	fang kuo hao jian	107
+卷积算子	juan ji suan zi	106
+黎曼矩阵	li man ju zhen	106
+分组译码	fen zu yi ma	105
+熵编码	shang bian ma	105
+双链表	shuang lian biao	104
+幺模映射	yao mo ying she	104
+立方图	li fang tu	104
+线性表示	xian xing biao shi	104
+虚指针	xu zhi zhen	104
+两码组合	liang ma zu he	103
+倒置矩阵	dao zhi ju zhen	103
+可约簇	ke yue cu	103
+非均匀堆	fei jun yun dui	103
+双位编码	shuang wei bian ma	102
+可串行化	ke chuan xing hua	102
+蓝线图	lan xian tu	102
+代理传值	dai li chuan zhi	101
+凸泛函	tu fan han	101
+拉回映射	la hui ying she	101
+边缘映射	bian yuan ying she	100
+广义梯度	guang yi ti du	99
+乘法算子	cheng fa suan zi	98
+真假值表	zhen jia zhi biao	98
+算子插值	suan zi cha zhi	98
+双机容错	shuang ji rong cuo	97
+暗池	an chi	97
+邻域运算	lin yu yun suan	97
+分层视图	fen ceng shi tu	96
+原子锁	yuan zi suo	96
+号码和值	hao ma he zhi	96
+无标号图	wu biao hao tu	96
+特征乘数	te zheng cheng shu	96
+均衡带宽	jun heng dai kuan	95
+幻方量化	huan fang liang hua	94
+徽标键	hui biao jian	94
+双插槽	shuang cha cao	93
+异步总线	yi bu zong xian	93
+反馈译码	fan kui yi ma	92
+定向流形	ding xiang liu xing	92
+带调词库	dai diao ci ku	91
+恒等排列	heng deng pai lie	90
+张量扰动	zhang liang rao dong	89
+紧开拓扑	jin kai tuo pu	89
+记存模型	ji cun mo xing	87
+图新智盛	tu xin zhi sheng	86
+控制台树	kong zhi tai shu	86
+激活原语	ji huo yuan yu	86
+象棋代理	xiang qi dai li	86
+输入辅码	shu ru fu ma	86
+张量曲面	zhang liang qu mian	84
+独享带宽	du xiang dai kuan	84
+分析簇	fen xi cu	83
+帧差法	zhen cha fa	83
+平均熵	ping jun shang	83
+线程阻塞	xian cheng zu se	83
+先验界限	xian yan jie xian	82
+函数组构	han shu zu gou	82
+增强树势	zeng qiang shu shi	82
+共变向量	gong bian xiang liang	81
+无重排列	wu chong pai lie	81
+热中子堆	re zhong zi dui	81
+转置映射	zhuan zhi ying she	81
+功耗表现	gong hao biao xian	80
+重心映射	zhong xin ying she	80
+凸规划	tu gui hua	79
+算子扰动	suan zi rao dong	79
+聚结模型	ju jie mo xing	78
+阶偏导数	jie pian dao shu	77
+矢量图层	shi liang tu ceng	76
+纤维映射	xian wei ying she	76
+舍弃运算	she qi yun suan	76
+凝聚映射	ning ju ying she	75
+劲风算法	jing feng suan fa	75
+嵌入算子	qian ru suan zi	75
+抛物回归	pao wu hui gui	75
+映射柱	ying she zhu	74
+余切向量	yu qie xiang liang	73
+梯度映射	ti du ying she	72
+代数译码	dai shu yi ma	71
+模态视图	mo tai shi tu	71
+维行向量	wei xing xiang liang	71
+凸组合	tu zu he	69
+泛圈图	fan quan tu	69
+脉码调制	mai ma tiao zhi	69
+伪逆算子	wei ni suan zi	68
+逆变张量	ni bian zhang liang	68
+动态插帧	dong tai cha zhen	67
+绕过缓存	rao guo huan cun	67
+复原解码	fu yuan jie ma	66
+执照号码	zhi zhao hao ma	65
+逐键提醒	zhu jian ti xing	64
+齐次算子	qi ci suan zi	63
+双曲流形	shuang qu liu xing	62
+幺矩阵	yao ju zhen	62
+数寄存器	shu ji cun qi	62
+簇集	cu ji	62
+线临界图	xian lin jie tu	62
+混输词库	hun shu ci ku	61
+表面咒语	biao mian zhou yu	61
+图灵归约	tu ling gui yue	60
+耗散算子	hao san suan zi	59
+音形辅码	yin xing fu ma	58
+预调微调	yu diao wei tiao	56
+奇偶剪枝	ji ou jian zhi	55
+逆变矢量	ni bian shi liang	55
+伊藤积分	yi teng ji fen	54
+容许映射	rong xu ying she	53
+插帧	cha zhen	53
+库仑计数	ku lun ji shu	51
+粘合映射	nian he ying she	51
+冰桶算法	bing tong suan fa	50
+归里包堆	gui li bao dui	50
+字节串行	zi jie chuan xing	49
+KL散度	kei le san du	1978
+KV缓存	kv huan cun	1212
+AOT编译	aot bian yi	435
+API接口	api jie kou	880
+AST语法树	ast yu fa shu	480
+BF16精度	bi fu shi liu jing du	450
+CAS原子操作	cas yuan zi cao zuo	420
+CLI命令行	cli ming ling hang	510
+CPU缓存	cpu huan cun	690
+CUDA核函数	cuda he han shu	640
+DNS解析	dns jie xi	720
+FP16精度	fu pi shi liu jing du	520
+FP8量化	fu pi ba liang hua	510
+GPU显存	gpu xian cun	850
+Git仓库	git cang ku	780
+HTTP请求	http qing qiu	890
+INT4量化	int si liang hua	490
+INT8量化	int ba liang hua	530
+JIT编译	jit bian yi	610
+JSON格式	json ge shi	840
+L1正则化	le yi zheng ze hua	588
+L2正则化	le er zheng ze hua	537
+LoRA微调	lora wei tiao	760
+NUMA架构	numa jia gou	460
+NVLink互联	nvlink hu lian	440
+OOM内存溢出	oom nei cun yi chu	550
+PCIe带宽	pcie dai kuan	520
+QLoRA微调	qlora wei tiao	580
+RPC框架	rpc kuang jia	670
+SDK工具包	sdk gong ju bao	710
+SIMD指令	simd zhi ling	540
+SQL查询	sql cha xun	830
+SSH密钥	ssh mi yao	750
+TCP连接	tcp lian jie	860
+TLB快表	tlb kuai biao	430
+UDP协议	udp xie yi	790
+YAML配置	yaml pei zhi	620

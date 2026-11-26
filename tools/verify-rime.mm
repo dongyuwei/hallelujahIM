@@ -1,8 +1,9 @@
 // Standalone harness: deploy rime-data with the downloaded librime and
 // simulate typing, to verify the vendored data set end to end.
-// Build: clang++ -std=c++14 tools/verify-rime.mm -o /tmp/verify-rime \
+// Build: xcrun -sdk macosx clang++ -std=c++14 tools/verify-rime.mm -o /tmp/verify-rime \
 //   -Ilibrime/dist/include -Llibrime/dist/lib -lrime.1 \
-//   -F/System/Library/Frameworks -framework Foundation -rpath $(pwd)/librime/dist/lib
+//   -framework Foundation -rpath $(pwd)/librime/dist/lib
+// Additional arguments are queried independently after the smoke tests.
 #import <Foundation/Foundation.h>
 #import <rime_api.h>
 
@@ -69,6 +70,12 @@ int main(int argc, char **argv) {
         api->process_key(session, 0xff1b, 0); // Escape
         printf("== punctuation\n");
         type(api, session, ",. ");
+
+        for (int i = 2; i < argc; ++i) {
+            printf("== query %s\n", argv[i]);
+            type(api, session, argv[i]);
+            api->clear_composition(session);
+        }
 
         api->destroy_session(session);
         api->cleanup_all_sessions();

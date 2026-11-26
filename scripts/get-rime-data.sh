@@ -10,6 +10,8 @@ LUNA_PINYIN_SHA="56b934b099dfbeab842320f13aa8b461a6ab3e42"
 STROKE_SHA="1e8fff9b9494ddec23b0cbc526bcfd8171a6fd48"
 ESSAY_SHA="e9b1a374a6ea015fca5bdd04318924b4483ac35a"
 OPENCC_TAG="1.4.2"
+QWEN_FREQ_TAG="v0.4.0"
+CS_AI_SHA256="e507241d396c1f8e0f9bdb81ec5524385ed12a191a45f59684bb31e9f2b35dc5"
 
 fetch() {
   local url="$1" dest="$2"
@@ -41,6 +43,12 @@ fetch "https://raw.githubusercontent.com/rime/rime-stroke/${STROKE_SHA}/stroke.d
 # rime-essay: 八股文 preset vocabulary used for phrase frequencies
 # (luna_pinyin.dict.yaml sets use_preset_vocabulary: true)
 fetch "https://raw.githubusercontent.com/rime/rime-essay/${ESSAY_SHA}/essay.txt" rime-data/essay.txt
+
+# Calibrated CS/AI terms; keep the original essay vocabulary unchanged.
+CS_AI_ARCHIVE="rime-data/cs_ai.dict.yaml.gz"
+fetch "https://github.com/mizorewww/rime-qwen-freq/releases/download/${QWEN_FREQ_TAG}/cs_ai.dict.yaml.gz" "${CS_AI_ARCHIVE}"
+echo "${CS_AI_SHA256}  ${CS_AI_ARCHIVE}" | shasum -a 256 -c -
+gunzip -f "${CS_AI_ARCHIVE}"
 
 # OpenCC: the prebuilt librime embeds OpenCC 1.1.9, which only reads compiled
 # .ocd2 dictionaries and requires the classic 1.x config layout (with a

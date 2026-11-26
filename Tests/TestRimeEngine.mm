@@ -47,6 +47,16 @@ static int KeySymForChar(char c) {
     }
 }
 
+- (NSArray<NSString *> *)candidateTexts {
+    return [[self.engine candidates:self.session] valueForKey:@"text"];
+}
+
+- (void)assertFirstCandidate:(NSString *)expected forKeys:(NSString *)keys {
+    [self.engine clearComposition:self.session];
+    [self type:keys];
+    XCTAssertEqualObjects(self.candidateTexts.firstObject, expected, @"input: %@", keys);
+}
+
 - (void)testSessionCreation {
     XCTAssertNotEqual(self.session, 0U);
     XCTAssertTrue([self.engine sessionAlive:self.session]);
@@ -88,6 +98,43 @@ static int KeySymForChar(char c) {
 
     NSString *preedit = [self.engine preedit:self.session selStart:nil selLength:nil caretPos:nil];
     XCTAssertEqualObjects(preedit, @"ni hao", @"preedit includes the syllable delimiter");
+}
+
+- (void)testCalibratedTechnicalTerms {
+    NSDictionary<NSString *, NSString *> *cases = @{
+        @"jianzhihuancun" : @"键值缓存",
+        @"dizhizishiying" : @"低秩自适应",
+        @"qianzhuishu" : @"前缀树",
+        @"midengxing" : @"幂等性",
+        @"kechongru" : @"可重入",
+        @"kvhuancun" : @"KV缓存",
+        @"loraweitiao" : @"LoRA微调",
+    };
+    for (NSString *keys in cases) {
+        [self assertFirstCandidate:cases[keys] forKeys:keys];
+    }
+}
+
+- (void)testCsAiDoesNotChangeCommonWordRanking {
+    NSDictionary<NSString *, NSString *> *cases = @{
+        @"nihao" : @"你好",
+        @"zhongguo" : @"中国",
+        @"wenti" : @"问题",
+        @"jisuan" : @"计算",
+        @"moxing" : @"模型",
+        @"jiedian" : @"节点",
+        @"lianghua" : @"量化",
+    };
+    for (NSString *keys in cases) {
+        [self assertFirstCandidate:cases[keys] forKeys:keys];
+    }
+}
+
+- (void)testImportedTermsDoNotDuplicateCandidates {
+    [self type:@"shenduxuexi"];
+    NSArray<NSString *> *texts = self.candidateTexts;
+    XCTAssertEqualObjects(texts.firstObject, @"深度学习");
+    XCTAssertEqual(texts.count, [NSSet setWithArray:texts].count);
 }
 
 // The pinyin panel only shows English rows on page 0, so the page number has
