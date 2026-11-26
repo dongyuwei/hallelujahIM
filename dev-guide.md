@@ -78,6 +78,9 @@ This input method uses two SQLite databases, queried via FMDB (SQLite wrapper):
    - Schema and dictionary data live in the app bundle at `Contents/SharedSupport/rime-data/`
    - Deployment runs automatically on first launch (artifacts go to `~/Library/Application Support/hallelujah/rime/`)
    - librime is a prebuilt universal library, downloaded and embedded via `scripts/get-librime.sh`
+   - Base schema and dictionary data come from the pinned Rime projects listed in `scripts/get-rime-data.sh`; `essay.txt` remains the unmodified rime-essay frequency data
+   - `rime-data/cs_ai.dict.yaml` is the `cs_ai.dict.yaml.gz` asset from [mizorewww/rime-qwen-freq v0.4.0](https://github.com/mizorewww/rime-qwen-freq/releases/tag/v0.4.0) (MIT license), with CS/AI term frequencies calibrated offline using Qwen3-14B-Base; no model runs at input time
+   - `luna_pinyin.extended.dict.yaml` combines `luna_pinyin` and `cs_ai` through `import_tables`; the fetch script pins the release and verifies the archive's SHA-256 before unpacking it
 
 3. **Substitutions database**: `~/Library/Application Support/hallelujah/substitutions.sqlite3`
    - Stores user-defined Text-Expander substitution rules
