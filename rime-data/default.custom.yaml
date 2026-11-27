@@ -6,5 +6,5 @@ patch:
   schema_list:
     - schema: luna_pinyin
 
-  # IMKCandidates shows 9 candidates per page
-  menu/page_size: 9
+  # Large pages; the grid moves its five-row visible window during navigation.
+  menu/page_size: 50

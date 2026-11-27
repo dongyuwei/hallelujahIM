@@ -93,11 +93,17 @@ static int KeySymForChar(char c) {
 - (void)testPinyinCandidates {
     [self type:@"nihao"];
     NSArray<RimeCandidateItem *> *candidates = [self.engine candidates:self.session];
-    XCTAssertEqual(candidates.count, 9U, "page size is 9");
     XCTAssertEqualObjects(candidates.firstObject.text, @"你好");
 
     NSString *preedit = [self.engine preedit:self.session selStart:nil selLength:nil caretPos:nil];
     XCTAssertEqualObjects(preedit, @"ni hao", @"preedit includes the syllable delimiter");
+}
+
+- (void)testLargeCandidatePageIncludesLowerFrequencyCharacters {
+    [self type:@"shu"];
+    NSArray<NSString *> *texts = self.candidateTexts;
+    XCTAssertEqual(texts.count, 50U);
+    XCTAssertEqualObjects(texts[15], @"竖");
 }
 
 - (void)testCalibratedTechnicalTerms {
@@ -140,7 +146,7 @@ static int KeySymForChar(char c) {
 // The pinyin panel only shows English rows on page 0, so the page number has
 // to follow candidate paging.
 - (void)testPageFollowsPaging {
-    [self type:@"nihao"];
+    [self type:@"shu"];
     XCTAssertEqual([self.engine page:self.session], 0);
 
     XCTAssertTrue([self.engine processKey:self.session keycode:RimeXK_Page_Down mask:0]);

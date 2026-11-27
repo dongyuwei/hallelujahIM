@@ -36,6 +36,7 @@ The candidate panel is drawn by the input method itself instead of the system `I
 
 - `src/CandidatePanelState`: a pure navigation state machine with no AppKit dependency — grid expand/collapse, column cycling, row-window scrolling — fully covered by unit tests;
 - `src/CandidatePanel`: the `NSPanel` wrapper plus `drawRect` rendering, cursor positioning (below the caret, clamped to the screen), highlight, mouse-click commit, and the annotation (via `ConversionEngine`'s `getAnnotation`) drawn as a built-in bottom gloss row.
+- Rime supplies 50 candidates per page (`menu/page_size: 50`). The custom grid displays at most five rows at a time and moves `gridVisibleRowOffset` as keyboard navigation passes an edge. It does not use `NSScrollView` or draw a visible scrollbar; digits still select within the active row.
 
 The grid navigation semantics (first-press expand, four-way navigation, in-row cycling) are inspired by [SwiftType](https://github.com/mgxv/SwiftType/)'s Grid Panel implementation. Thanks [mgxv](https://github.com/mgxv) for the great work!
 
